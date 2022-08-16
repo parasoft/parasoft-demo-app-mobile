@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <!--  Custom Color  -->
     <color name="app_default">#183C82</color>
-    <color name="title">#FFFFFF</color>
+    <color name="app_title">#FFFFFF</color>
 </resources>
