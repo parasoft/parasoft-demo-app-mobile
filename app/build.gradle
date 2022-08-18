@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
 }
 
+def applicationName = "parasoft-demo-app-mobile-1.0"
+
 android {
     compileSdk 32
 
@@ -19,6 +21,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            // To modify the name of build apk file
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${applicationName}.apk"
+                }
+            }
         }
     }
     compileOptions {
