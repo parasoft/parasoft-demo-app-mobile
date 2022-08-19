@@ -29,7 +29,7 @@ public class LoginActivityTest {
     @Test
     public void loginActivityTest() {
         ViewInteraction textView = onView(
-                allOf(withId(R.id.display_title), withText("PARASOFT DEMO APP"),
+                allOf(withId(R.id.display_title),
                         withParent(withParent(withId(androidx.appcompat.R.id.action_bar))),
                         isDisplayed()));
         textView.check(matches(withText("PARASOFT DEMO APP")));
