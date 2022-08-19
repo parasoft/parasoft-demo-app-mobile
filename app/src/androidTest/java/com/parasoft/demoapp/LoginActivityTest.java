@@ -32,6 +32,6 @@ public class LoginActivityTest {
                 allOf(withId(R.id.display_title),
                         withParent(withParent(withId(androidx.appcompat.R.id.action_bar))),
                         isDisplayed()));
-        textView.check(matches(withText("PARASOFT DEMO APP")));
+        textView.check(matches(withText(R.string.app_title)));
     }
 }
