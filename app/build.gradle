@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
-def applicationName = "parasoft-demo-app-mobile-1.0"
+def applicationName = "parasoft-demo-app-mobile"
 
 android {
     compileSdk 32
@@ -27,7 +27,7 @@ android {
             // To modify the name of build apk file
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "${applicationName}.apk"
+                    outputFileName = "${applicationName}-" + android.defaultConfig.versionName + ".apk"
                 }
             }
         }
