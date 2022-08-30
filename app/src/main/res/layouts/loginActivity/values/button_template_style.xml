@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="button_template_style">
+        <item name="android:layout_width">336dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:backgroundTint" tools:ignore="NewApi">@color/orange_button</item>
+        <item name="android:textColor">@color/dark_blue</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+</resources>

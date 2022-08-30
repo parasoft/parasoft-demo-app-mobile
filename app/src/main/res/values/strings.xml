@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Parasoft Demo App</string>
     <string name="app_title">PARASOFT DEMO APP</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_in_button">SIGN IN</string>
+    <string name="user_name">User name</string>
+    <string name="Password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="settings">Settings</string>
     <string name="cancel">cancel</string>
     <string name="save">save</string>
