@@ -10,7 +10,7 @@
     </item>
     <item android:bottom ="1dp">
         <shape>
-            <solid android:color="@color/input_background"/>
+            <solid android:color="@color/light_gray"/>
             <corners
               android:topLeftRadius="10dp"
               android:topRightRadius="10dp"/>

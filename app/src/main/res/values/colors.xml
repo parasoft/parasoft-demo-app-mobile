@@ -11,8 +11,8 @@
     <color name="app_default">#183C82</color>
     <color name="app_status_bar">#122D62</color>
     <color name="app_title">#FFFFFF</color>
-    <color name="login_background">#F8F6F6</color>
-    <color name="sign_in_button">#FF9800</color>
-    <color name="input_background">#F3F1F1</color>
-    <color name="sign_in_background">#B8B6B6</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="orange_button">#FF9900</color>
+    <color name="dark_blue">#001F55</color>
+    <color name="light_black">#333333</color>
 </resources>
