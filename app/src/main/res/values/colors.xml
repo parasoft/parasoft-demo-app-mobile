@@ -15,4 +15,8 @@
     <color name="sign_in_button">#FF9800</color>
     <color name="input_background">#F3F1F1</color>
     <color name="sign_in_background">#B8B6B6</color>
+    <color name="input_field">#F2F2F2</color>
+    <color name="dialog_divider">#D7D7D7</color>
+    <color name="dialog_text_black">#333333</color>
+    <color name="dialog_text_blue">#001F55</color>
 </resources>
