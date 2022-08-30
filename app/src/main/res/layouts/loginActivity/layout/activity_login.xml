@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background"
+    android:background="@color/light_gray"
     tools:context=".LoginActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="350sp"
-        android:layout_height="350sp"
+        android:layout_width="378sp"
+        android:layout_height="346sp"
         app:layout_constraintBottom_toTopOf="@+id/footer"
         android:background="@drawable/sign_in_background"
         android:elevation="3dp"
@@ -22,12 +22,12 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="10dp"
             android:text="@string/sign_in"
-            android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:textColor="@color/light_black"
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,36 +37,19 @@
             android:orientation="vertical">
 
             <EditText
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:background="@drawable/input_background"
+                style="@style/input_template_style"
                 android:hint="@string/user_name"
-                android:inputType="text"
-                android:paddingLeft="20dp"
-                android:textColorHint="@color/black"
-                android:textCursorDrawable="@drawable/black_cursor"
-                android:textSize="15sp"/>
-
+                android:inputType="text"/>
             <EditText
-                android:layout_width="300dp"
-                android:layout_height="50dp"
+                style="@style/input_template_style"
                 android:layout_marginTop="25dp"
-                android:background="@drawable/input_background"
                 android:hint="@string/Password"
-                android:inputType="textPassword"
-                android:paddingLeft="20dp"
-                android:textColorHint="@color/black"
-                android:textCursorDrawable="@drawable/black_cursor"
-                android:textSize="15sp"/>
+                android:inputType="textPassword"/>
 
             <Button
-                android:layout_width="300dp"
-                android:layout_height="50dp"
+                style="@style/button_template_style"
                 android:layout_marginTop="25dp"
-                android:backgroundTint="@color/sign_in_button"
-                android:text="@string/sign_in_button"
-                android:textColor="@color/black"
-                android:textSize="17sp">
+                android:text="@string/sign_in_button">
             </Button>
         </LinearLayout>
 
@@ -76,7 +59,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/forgot_password"
-            android:textColor="@color/black"/>
+            android:textColor="@color/dark_blue"/>
     </LinearLayout>
 
     <include layout="@layout/footer_layout" />
