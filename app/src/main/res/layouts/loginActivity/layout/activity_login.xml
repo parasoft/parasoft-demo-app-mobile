@@ -8,7 +8,6 @@
     tools:context=".LoginActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="378dp"
         android:layout_height="346dp"
         android:background="@drawable/sign_in_background"
