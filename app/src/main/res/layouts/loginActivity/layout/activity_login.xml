@@ -8,7 +8,6 @@
     tools:context=".LoginActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="378sp"
         android:layout_height="346sp"
         app:layout_constraintBottom_toTopOf="@+id/footer"

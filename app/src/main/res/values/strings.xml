@@ -6,10 +6,10 @@
     <string name="user_name">User name</string>
     <string name="Password">Password</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="footer_info">PARASOFT DEMO APP v1.1.0_20220725B397.6f55149fb1b</string>
     <string name="settings">Settings</string>
     <string name="cancel">cancel</string>
     <string name="save">save</string>
     <string name="base_url">Base URL</string>
     <string name="default_url">http://localhost:8080/v1/orders</string>
+    <string name="footer_info">PARASOFT DEMO APP v1.1.0_20220725B397.6f55149fb1b</string>
 </resources>

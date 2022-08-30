@@ -15,8 +15,5 @@
     <color name="orange_button">#FF9900</color>
     <color name="dark_blue">#001F55</color>
     <color name="light_black">#333333</color>
-    <color name="input_field">#F2F2F2</color>
     <color name="dialog_divider">#D7D7D7</color>
-    <color name="dialog_text_black">#333333</color>
-    <color name="dialog_text_blue">#001F55</color>
 </resources>
