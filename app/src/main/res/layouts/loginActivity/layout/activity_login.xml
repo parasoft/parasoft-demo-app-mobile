@@ -11,6 +11,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="350sp"
         android:layout_height="350sp"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
         android:background="@drawable/sign_in_background"
         android:elevation="3dp"
         android:orientation="vertical"
@@ -77,4 +78,6 @@
             android:text="@string/forgot_password"
             android:textColor="@color/black"/>
     </LinearLayout>
+
+    <include layout="@layout/footer_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
