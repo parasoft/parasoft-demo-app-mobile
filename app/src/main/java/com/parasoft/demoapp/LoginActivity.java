@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.parasoft.demoapp.component.SettingDialog;
-
+import com.parasoft.demoapp.util.FooterUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initCustomActionBar();
+        FooterUtil.setFooterInfo(this);
     }
 
     public void initCustomActionBar() {

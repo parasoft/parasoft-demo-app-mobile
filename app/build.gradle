@@ -4,6 +4,16 @@ plugins {
 
 def applicationName = "parasoft-demo-app-mobile"
 
+def buildMetadata = ''
+if (project.hasProperty("jenkinsBuildNumber")) {
+    buildMetadata += new Date().format('yyyyMMdd') + 'B' + jenkinsBuildNumber
+} else {
+    buildMetadata += new Date().format('yyyyMMddHHmmss')
+}
+if (project.hasProperty("gitCommitHash")) {
+    buildMetadata += '.' + gitCommitHash
+}
+
 android {
     compileSdk 32
 
@@ -15,6 +25,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "buildMetadata", "\"${buildMetadata}\"")
     }
 
     buildTypes {
