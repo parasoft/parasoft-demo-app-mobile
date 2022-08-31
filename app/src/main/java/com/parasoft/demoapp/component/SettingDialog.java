@@ -43,7 +43,7 @@ public class SettingDialog extends DialogFragment {
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = (int) (displayMetrics.widthPixels * 0.9);
-        window.setAttributes((WindowManager.LayoutParams) params);
+        window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         super.onStart();

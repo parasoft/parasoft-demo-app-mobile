@@ -26,7 +26,6 @@
         android:layout_width="82dp"
         android:layout_height="26dp"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/settings"
         android:textColor="@color/light_black"

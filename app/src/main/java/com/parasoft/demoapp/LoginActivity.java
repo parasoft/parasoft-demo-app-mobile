@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar parent = (Toolbar) customActionBar.getParent();
         parent.setContentInsetsAbsolute(0, 0);
 
-        ImageButton settingButton = (ImageButton) customActionBar.findViewById(R.id.settingButton);
+        ImageButton settingButton = customActionBar.findViewById(R.id.settingButton);
         settingButton.setOnClickListener(view -> openSettingModal());
     }
 
