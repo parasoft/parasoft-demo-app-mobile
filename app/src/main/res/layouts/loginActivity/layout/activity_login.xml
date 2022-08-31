@@ -4,15 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     tools:context=".LoginActivity">
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Hello World!"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
+        android:background="@drawable/sign_in_background"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/sign_in"
+            android:textColor="@color/light_black"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                style="@style/input_template_style"
+                android:hint="@string/user_name"
+                android:inputType="text"
+                android:importantForAutofill="no" />
+            <EditText
+                style="@style/input_template_style"
+                android:layout_marginTop="25dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:importantForAutofill="no" />
+
+            <Button
+                style="@style/button_template_style"
+                android:layout_marginTop="25dp"
+                android:text="@string/sign_in_button">
+            </Button>
+        </LinearLayout>
+
+        <!--This is just a text prompt, and it will be reconstructed later-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/forgot_password"
+            android:textColor="@color/dark_blue"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"/>
+    </LinearLayout>
+
+    <include layout="@layout/footer_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
