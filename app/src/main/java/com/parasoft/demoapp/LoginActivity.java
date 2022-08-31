@@ -6,11 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.parasoft.demoapp.Component.SettingDialog;
+import com.parasoft.demoapp.component.SettingDialog;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,12 +22,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void initCustomActionBar() {
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        View customActionBar = LayoutInflater.from(this).inflate(R.layout.title_layout, null);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar == null){
             return;
         }
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+        View customActionBar = View.inflate(this, R.layout.title_layout, null);
 
         actionBar.setCustomView(customActionBar, lp);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);

@@ -1,5 +1,6 @@
-package com.parasoft.demoapp.Component;
+package com.parasoft.demoapp.component;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,7 +34,11 @@ public class SettingDialog extends DialogFragment {
 
     @Override
     public void onStart() {
-        Window window = getDialog().getWindow();
+        Dialog dialog = getDialog();
+        if (dialog == null) {
+            return;
+        }
+        Window window = dialog.getWindow();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         WindowManager.LayoutParams params = window.getAttributes();
