@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="button_template_style">
-        <item name="android:layout_width">336dp</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint" tools:ignore="NewApi">@color/orange_button</item>
         <item name="android:textColor">@color/dark_blue</item>
         <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginRight">25dp</item>
     </style>
     <style name="dialog_button_template_style" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">wrap_content</item>
