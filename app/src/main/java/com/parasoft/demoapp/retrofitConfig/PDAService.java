@@ -12,12 +12,12 @@ public class PDAService {
     private static String baseUrl = null;
     private static String authToken = null;
     private static Retrofit retrofit = null;
+    private static boolean propertiesChanged = false;
 
     public static synchronized <T> T getClient(Class<T> serviceClass) {
-        if(retrofit == null) {
+        if(retrofit == null || propertiesChanged) {
             refreshRetrofit();
         }
-        System.out.println(baseUrl);
 
         return retrofit.create(serviceClass);
     }
@@ -57,11 +57,11 @@ public class PDAService {
 
     public static void setBaseUrl(String baseUrl) {
         PDAService.baseUrl = baseUrl;
-        refreshRetrofit();
+        propertiesChanged = true;
     }
 
     public static void setAuthToken(String authToken) {
         PDAService.authToken = authToken;
-        refreshRetrofit();
+        propertiesChanged = true;
     }
 }

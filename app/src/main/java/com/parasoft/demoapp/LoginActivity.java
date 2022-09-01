@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         setElementEnabledStatus(signInButton, false);
 
         // Set default base url or existing base url
-        PDAService.setBaseUrl(getBaseUrl());
+        PDAService.setBaseUrl(SettingsUtil.getBaseUrl(this));
     }
 
     public void initCustomActionBar() {
@@ -89,7 +89,8 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
-        PDAService.getClient(ApiInterface.class).login(username, password)
+        try {
+            PDAService.getClient(ApiInterface.class).login(username, password)
                 .enqueue(new Callback<ResultResponse<Void>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<Void>> call, @NonNull Response<ResultResponse<Void>> response) {
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else if(code == 401) {
                             errorMessage.setText(getResources().getString(R.string.wrong_username_or_password));
                         } else {
-                            errorMessage.setText(getResources().getString(R.string.internal_error));
+                            errorMessage.setText(getResources().getString(R.string.wrong_base_url));
                         }
                         setElementsEnabledStatus(true);
                     }
@@ -116,14 +117,11 @@ public class LoginActivity extends AppCompatActivity {
                         setElementsEnabledStatus(true);
                     }
                 });
-    }
-
-    public String getBaseUrl() {
-        String baseUrl = SettingsUtil.getSetting(this, SettingsUtil.BASE_URL_KEY);
-        if(baseUrl == null) {
-            baseUrl = getResources().getString(R.string.default_url);
+        } catch (IllegalArgumentException e) {
+            Log.e("LoginActivity", "Base URL error", e);
+            errorMessage.setText(getResources().getString(R.string.wrong_base_url));
+            setElementsEnabledStatus(true);
         }
-        return baseUrl;
     }
 
     private void setElementsEnabledStatus(boolean enabled) {

@@ -24,7 +24,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.parasoft.demoapp.LoginActivity;
 import com.parasoft.demoapp.R;
-import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.util.SettingsUtil;
 
 public class SettingDialog extends DialogFragment {
@@ -84,12 +83,11 @@ public class SettingDialog extends DialogFragment {
 
     public void saveBaseUrl() {
         String baseUrl = baseUrlInput.getText().toString();
-        SettingsUtil.saveSetting(loginActivity, "baseUrl", baseUrl);
-        PDAService.setBaseUrl(loginActivity.getBaseUrl());
+        SettingsUtil.saveBaseUrl(loginActivity, baseUrl);
     }
 
     public void fillBaseUrl() {
-        baseUrlInput.setText(loginActivity.getBaseUrl());
+        baseUrlInput.setText(SettingsUtil.getBaseUrl(loginActivity));
     }
 
     private class BaseUrlTextWatcher implements TextWatcher {
