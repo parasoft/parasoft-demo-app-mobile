@@ -32,9 +32,8 @@ public class SettingDialog extends DialogFragment {
     private Button cancelButton;
     private Button saveButton;
     private TextView errorMessage;
-    private TextWatcher baseUrlTextWatcher = new BaseUrlTextWatcher();
 
-    public static String TAG = "SettingDialog";
+    public static final String TAG = "SettingDialog";
     public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
 
     @Nullable
@@ -42,12 +41,14 @@ public class SettingDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.setting_dialog_layout, container, false);
         baseUrlInput = view.findViewById(R.id.base_url_input);
-        baseUrlInput.addTextChangedListener(baseUrlTextWatcher);
         saveButton = view.findViewById(R.id.save_button);
         cancelButton = view.findViewById(R.id.dismiss_button);
         errorMessage = view.findViewById(R.id.base_url_error_message);
         loginActivity = (LoginActivity) getActivity();
+
         setClickEvent();
+        baseUrlInput.addTextChangedListener(new BaseUrlTextWatcher());
+
         fillBaseUrl();
 
         return view;
@@ -82,15 +83,11 @@ public class SettingDialog extends DialogFragment {
 
     public void saveBaseUrl() {
         String baseUrl = baseUrlInput.getText().toString();
-        SettingsUtil.saveSetting(loginActivity, "baseUrl", baseUrl);
+        SettingsUtil.saveBaseUrl(loginActivity, baseUrl);
     }
 
     public void fillBaseUrl() {
-        String baseUrl = SettingsUtil.getSetting(loginActivity, "baseUrl");
-        if (TextUtils.isEmpty(baseUrl)) {
-            baseUrl = getResources().getString(R.string.default_url);
-        }
-        baseUrlInput.setText(baseUrl);
+        baseUrlInput.setText(SettingsUtil.getBaseUrl(loginActivity));
     }
 
     private class BaseUrlTextWatcher implements TextWatcher {
@@ -106,11 +103,11 @@ public class SettingDialog extends DialogFragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            String baseUrl = baseUrlInput.getText().toString();
+            String baseUrl = baseUrlInput.getText().toString().trim();
             if (TextUtils.isEmpty(baseUrl) || !baseUrl.matches(WELL_FORMED_URL_REGEX)) {
                 saveButton.setEnabled(false);
                 saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
-                String baseUrlErrorMessage = "";
+                String baseUrlErrorMessage;
                 if (TextUtils.isEmpty(baseUrl)) {
                     baseUrlErrorMessage = getResources().getString(R.string.base_url_must_not_be_empty);
                 } else {
