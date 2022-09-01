@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.parasoft.demoapp.util.FooterUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initCustomActionBar();
+        FooterUtil.setFooterInfo(this);
 
         usernameInput = findViewById(R.id.username);
         passwordInput = findViewById(R.id.password);
@@ -64,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar parent = (Toolbar) customActionBar.getParent();
         parent.setContentInsetsAbsolute(0, 0);
 
-        ImageButton settingButton = (ImageButton) customActionBar.findViewById(R.id.settingButton);
+        ImageButton settingButton = customActionBar.findViewById(R.id.settingButton);
         settingButton.setOnClickListener(view -> openSettingModal());
     }
 

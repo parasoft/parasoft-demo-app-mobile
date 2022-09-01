@@ -56,7 +56,7 @@
                 style="@style/input_template_style"
                 android:id="@+id/password"
                 android:layout_marginTop="25dp"
-                android:hint="@string/Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:importantForAutofill="no" />
 
