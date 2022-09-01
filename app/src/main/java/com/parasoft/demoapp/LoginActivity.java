@@ -7,6 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.parasoft.demoapp.util.FooterUtil;
+import com.parasoft.demoapp.util.SettingsUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -46,7 +50,10 @@ public class LoginActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.sign_in);
         errorMessage = findViewById(R.id.login_error_message);
 
+        usernameInput.addTextChangedListener(new InputTextWatcher());
+        passwordInput.addTextChangedListener(new InputTextWatcher());
         signInButton.setOnClickListener(view -> signIn());
+        setElementEnabledStatus(signInButton, false);
 
         // Set default base url or existing base url
         PDAService.setBaseUrl(getBaseUrl());
@@ -112,9 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public String getBaseUrl() {
-        // TODO: Integrate with PDA-997
-        /*String baseUrl = SettingsUtil.getSetting(this, "baseURL");*/
-        String baseUrl = null;
+        String baseUrl = SettingsUtil.getSetting(this, SettingsUtil.BASE_URL_KEY);
         if(baseUrl == null) {
             baseUrl = getResources().getString(R.string.default_url);
         }
@@ -122,8 +127,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setElementsEnabledStatus(boolean enabled) {
-        usernameInput.setEnabled(enabled);
-        passwordInput.setEnabled(enabled);
-        signInButton.setEnabled(enabled);
+        setElementEnabledStatus(usernameInput, enabled);
+        setElementEnabledStatus(passwordInput, enabled);
+        setElementEnabledStatus(signInButton, enabled);
+    }
+
+    private void setElementEnabledStatus(TextView element, boolean enabled) {
+        element.setEnabled(enabled);
+        if(enabled) {
+            element.setTextColor(getResources().getColor(R.color.dark_blue));
+        } else {
+            element.setTextColor(getResources().getColor(R.color.button_disabled));
+        }
+    }
+
+    private void changeSignInButtonEnabledStatus() {
+        String username = usernameInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        setElementEnabledStatus(signInButton, !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password));
+    }
+
+    private class InputTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            // do nothing
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            changeSignInButtonEnabledStatus();
+        }
     }
 }

@@ -17,6 +17,7 @@ public class PDAService {
         if(retrofit == null) {
             refreshRetrofit();
         }
+        System.out.println(baseUrl);
 
         return retrofit.create(serviceClass);
     }
