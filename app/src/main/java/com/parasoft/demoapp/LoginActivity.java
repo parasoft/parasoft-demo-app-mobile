@@ -104,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                             LoginActivity.this.finish();
-                        } else if(code == 401) {
+                            return;
+                        } else if (code == 401) {
                             errorMessage.setText(getResources().getString(R.string.wrong_username_or_password));
                         } else {
                             errorMessage.setText(getResources().getString(R.string.wrong_base_url));

@@ -9,10 +9,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PDAService {
 
-    private static String baseUrl = null;
-    private static String authToken = null;
-    private static Retrofit retrofit = null;
-    private static boolean propertiesChanged = false;
+    private static String baseUrl;
+    private static String authToken;
+    private static Retrofit retrofit;
+    private static volatile boolean propertiesChanged = false;
 
     public static synchronized <T> T getClient(Class<T> serviceClass) {
         if(retrofit == null || propertiesChanged) {
