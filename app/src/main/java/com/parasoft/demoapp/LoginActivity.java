@@ -134,16 +134,17 @@ public class LoginActivity extends AppCompatActivity {
     private void setElementEnabledStatus(TextView element, boolean enabled) {
         element.setEnabled(enabled);
         if(enabled) {
+            element.setBackgroundColor(getResources().getColor(R.color.orange_button));
             element.setTextColor(getResources().getColor(R.color.dark_blue));
         } else {
-            element.setTextColor(getResources().getColor(R.color.button_disabled));
+            element.setBackgroundColor(getResources().getColor(R.color.button_disabled));
+            element.setTextColor(getResources().getColor(R.color.button_text_disabled));
         }
     }
 
     private void changeSignInButtonEnabledStatus() {
         String username = usernameInput.getText().toString().trim();
-        String password = passwordInput.getText().toString().trim();
-        setElementEnabledStatus(signInButton, !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password));
+        setElementEnabledStatus(signInButton, !TextUtils.isEmpty(username));
     }
 
     private class InputTextWatcher implements TextWatcher {

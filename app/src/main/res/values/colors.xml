@@ -17,5 +17,7 @@
     <color name="light_black">#333333</color>
     <color name="dialog_divider">#D7D7D7</color>
     <color name="error">#FF0000</color>
-    <color name="button_disabled">#808080</color>
+    <color name="button_text_disabled">#808080</color>
+    <color name="button_disabled">#cccccc</color>
+
 </resources>
