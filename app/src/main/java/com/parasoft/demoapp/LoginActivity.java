@@ -3,6 +3,7 @@ package com.parasoft.demoapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
@@ -134,16 +135,25 @@ public class LoginActivity extends AppCompatActivity {
     private void setElementEnabledStatus(TextView element, boolean enabled) {
         element.setEnabled(enabled);
         if(enabled) {
+            if(element.equals(signInButton)) {
+                element.setBackgroundColor(getResources().getColor(R.color.orange_button));
+            } else {
+                element.setBackground(AppCompatResources.getDrawable(this, R.drawable.input_background));
+            }
             element.setTextColor(getResources().getColor(R.color.dark_blue));
         } else {
-            element.setTextColor(getResources().getColor(R.color.button_disabled));
+            if(element.equals(signInButton)) {
+                element.setBackgroundColor(getResources().getColor(R.color.button_disabled));
+            } else {
+                element.setBackground(AppCompatResources.getDrawable(this, R.drawable.input_background_disabled));
+            }
+            element.setTextColor(getResources().getColor(R.color.button_text_disabled));
         }
     }
 
     private void changeSignInButtonEnabledStatus() {
         String username = usernameInput.getText().toString().trim();
-        String password = passwordInput.getText().toString().trim();
-        setElementEnabledStatus(signInButton, !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password));
+        setElementEnabledStatus(signInButton, !TextUtils.isEmpty(username));
     }
 
     private class InputTextWatcher implements TextWatcher {
