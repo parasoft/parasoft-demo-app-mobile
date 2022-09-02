@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.parasoft.demoapp.util.FooterUtil;
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override
@@ -18,5 +20,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.title_layout);
+
+        FooterUtil.setFooterInfo(this);
     }
 }
