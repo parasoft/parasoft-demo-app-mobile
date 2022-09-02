@@ -52,7 +52,9 @@ android {
         main {
             res.srcDirs = [
                     // Add layout files path
+                    'src/main/res/layouts/homeActivity',
                     'src/main/res/layouts/loginActivity',
+                    'src/main/res/layouts/common',
                     'src/main/res/'
             ]
         }
