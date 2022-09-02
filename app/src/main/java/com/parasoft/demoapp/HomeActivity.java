@@ -34,7 +34,6 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        System.out.println(item);
         int id = item.getItemId();
         if (id == R.id.sign_out) {
             signOut();
