@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.parasoft.demoapp.component.SettingDialog;
+import com.parasoft.demoapp.component.UserInformationDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
@@ -79,6 +80,11 @@ public class LoginActivity extends AppCompatActivity {
 
         ImageButton settingButton = customActionBar.findViewById(R.id.settingButton);
         settingButton.setOnClickListener(view -> openSettingModal());
+    }
+
+    public void openUserInformationModal(View view) {
+        UserInformationDialog dialog = new UserInformationDialog();
+        dialog.show(getSupportFragmentManager(), UserInformationDialog.TAG);
     }
 
     public void openSettingModal() {
