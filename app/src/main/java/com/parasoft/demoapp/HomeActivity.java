@@ -52,7 +52,6 @@ public class HomeActivity extends AppCompatActivity {
     public void signOut() {
         PDAService.getClient(ApiInterface.class).logout();
         PDAService.setAuthToken(null);
-        PDAService.refreshRetrofit();
 
         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         startActivity(intent);
