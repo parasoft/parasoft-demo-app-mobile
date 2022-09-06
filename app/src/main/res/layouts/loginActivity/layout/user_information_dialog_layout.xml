@@ -10,8 +10,8 @@
         android:id="@+id/user_information_dialog_title"
         android:layout_width="152dp"
         android:layout_height="26dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
         android:text="@string/user_information"
         android:textColor="@color/light_black"
         android:textSize="20sp"
@@ -22,6 +22,7 @@
         android:id="@+id/close_button"
         style="@style/dialog_button_template_style"
         android:text="@string/close"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/footer_top_divider" />
 
