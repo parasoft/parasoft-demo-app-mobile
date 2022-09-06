@@ -145,7 +145,7 @@ public class UserInformationDialog extends DialogFragment {
                     userInformationTable.setVisibility(View.VISIBLE);
                     break;
                 case NO_DATA: // when load completed but with no data
-                    textDisplayArea.setText(getResources().getString(R.string.no_user_with_this_role));
+                    textDisplayArea.setText(getResources().getString(R.string.no_users_available));
                     textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
                     progressBar.setVisibility(View.INVISIBLE);
                     textDisplayArea.setVisibility(View.VISIBLE);

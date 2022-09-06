@@ -20,5 +20,5 @@
     <string name="close">关闭</string>
     <string name="user_name_label">用户名:</string>
     <string name="password_label">密码:</string>
-    <string name="no_user_with_this_role">沒有具有该角色的用户</string>
+    <string name="no_users_available">沒有可用的用户</string>
 </resources>

@@ -22,5 +22,5 @@
     <string name="close">CLOSE</string>
     <string name="user_name_label">Username:</string>
     <string name="password_label">Password:</string>
-    <string name="no_user_with_this_role">No user with this role</string>
+    <string name="no_users_available">No users available</string>
 </resources>
