@@ -122,10 +122,12 @@ public class UserInformationDialog extends DialogFragment {
                 textDisplayArea.setVisibility(View.INVISIBLE);
                 break;
             case 2: // when failed to load
-                textDisplayArea.setText(getResources().getString(R.string.wrong_base_url));
-                textDisplayArea.setTextColor(getResources().getColor(R.color.error));
-                progressBar.setVisibility(View.INVISIBLE);
-                textDisplayArea.setVisibility(View.VISIBLE);
+                if (isAdded()) {
+                    textDisplayArea.setText(getResources().getString(R.string.wrong_base_url));
+                    textDisplayArea.setTextColor(getResources().getColor(R.color.error));
+                    progressBar.setVisibility(View.INVISIBLE);
+                    textDisplayArea.setVisibility(View.VISIBLE);
+                }
                 break;
             case 3: // when load completed with data
                 usernameMessage.setText(userInfo.getPrimaryUserInfo().getUserName());
@@ -134,10 +136,12 @@ public class UserInformationDialog extends DialogFragment {
                 userInformationTable.setVisibility(View.VISIBLE);
                 break;
             case 4: // when load completed but with no data
-                textDisplayArea.setText(getResources().getString(R.string.no_user_with_this_role));
-                textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
-                progressBar.setVisibility(View.INVISIBLE);
-                userInformationTable.setVisibility(View.VISIBLE);
+                if (isAdded()) {
+                    textDisplayArea.setText(getResources().getString(R.string.no_user_with_this_role));
+                    textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
+                    progressBar.setVisibility(View.INVISIBLE);
+                    userInformationTable.setVisibility(View.VISIBLE);
+                }
         }
     }
 }
