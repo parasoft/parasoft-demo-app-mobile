@@ -1,6 +1,9 @@
 package com.parasoft.demoapp.retrofitConfig;
 
+import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -15,4 +18,7 @@ public interface ApiInterface {
 
     @GET("/logout")
     Call<ResultResponse<Void>> logout();
+
+    @GET("/forgotPassword")
+    Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword();
 }

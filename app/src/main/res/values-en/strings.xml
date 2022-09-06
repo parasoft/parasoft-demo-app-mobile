@@ -16,4 +16,9 @@
     <string name="wrong_username_or_password">Incorrect username or password</string>
     <string name="home_title">APPROVALS</string>
     <string name="sign_out">Sign out</string>
+    <string name="user_information">User Information</string>
+    <string name="close">CLOSE</string>
+    <string name="user_name_label">Username:</string>
+    <string name="password_label">Password:</string>
+    <string name="no_users_available">No users available</string>
 </resources>

@@ -70,13 +70,15 @@
 
         <!--This is just a text prompt, and it will be reconstructed later-->
         <TextView
+            android:id="@+id/forgotPasswordLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/forgot_password"
-            android:textColor="@color/dark_blue"
             android:paddingTop="20dp"
-            android:paddingBottom="20dp"/>
+            android:paddingBottom="20dp"
+            android:text="@string/forgot_password"
+            android:onClick="openUserInformationModal"
+            android:textColor="@color/dark_blue" />
     </LinearLayout>
 
     <include layout="@layout/footer_layout" />
