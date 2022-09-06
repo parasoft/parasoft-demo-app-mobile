@@ -101,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
                         int code = response.code();
                         if(code == 200) {
                             PDAService.setAuthToken(Credentials.basic(username, password));
-                            PDAService.refreshRetrofit();
                             // Go to home page
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
