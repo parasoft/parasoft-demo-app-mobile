@@ -10,7 +10,7 @@
     <!--  Custom Color  -->
     <color name="app_default">#183C82</color>
     <color name="app_status_bar">#122D62</color>
-    <color name="app_title">#FFFFFF</color>
+    <color name="app_title">#CBD7F0</color>
     <color name="light_gray">#F5F5F5</color>
     <color name="orange_button">#FF9900</color>
     <color name="dark_blue">#001F55</color>

@@ -106,7 +106,7 @@ public class SettingDialog extends DialogFragment {
             String baseUrl = baseUrlInput.getText().toString().trim();
             if (TextUtils.isEmpty(baseUrl) || !baseUrl.matches(WELL_FORMED_URL_REGEX)) {
                 saveButton.setEnabled(false);
-                saveButton.setTextColor(getResources().getColor(R.color.button_text_disabled));
+                saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
                 String baseUrlErrorMessage;
                 if (TextUtils.isEmpty(baseUrl)) {
                     baseUrlErrorMessage = getResources().getString(R.string.base_url_must_not_be_empty);
