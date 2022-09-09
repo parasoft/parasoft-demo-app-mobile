@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordInput;
     private Button signInButton;
     private TextView errorMessage;
+    private SettingDialog dialog = new SettingDialog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openSettingModal() {
-        SettingDialog dialog = new SettingDialog();
         dialog.show(getSupportFragmentManager(), SettingDialog.TAG);
     }
 
