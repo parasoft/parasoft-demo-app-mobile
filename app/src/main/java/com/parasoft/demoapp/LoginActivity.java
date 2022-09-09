@@ -42,6 +42,26 @@ public class LoginActivity extends AppCompatActivity {
     private TextView errorMessage;
     private SettingDialog dialog = new SettingDialog();
 
+    public EditText getUsernameInput() {
+        return usernameInput;
+    }
+
+    public EditText getPasswordInput() {
+        return passwordInput;
+    }
+
+    public Button getSignInButton() {
+        return signInButton;
+    }
+
+    public TextView getErrorMessage() {
+        return errorMessage;
+    }
+
+    public SettingDialog getDialog() {
+        return dialog;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
