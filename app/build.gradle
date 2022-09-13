@@ -88,6 +88,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
 }
 
 task mergeUnitTestAndAndroidTestReports(type: JacocoReport, dependsOn: ["testDebugUnitTest", "createDebugCoverageReport"]) {
