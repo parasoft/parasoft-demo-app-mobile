@@ -9,7 +9,7 @@ public class ForgotPasswordUserInfo {
     private PrimaryUserInfo primaryUserInfo;
 
     @Data
-    public class PrimaryUserInfo {
+    public static class PrimaryUserInfo {
         private String userName;
         private String password;
     }

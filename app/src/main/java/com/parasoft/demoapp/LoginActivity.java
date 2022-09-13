@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordInput;
     private Button signInButton;
     private TextView errorMessage;
+    private TextView forgotPasswordLink;
     @Setter // Add Setter just for testing to replace it with a mock service.
     private PDAService pdaService = new PDAService();
     private final SettingDialog settingDialog = new SettingDialog();
@@ -61,9 +62,12 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.password);
         signInButton = findViewById(R.id.sign_in);
         errorMessage = findViewById(R.id.login_error_message);
+        forgotPasswordLink = findViewById(R.id.forgot_password_link);
 
         usernameInput.addTextChangedListener(new InputTextWatcher());
         passwordInput.addTextChangedListener(new InputTextWatcher());
+
+        forgotPasswordLink.setOnClickListener(view -> openUserInformationModal());
         signInButton.setOnClickListener(view -> signIn());
         setElementEnabledStatus(signInButton, false);
 
@@ -89,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         settingButton.setOnClickListener(view -> openSettingModal());
     }
 
-    public void openUserInformationModal(View view) {
+    public void openUserInformationModal() {
         userInformationDialog.show(getSupportFragmentManager(), UserInformationDialog.TAG);
     }
 

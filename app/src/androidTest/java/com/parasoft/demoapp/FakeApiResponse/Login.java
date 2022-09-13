@@ -64,7 +64,6 @@ public class Login {
             return new CallInterfaceImplForTest<ResultResponse<Void>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<Void>> callback) {
-                    // 403
                     Response<ResultResponse<Void>> response = Response.error(500, ResponseBody.create(null, "Internal error."));
                     callback.onResponse(null, response);
                 }
@@ -78,7 +77,6 @@ public class Login {
             return new CallInterfaceImplForTest<ResultResponse<Void>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<Void>> callback) {
-
                     callback.onFailure(null, new RuntimeException("On failure"));
                 }
             };
