@@ -25,54 +25,52 @@ import org.mockito.Mock;
 @RunWith(AndroidJUnit4.class)
 public class SettingDialogTest {
 
-  @Mock
-  SettingDialog settingDialog;
+    SettingDialog settingDialog;
 
-  @Mock
-  EditText baseUrlInput;
+    EditText baseUrlInput;
 
-  @Rule
-  public IntentsTestRule<LoginActivity> intentsTestRule =
+    @Rule
+    public IntentsTestRule<LoginActivity> intentsTestRule =
           new IntentsTestRule<>(LoginActivity.class);
 
-  @Before
-  public void setUp() {
-    settingDialog = intentsTestRule.getActivity().getDialog();
-    onView(withId(R.id.settingButton)).perform(click());
+    @Before
+    public void setUp() {
+        settingDialog = intentsTestRule.getActivity().getDialog();
+        onView(withId(R.id.settingButton)).perform(click());
 
-    baseUrlInput = settingDialog.getBaseUrlInput();
+        baseUrlInput = settingDialog.getBaseUrlInput();
 
-    onView(withId(R.id.base_url_error_message)).check(matches(withText("")));
-    onView(withId(R.id.setting_dialog_title)).check(matches(withText(R.string.settings)));
-    onView(withId(R.id.base_url_input)).check(matches(withHint(R.string.base_url)));
-    onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.dark_blue)));
-    onView(withId(R.id.save_button)).check(matches(withText(R.string.save)));
-    onView(withId(R.id.dismiss_button)).check(matches(withText(R.string.cancel)));
-  }
+        onView(withId(R.id.base_url_error_message)).check(matches(withText("")));
+        onView(withId(R.id.setting_dialog_title)).check(matches(withText(R.string.settings)));
+        onView(withId(R.id.base_url_input)).check(matches(withHint(R.string.base_url)));
+        onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.dark_blue)));
+        onView(withId(R.id.save_button)).check(matches(withText(R.string.save)));
+        onView(withId(R.id.dismiss_button)).check(matches(withText(R.string.cancel)));
+    }
 
-  @Test
-  public void testInputIsValid() {
-    baseUrlInput.setText("http://localhost:8081");
-    onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.dark_blue)));
-    onView(withId(R.id.base_url_error_message)).check(matches(withText("")));
-    onView(withId(R.id.save_button)).perform(click());
-    onView(withId(R.id.settingButton)).perform(click());
-    onView(withId(R.id.base_url_input)).check(matches(withText("http://localhost:8081")));
-  }
+    @Test
+    public void testInputIsValid() {
+        baseUrlInput.setText("http://localhost:8081");
+        onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.dark_blue)));
+        onView(withId(R.id.base_url_error_message)).check(matches(withText("")));
+        onView(withId(R.id.save_button)).perform(click());
+        onView(withId(R.id.settingButton)).perform(click());
+        onView(withId(R.id.base_url_input)).check(matches(withText("http://localhost:8081")));
+    }
 
-  @Test
-  public void testInputIsInvalid() {
-    baseUrlInput.setText("http");
-    onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.button_disabled)));
-    onView(withId(R.id.base_url_error_message)).check(matches(withText(R.string.invalid_url)));
-    onView(withId(R.id.dismiss_button)).perform(click());
-  }
+    @Test
+    public void testInputIsInvalid() {
+        baseUrlInput.setText("http");
+        onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.button_disabled)));
+        onView(withId(R.id.base_url_error_message)).check(matches(withText(R.string.invalid_url)));
+        onView(withId(R.id.dismiss_button)).perform(click());
+    }
 
-  @Test
-  public void testInputIsEmpty() {
-    baseUrlInput.setText(null);
-    onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.button_disabled)));
-    onView(withId(R.id.base_url_error_message)).check(matches(withText(R.string.base_url_must_not_be_empty)));
-    onView(withId(R.id.dismiss_button)).perform(click());
-  }
+    @Test
+    public void testInputIsEmpty() {
+        baseUrlInput.setText(null);
+        onView(withId(R.id.save_button)).check(matches(hasTextColor(R.color.button_disabled)));
+        onView(withId(R.id.base_url_error_message)).check(matches(withText(R.string.base_url_must_not_be_empty)));
+        onView(withId(R.id.dismiss_button)).perform(click());
+    }
 }
