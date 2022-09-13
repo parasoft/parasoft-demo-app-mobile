@@ -72,7 +72,7 @@
 
         <!--This is just a text prompt, and it will be reconstructed later-->
         <TextView
-            android:id="@+id/forgotPasswordLink"
+            android:id="@+id/forgot_password_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

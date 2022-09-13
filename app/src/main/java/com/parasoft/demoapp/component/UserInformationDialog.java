@@ -63,7 +63,7 @@ public class UserInformationDialog extends DialogFragment {
         closeButton.setOnClickListener(v -> dismiss());
 
         try {
-            PDAService.getClient(ApiInterface.class).forgotPassword()
+            new PDAService().getClient(ApiInterface.class).forgotPassword()
                 .enqueue(new Callback<ResultResponse<List<ForgotPasswordUserInfo>>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfo>>> call,
