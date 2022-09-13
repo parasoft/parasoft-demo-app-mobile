@@ -54,6 +54,7 @@ public class LoginActivityTest {
 
     @After
     public void tearDown() {
+        loginActivityScenario.close();
         loginActivityScenario = null;
     }
 
