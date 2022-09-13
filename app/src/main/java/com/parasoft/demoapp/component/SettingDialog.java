@@ -32,6 +32,7 @@ public class SettingDialog extends DialogFragment {
     private Button cancelButton;
     private Button saveButton;
     private TextView errorMessage;
+    private TextView resetBaseURL;
 
     public static final String TAG = "SettingDialog";
     public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
@@ -44,10 +45,12 @@ public class SettingDialog extends DialogFragment {
         saveButton = view.findViewById(R.id.save_button);
         cancelButton = view.findViewById(R.id.dismiss_button);
         errorMessage = view.findViewById(R.id.base_url_error_message);
+        resetBaseURL = view.findViewById(R.id.reset_base_url);
         loginActivity = (LoginActivity) getActivity();
 
         setClickEvent();
         baseUrlInput.addTextChangedListener(new BaseUrlTextWatcher());
+        resetBaseURL.setOnClickListener(v -> fillBaseUrl());
 
         fillBaseUrl();
 
