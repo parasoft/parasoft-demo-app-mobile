@@ -69,7 +69,6 @@
             </Button>
         </LinearLayout>
 
-        <!--This is just a text prompt, and it will be reconstructed later-->
         <TextView
             android:id="@+id/forgotPasswordLink"
             android:layout_width="match_parent"
