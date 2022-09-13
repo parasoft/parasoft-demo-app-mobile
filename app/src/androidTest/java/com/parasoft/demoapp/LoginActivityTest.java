@@ -25,7 +25,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.parasoft.demoapp.FakeApiResponse.Login;
+import com.parasoft.demoapp.FakeApiResponse.LoginApi;
 import com.parasoft.demoapp.component.SettingDialog;
 import com.parasoft.demoapp.component.UserInformationDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
@@ -128,7 +128,7 @@ public class LoginActivityTest {
             // Given
             PDAService mockedPdaService = mock(PDAService.class);
             loginActivity.setPdaService(mockedPdaService);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(Login.return200Response());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(LoginApi.return200Response());
 
             Button signInButton = loginActivity.getSignInButton();
             EditText usernameInput = loginActivity.getUsernameInput();
@@ -151,7 +151,7 @@ public class LoginActivityTest {
             // Given
             PDAService mockedPdaService = mock(PDAService.class);
             loginActivity.setPdaService(mockedPdaService);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(Login.return401Response());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(LoginApi.return401Response());
 
             Button signInButton = loginActivity.getSignInButton();
             EditText usernameInput = loginActivity.getUsernameInput();
@@ -178,7 +178,7 @@ public class LoginActivityTest {
             // Given
             PDAService mockedPdaService = mock(PDAService.class);
             loginActivity.setPdaService(mockedPdaService);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(Login.return500Response());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(LoginApi.return500Response());
 
             Button signInButton = loginActivity.getSignInButton();
             EditText usernameInput = loginActivity.getUsernameInput();
@@ -205,7 +205,7 @@ public class LoginActivityTest {
             // Given
             PDAService mockedPdaService = mock(PDAService.class);
             loginActivity.setPdaService(mockedPdaService);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(Login.onFailure());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(LoginApi.onFailure());
 
             Button signInButton = loginActivity.getSignInButton();
             EditText usernameInput = loginActivity.getUsernameInput();

@@ -14,7 +14,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.parasoft.demoapp.FakeApiResponse.ForgotPassword;
+import com.parasoft.demoapp.FakeApiResponse.ForgotPasswordApi;
 import com.parasoft.demoapp.LoginActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
@@ -62,7 +62,7 @@ public class UserInformationDialogTest {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {
             PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPassword.return200Response());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200Response());
             activity.getUserInformationDialog().setPdaService(mockedPdaService);
         });
 
@@ -85,7 +85,7 @@ public class UserInformationDialogTest {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {
             PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPassword.return200ButNoDataResponse());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200ButNoDataResponse());
             activity.getUserInformationDialog().setPdaService(mockedPdaService);
         });
 
@@ -103,7 +103,7 @@ public class UserInformationDialogTest {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {
             PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPassword.return200ButNoUserInfoResponse());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200ButNoUserInfoResponse());
             activity.getUserInformationDialog().setPdaService(mockedPdaService);
         });
 
@@ -121,7 +121,7 @@ public class UserInformationDialogTest {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {
             PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPassword.return500Response());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return500Response());
             activity.getUserInformationDialog().setPdaService(mockedPdaService);
         });
 
@@ -139,7 +139,7 @@ public class UserInformationDialogTest {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {
             PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPassword.onFailure());
+            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.onFailure());
             activity.getUserInformationDialog().setPdaService(mockedPdaService);
         });
 

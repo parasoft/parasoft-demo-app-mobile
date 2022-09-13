@@ -8,44 +8,49 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * This class is just for test use.
+ * <br/>
+ * No real implementation for all methods. You need to override the method/methods in subclass if you will use it/them.
+ */
 public class CallInterfaceImplForTest<T> implements Call<T> {
     @Override
     public Response<T> execute() throws IOException {
-        return null;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public void enqueue(Callback<T> callback) {
-
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public boolean isExecuted() {
-        return false;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public void cancel() {
-
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public boolean isCanceled() {
-        return false;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public Call<T> clone() {
-        return null;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public Request request() {
-        return null;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
     public Timeout timeout() {
-        return null;
+        throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 }
