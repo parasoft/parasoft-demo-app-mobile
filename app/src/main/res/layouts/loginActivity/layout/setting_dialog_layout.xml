@@ -67,7 +67,6 @@
         android:layout_marginTop="7dp"
         android:paddingBottom="7dp"
         android:gravity="center"
-        android:paddingBottom="10dp"
         android:textColor="@color/error"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
