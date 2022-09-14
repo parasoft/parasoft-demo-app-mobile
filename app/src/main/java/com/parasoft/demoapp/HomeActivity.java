@@ -32,8 +32,8 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private TextView errorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
         FooterUtil.setFooterInfo(this);
 
         progressBar = findViewById(R.id.progress_bar);
+        errorMessage = findViewById(R.id.order_error_message);
+        errorMessage.setVisibility(View.INVISIBLE);
         loadOrderList();
     }
 
@@ -71,24 +73,28 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void loadOrderList() {
+        progressBar.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(View.INVISIBLE);
         PDAService.getClient(ApiInterface.class).getOrderList()
             .enqueue(new Callback<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                        @NonNull Response<ResultResponse<OrderListResponse>> response) {
+                    progressBar.setVisibility(View.INVISIBLE);
                     if (response.code() == 200) {
                         initRecyclerView(response.body().getData().getContent());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResultResponse<OrderListResponse>> call, Throwable t) {
-                    TextView message = findViewById(R.id.order_error_message);
-                    message.setText(t.getMessage());
+                public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    errorMessage.setVisibility(View.VISIBLE);
+                    errorMessage.setText(R.string.orders_loading_error);
                     Log.e("onFailure", t.getMessage());
                 }
             });
-        progressBar.setVisibility(View.INVISIBLE);
+
     }
 
     public void signOut() {
@@ -101,7 +107,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initRecyclerView(List<OrderResponse> orders) {
-        recyclerView = findViewById(R.id.order_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.order_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         OrderAdapter orderAdapter = new OrderAdapter(orders);

@@ -16,6 +16,7 @@
         android:text="@string/order_requests_title"
         android:textSize="18sp"
         android:textColor="@color/dark_blue"
+        android:letterSpacing="0.15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,8 +37,9 @@
         android:layout_marginTop="50dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:textSize="18sp"
         android:textColor="@color/error"
-        app:layout_constraintBottom_toTopOf="@+id/order_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_requests_title" />
