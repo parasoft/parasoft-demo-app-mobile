@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,12 +27,16 @@ import com.parasoft.demoapp.LoginActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.util.SettingsUtil;
 
+import lombok.Getter;
+
+@Getter
 public class SettingDialog extends DialogFragment {
     private LoginActivity loginActivity;
     private EditText baseUrlInput;
     private Button cancelButton;
     private Button saveButton;
     private TextView errorMessage;
+    private TextView resetBaseURL;
 
     public static final String TAG = "SettingDialog";
     public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
@@ -44,10 +49,12 @@ public class SettingDialog extends DialogFragment {
         saveButton = view.findViewById(R.id.save_button);
         cancelButton = view.findViewById(R.id.dismiss_button);
         errorMessage = view.findViewById(R.id.base_url_error_message);
+        resetBaseURL = view.findViewById(R.id.reset_base_url);
         loginActivity = (LoginActivity) getActivity();
 
         setClickEvent();
         baseUrlInput.addTextChangedListener(new BaseUrlTextWatcher());
+        resetBaseURL.setOnClickListener(v -> fillBaseUrl());
 
         fillBaseUrl();
 
@@ -105,7 +112,15 @@ public class SettingDialog extends DialogFragment {
         public void afterTextChanged(Editable editable) {
             String baseUrl = baseUrlInput.getText().toString().trim();
             if (TextUtils.isEmpty(baseUrl) || !baseUrl.matches(WELL_FORMED_URL_REGEX)) {
-                saveButton.setEnabled(false);
+                if(Looper.myLooper() == null) {
+                    Looper.prepare();
+                }
+                loginActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveButton.setEnabled(false);
+                    }
+                });
                 saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
                 String baseUrlErrorMessage;
                 if (TextUtils.isEmpty(baseUrl)) {

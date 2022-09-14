@@ -20,9 +20,9 @@ public class ExampleAppiumTest extends BaseTest {
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
         wait.until(ExpectedConditions
-                .presenceOfElementLocated(By.id("com.parasoft.demoapp:id/settingButton")));
+                .presenceOfElementLocated(By.id("com.parasoft.demoapp:id/setting_button")));
         WebElement settingsGearIcon = driver
-                .findElement(By.id("com.parasoft.demoapp:id/settingButton"));
+                .findElement(By.id("com.parasoft.demoapp:id/setting_button"));
         settingsGearIcon.click();
 
         wait.until(ExpectedConditions

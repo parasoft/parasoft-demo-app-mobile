@@ -12,6 +12,7 @@
     <string name="base_url_must_not_be_empty">Base URL must not be empty</string>
     <string name="saved_successfully">Saved successfully</string>
     <string name="invalid_url">Invalid URL</string>
+    <string name="reset_base_url">Reset Base URL</string>
     <string name="wrong_base_url">Base URL is not reachable</string>
     <string name="wrong_username_or_password">Incorrect username or password</string>
     <string name="home_title">APPROVALS</string>
@@ -23,4 +24,5 @@
     <string name="no_users_available">No users available</string>
     <string name="order_requests_title">ORDER REQUESTS</string>
     <string name="order_dialog_title">Order request: #%1$s</string>
+    <string name="orders_loading_error">Error loading orders</string>
 </resources>

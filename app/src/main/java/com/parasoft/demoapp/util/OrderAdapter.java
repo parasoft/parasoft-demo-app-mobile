@@ -39,7 +39,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     // Set the list size to Recycler View
     @Override
     public int getItemCount() {
-        return mOrderList.size();
+        return mOrderList == null ? 0 : mOrderList.size();
     }
 
     // Define ViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View

@@ -12,6 +12,7 @@
     <string name="base_url_must_not_be_empty">基地址不能为空</string>
     <string name="saved_successfully">保存成功</string>
     <string name="invalid_url">无效的地址</string>
+    <string name="reset_base_url">重置基地址</string>
     <string name="wrong_base_url">无法访问基地址</string>
     <string name="wrong_username_or_password">用户名或密码不正确</string>
     <string name="home_title">审批</string>
@@ -23,4 +24,5 @@
     <string name="no_users_available">沒有可用的用户</string>
     <string name="order_requests_title">订单请求</string>
     <string name="order_dialog_title">订单请求： #%1$s</string>
+    <string name="orders_loading_error">加载订单错误</string>
 </resources>
