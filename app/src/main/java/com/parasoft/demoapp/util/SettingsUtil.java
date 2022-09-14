@@ -23,7 +23,7 @@ public class SettingsUtil {
 
     public static String getBaseUrl(Context context) {
         String baseUrl = getSetting(context, BASE_URL_KEY);
-        if(baseUrl == null) {
+        if (baseUrl == null) {
             baseUrl = context.getString(R.string.default_url);
         }
         return baseUrl;
