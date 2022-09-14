@@ -28,7 +28,7 @@
         android:id="@+id/order_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="26dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/light_black"
         android:textSize="18sp"

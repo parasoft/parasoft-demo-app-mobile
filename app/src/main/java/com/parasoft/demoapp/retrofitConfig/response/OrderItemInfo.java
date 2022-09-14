@@ -3,7 +3,7 @@ package com.parasoft.demoapp.retrofitConfig.response;
 import lombok.Data;
 
 @Data
-public class OrederItemInfo {
+public class OrderItemInfo {
     private Long id;
 
     private String name;
@@ -16,7 +16,7 @@ public class OrederItemInfo {
 
     private Integer quantity;
 
-    public OrederItemInfo(String name, String description, String image, Integer quantity) {
+    public OrderItemInfo(String name, String description, String image, Integer quantity) {
         this.name = name;
         this.description = description;
         this.image = image;

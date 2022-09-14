@@ -22,7 +22,7 @@ public class OrderInfo {
 
     private String respondedBy;  // approver's username
 
-    private List<OrederItemInfo> orderItems; // parasoft-suppress UC.AURCO "expected"
+    private List<OrderItemInfo> orderItems; // parasoft-suppress UC.AURCO "expected"
 
     private String region;
 

@@ -38,6 +38,7 @@ public class OrderDialog extends DialogFragment {
     private ImageButton closeButton;
     private TextView errorMessage;
     private OrderInfo orderInfo;
+    private PDAService pdaService;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -48,15 +49,16 @@ public class OrderDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        pdaService = new PDAService();
         View view = inflater.inflate(R.layout.order_dialog_layout, container, false);
         saveButton = view.findViewById(R.id.order_save_button);
         cancelButton = view.findViewById(R.id.order_dismiss_button);
         closeButton = view.findViewById(R.id.order_close_button);
         errorMessage = view.findViewById(R.id.order_info_error_message );
         setClickEvent();
-        getOrderDetails();
         TextView textView = view.findViewById(R.id.order_dialog_title);
         textView.setText(getString(R.string.order_dialog_title, orderNumber));
+        getOrderDetails();
 
         return view;
     }
@@ -89,7 +91,7 @@ public class OrderDialog extends DialogFragment {
 
     public void getOrderDetails() {
         errorMessage.setText("");
-        PDAService.getClient(ApiInterface.class).orderDetails(orderNumber)
+        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
                 .enqueue(new Callback<ResultResponse<OrderInfo>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Response<ResultResponse<OrderInfo>> response) {
@@ -114,7 +116,7 @@ public class OrderDialog extends DialogFragment {
         orderStatusDTO.setStatus(oldOrderInfo.getStatus());
         orderStatusDTO.setReviewedByAPV(true);
 
-        PDAService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusDTO)
+        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusDTO)
                 .enqueue(new Callback<ResultResponse<OrderInfo>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Response<ResultResponse<OrderInfo>> response) {
