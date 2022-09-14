@@ -34,9 +34,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView errorMessage;
+    private PDAService pdaService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        pdaService = new PDAService();
         super.onCreate(savedInstanceState);
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_home);
@@ -45,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.order_error_message);
+        errorMessage.setText("");
         errorMessage.setVisibility(View.INVISIBLE);
         loadOrderList();
     }
@@ -74,15 +77,19 @@ public class HomeActivity extends AppCompatActivity {
 
     public void loadOrderList() {
         progressBar.setVisibility(View.VISIBLE);
+        errorMessage.setText("");
         errorMessage.setVisibility(View.INVISIBLE);
-        PDAService.getClient(ApiInterface.class).getOrderList()
+        pdaService.getClient(ApiInterface.class).getOrderList()
             .enqueue(new Callback<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                        @NonNull Response<ResultResponse<OrderListResponse>> response) {
                     progressBar.setVisibility(View.INVISIBLE);
                     if (response.code() == 200) {
-                        initRecyclerView(response.body().getData().getContent());
+                        OrderListResponse res = response.body().getData();
+                        if (res != null) {
+                            initRecyclerView(res.getContent());
+                        }
                     }
                 }
 
@@ -98,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void signOut() {
-        new PDAService().getClient(ApiInterface.class).logout();
+        pdaService.getClient(ApiInterface.class).logout();
         PDAService.setAuthToken(null);
 
         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
