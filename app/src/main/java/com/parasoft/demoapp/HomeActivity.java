@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
-import com.parasoft.demoapp.retrofitConfig.response.OrdersInfoResponse;
-import com.parasoft.demoapp.retrofitConfig.response.OrdersInfoResponse.OrdersInfo;
+import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,7 +34,6 @@ public class HomeActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private List<OrdersInfo> orderList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,19 +72,17 @@ public class HomeActivity extends AppCompatActivity {
 
     public void loadOrderList() {
         PDAService.getClient(ApiInterface.class).getOrderList()
-            .enqueue(new Callback<ResultResponse<OrdersInfoResponse>>() {
+            .enqueue(new Callback<ResultResponse<OrderListResponse>>() {
                 @Override
-                public void onResponse(@NonNull Call<ResultResponse<OrdersInfoResponse>> call,
-                                       @NonNull Response<ResultResponse<OrdersInfoResponse>> response) {
+                public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
+                                       @NonNull Response<ResultResponse<OrderListResponse>> response) {
                     if (response.code() == 200) {
-                        OrdersInfoResponse ordersInfoResponse = response.body().getData();
-                        orderList = ordersInfoResponse.getContent();
-                        initRecyclerView();
+                        initRecyclerView(response.body().getData().getContent());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResultResponse<OrdersInfoResponse>> call, Throwable t) {
+                public void onFailure(Call<ResultResponse<OrderListResponse>> call, Throwable t) {
                     TextView message = findViewById(R.id.order_error_message);
                     message.setText(t.getMessage());
                     Log.e("onFailure", t.getMessage());
@@ -104,11 +100,11 @@ public class HomeActivity extends AppCompatActivity {
         HomeActivity.this.finish();
     }
 
-    public void initRecyclerView() {
+    public void initRecyclerView(List<OrderResponse> orders) {
         recyclerView = findViewById(R.id.order_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orderList);
+        OrderAdapter orderAdapter = new OrderAdapter(orders);
         recyclerView.setAdapter(orderAdapter);
     }
 }

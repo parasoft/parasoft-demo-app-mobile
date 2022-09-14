@@ -7,31 +7,28 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parasoft.demoapp.R;
-import com.parasoft.demoapp.retrofitConfig.response.OrdersInfoResponse.OrdersInfo;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 
 import java.util.List;
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
-    private List<OrdersInfo> mOrderList;
+    private List<OrderResponse> mOrderList;
 
-    public OrderAdapter(List<OrdersInfo> orderList){
-        System.out.println(orderList);
+    public OrderAdapter(List<OrderResponse> orderList){
         mOrderList =  orderList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_list_info_layout,parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     // Set values of the views in Recycler View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        OrdersInfo orderList = mOrderList.get(position);
-        System.out.println(position);
+        OrderResponse orderList = mOrderList.get(position);
         viewHolder.orderIndex.setText(position + 1 + "");
         viewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
     }
@@ -43,7 +40,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     }
 
     // Define ViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView orderIndex;
         TextView orderNumber;
 
