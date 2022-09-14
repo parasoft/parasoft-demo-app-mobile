@@ -30,11 +30,11 @@ public class LoginActivityTest extends BaseTest {
         new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.
                         presenceOfElementLocated(By
-                                .id("com.parasoft.demoapp:id/forgotPasswordLink")));
+                                .id("com.parasoft.demoapp:id/forgot_password_link")));
         WebElement forgotPasswordLink = driver
-                .findElement(By.id("com.parasoft.demoapp:id/forgotPasswordLink"));
-        String headerText = forgotPasswordLink.getText();
-        assertEquals("Forgot password?", headerText);
+                .findElement(By.id("com.parasoft.demoapp:id/forgot_password_link"));
+        String forgotPasswordText = forgotPasswordLink.getText();
+        assertEquals("Forgot password?", forgotPasswordText);
     }
 
 }
