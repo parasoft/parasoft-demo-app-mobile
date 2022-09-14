@@ -1,6 +1,7 @@
 package com.parasoft.demoapp.retrofitConfig;
 
 import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
+import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface ApiInterface {
 
     @GET("/forgotPassword")
     Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword();
+
+    @GET("/v1/orders")
+    Call<ResultResponse<OrderListResponse>> getOrderList();
 }

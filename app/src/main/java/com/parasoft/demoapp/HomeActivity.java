@@ -2,28 +2,51 @@ package com.parasoft.demoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
+import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
+import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.FooterUtil;
+import com.parasoft.demoapp.util.OrderAdapter;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class HomeActivity extends AppCompatActivity {
+
+    private ProgressBar progressBar;
+    private TextView errorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_home);
-
         initCustomActionBar();
         FooterUtil.setFooterInfo(this);
+
+        progressBar = findViewById(R.id.progress_bar);
+        errorMessage = findViewById(R.id.order_error_message);
+        errorMessage.setVisibility(View.INVISIBLE);
+        loadOrderList();
     }
 
     @Override
@@ -49,6 +72,31 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void loadOrderList() {
+        progressBar.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(View.INVISIBLE);
+        PDAService.getClient(ApiInterface.class).getOrderList()
+            .enqueue(new Callback<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
+                                       @NonNull Response<ResultResponse<OrderListResponse>> response) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if (response.code() == 200) {
+                        initRecyclerView(response.body().getData().getContent());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    errorMessage.setVisibility(View.VISIBLE);
+                    errorMessage.setText(R.string.orders_loading_error);
+                    Log.e("onFailure", t.getMessage());
+                }
+            });
+
+    }
+
     public void signOut() {
         new PDAService().getClient(ApiInterface.class).logout();
         PDAService.setAuthToken(null);
@@ -56,5 +104,13 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         startActivity(intent);
         HomeActivity.this.finish();
+    }
+
+    public void initRecyclerView(List<OrderResponse> orders) {
+        RecyclerView recyclerView = findViewById(R.id.order_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        OrderAdapter orderAdapter = new OrderAdapter(orders);
+        recyclerView.setAdapter(orderAdapter);
     }
 }
