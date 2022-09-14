@@ -71,14 +71,13 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/forgotPasswordLink"
+            android:id="@+id/forgot_password_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:text="@string/forgot_password"
-            android:onClick="openUserInformationModal"
             android:textColor="@color/dark_blue" />
     </LinearLayout>
 

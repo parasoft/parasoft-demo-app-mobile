@@ -27,6 +27,8 @@ import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.Credentials;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,33 +37,18 @@ import retrofit2.Response;
 import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.SettingsUtil;
 
+@Getter
 public class LoginActivity extends AppCompatActivity {
 
     private EditText usernameInput;
     private EditText passwordInput;
     private Button signInButton;
     private TextView errorMessage;
-    private SettingDialog dialog = new SettingDialog();
-
-    public EditText getUsernameInput() {
-        return usernameInput;
-    }
-
-    public EditText getPasswordInput() {
-        return passwordInput;
-    }
-
-    public Button getSignInButton() {
-        return signInButton;
-    }
-
-    public TextView getErrorMessage() {
-        return errorMessage;
-    }
-
-    public SettingDialog getDialog() {
-        return dialog;
-    }
+    private TextView forgotPasswordLink;
+    @Setter // Add Setter just for testing to replace it with a mock service.
+    private PDAService pdaService = new PDAService();
+    private final SettingDialog settingDialog = new SettingDialog();
+    private final UserInformationDialog userInformationDialog = new UserInformationDialog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +62,12 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.password);
         signInButton = findViewById(R.id.sign_in);
         errorMessage = findViewById(R.id.login_error_message);
+        forgotPasswordLink = findViewById(R.id.forgot_password_link);
 
         usernameInput.addTextChangedListener(new InputTextWatcher());
         passwordInput.addTextChangedListener(new InputTextWatcher());
+
+        forgotPasswordLink.setOnClickListener(view -> openUserInformationModal());
         signInButton.setOnClickListener(view -> signIn());
         setElementEnabledStatus(signInButton, false);
 
@@ -99,17 +89,16 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar parent = (Toolbar) customActionBar.getParent();
         parent.setContentInsetsAbsolute(0, 0);
 
-        ImageButton settingButton = customActionBar.findViewById(R.id.settingButton);
+        ImageButton settingButton = customActionBar.findViewById(R.id.setting_button);
         settingButton.setOnClickListener(view -> openSettingModal());
     }
 
-    public void openUserInformationModal(View view) {
-        UserInformationDialog dialog = new UserInformationDialog();
-        dialog.show(getSupportFragmentManager(), UserInformationDialog.TAG);
+    public void openUserInformationModal() {
+        userInformationDialog.show(getSupportFragmentManager(), UserInformationDialog.TAG);
     }
 
     public void openSettingModal() {
-        dialog.show(getSupportFragmentManager(), SettingDialog.TAG);
+        settingDialog.show(getSupportFragmentManager(), SettingDialog.TAG);
     }
 
     public void signIn() {
@@ -120,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordInput.getText().toString().trim();
 
         try {
-            PDAService.getClient(ApiInterface.class).login(username, password)
+            pdaService.getClient(ApiInterface.class).login(username, password)
                 .enqueue(new Callback<ResultResponse<Void>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<Void>> call, @NonNull Response<ResultResponse<Void>> response) {

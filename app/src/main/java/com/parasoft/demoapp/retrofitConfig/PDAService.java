@@ -14,7 +14,7 @@ public class PDAService {
     private static Retrofit retrofit;
     private static volatile boolean propertiesChanged = false;
 
-    public static synchronized <T> T getClient(Class<T> serviceClass) {
+    public synchronized <T> T getClient(Class<T> serviceClass) {
         if(retrofit == null || propertiesChanged) {
             refreshRetrofit();
         }
