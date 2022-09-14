@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
@@ -34,6 +35,8 @@ public class HomeActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private ProgressBar progressBar;
+
+    private OrderDialog orderDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ResultResponse<OrderListResponse>> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
                     TextView message = findViewById(R.id.order_error_message);
                     message.setText(t.getMessage());
                     Log.e("onFailure", t.getMessage());
@@ -100,11 +103,16 @@ public class HomeActivity extends AppCompatActivity {
         HomeActivity.this.finish();
     }
 
+    public void openOrderDialog(String orderNumber) {
+        orderDialog = new OrderDialog(orderNumber);
+        orderDialog.show(getSupportFragmentManager(), OrderDialog.TAG);
+    }
+
     public void initRecyclerView(List<OrderResponse> orders) {
         recyclerView = findViewById(R.id.order_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders);
+        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
         recyclerView.setAdapter(orderAdapter);
     }
 }

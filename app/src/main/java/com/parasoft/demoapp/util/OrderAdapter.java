@@ -13,10 +13,12 @@ import java.util.List;
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+    private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
 
-    public OrderAdapter(List<OrderResponse> orderList){
+    public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList =  orderList;
+        listener = customListener;
     }
 
     @Override
@@ -31,6 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         OrderResponse orderList = mOrderList.get(position);
         viewHolder.orderIndex.setText(position + 1 + "");
         viewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
+        viewHolder.bind(orderList, listener);
     }
 
     // Set the list size to Recycler View
@@ -49,5 +52,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             orderIndex = itemView.findViewById(R.id.order_index);
             orderNumber = itemView.findViewById(R.id.order_number);
         }
+
+        public void bind(final OrderResponse item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(OrderResponse item);
     }
 }

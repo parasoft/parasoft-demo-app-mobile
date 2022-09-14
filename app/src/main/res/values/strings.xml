@@ -24,4 +24,5 @@
     <string name="password_label">Password:</string>
     <string name="no_users_available">No users available</string>
     <string name="order_requests_title">ORDER REQUESTS</string>
+    <string name="order_dialog_title">Order request: #%1$s</string>
 </resources>
