@@ -95,17 +95,23 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderInfo>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Response<ResultResponse<OrderInfo>> response) {
-                        if(response.code() == 200) {
+                        int code = response.code();
+                        if(code == 200) {
                             orderInfo = response.body().getData();
                             if (!orderInfo.getReviewedByAPV()) {
                                 updateOrderStatus(orderInfo);
                             }
+                        } else if(code == 404) {
+                            errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
+                        }
+                        else {
+                            errorMessage.setText(getResources().getString(R.string.order_loading_error));
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Throwable t) {
-                        errorMessage.setText(getResources().getString(R.string.orders_loading_error));
+                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
                         Log.e("OrderDialog", "Load order info error", t);
                     }
                 });
