@@ -2,7 +2,9 @@ package com.parasoft.demoapp.FakeApiResponse;
 
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
+import com.parasoft.demoapp.retrofitConfig.response.OrderInfo;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
+import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
@@ -32,6 +34,16 @@ public class ApiInterfaceImplForTest implements ApiInterface {
 
     @Override
     public Call<ResultResponse<OrderListResponse>> getOrderList() {
+        throw new UnsupportedOperationException("Need to override this method in subclass");
+    }
+
+    @Override
+    public Call<ResultResponse<OrderInfo>> orderDetails(String orderNumber) {
+        throw new UnsupportedOperationException("Need to override this method in subclass");
+    }
+
+    @Override
+    public Call<ResultResponse<OrderInfo>> orderDetails(String orderNumber, OrderStatus orderStatusDTO) {
         throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 }

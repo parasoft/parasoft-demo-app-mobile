@@ -105,8 +105,8 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Throwable t) {
-                        errorMessage.setText(getResources().getString(R.string.wrong_base_url));
-                        Log.e("HomeActivity", "Order info error", t);
+                        errorMessage.setText(getResources().getString(R.string.orders_loading_error));
+                        Log.e("OrderDialog", "Load order info error", t);
                     }
                 });
     }
@@ -127,7 +127,7 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Throwable t) {
-                        Log.e("HomeActivity", "Update Order status failed", t);
+                        Log.e("OrderDialog", "Update Order status failed", t);
                     }
                 });
     }
