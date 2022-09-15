@@ -68,7 +68,7 @@ public class LoginActivityTest {
             TextView errorMessage = loginActivity.getErrorMessage();
             View actionbarView = Objects.requireNonNull(loginActivity.getSupportActionBar()).getCustomView();
             ImageButton settingButton = actionbarView.findViewById(R.id.setting_button);
-            TextView titleText = actionbarView.findViewById(R.id.display_title);
+            TextView titleText = actionbarView.findViewById(R.id.app_title);
             SettingDialog settingDialog = loginActivity.getSettingDialog();
             UserInformationDialog userInformationDialog = loginActivity.getUserInformationDialog();
             PDAService pdaService = loginActivity.getPdaService();

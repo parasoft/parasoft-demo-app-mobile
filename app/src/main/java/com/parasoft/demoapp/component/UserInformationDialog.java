@@ -60,7 +60,7 @@ public class UserInformationDialog extends DialogFragment {
         textDisplayArea = view.findViewById(R.id.textDisplayArea);
         usernameMessage = view.findViewById(R.id.username_value);
         passwordMessage = view.findViewById(R.id.password_value);
-        closeButton = view.findViewById(R.id.close_button);
+        closeButton = view.findViewById(R.id.user_information_close_button);
 
         loadContent(LOADING, null);
         closeButton.setOnClickListener(v -> dismiss());
