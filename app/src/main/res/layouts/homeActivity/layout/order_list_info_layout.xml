@@ -20,29 +20,92 @@
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/order_index"
-                android:layout_width="15dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/orderNumber" />
+                android:layout_marginEnd="10dp">
 
-            <TextView
-                android:id="@+id/order_number"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/order_index"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/order_new_status"
+                    android:layout_width="45dp"
+                    android:layout_height="20dp"
+                    android:layout_alignEnd="@+id/order_index"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/status_icon_background"
+                    android:text="@string/status_new"
+                    android:textColor="@color/color_brown"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/order_description"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
+                android:layout_marginTop="-5dp"
                 android:layout_marginRight="25dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
+                android:layout_marginBottom="7dp"
+                app:layout_constraintBottom_toTopOf="@+id/footer_top_divider"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/order_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/order_number"
+                    android:textColor="#6F6F6F">
+
+                    <TextView
+                        android:id="@+id/order_detail_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/order_detail_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/order_detail_requested_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp" />
+                </TableRow>
+
+                <TextView
+                    android:id="@+id/order_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

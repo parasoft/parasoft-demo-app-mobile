@@ -26,4 +26,8 @@
     <string name="no_users_available">No users available</string>
     <string name="order_requests_title">ORDER REQUESTS</string>
     <string name="orders_loading_error">Error loading orders</string>
+    <string name="status_new">NEW</string>
+    <string name="status_open">OPEN</string>
+    <string name="status_approved">APPROVED</string>
+    <string name="status_denied">DENIED</string>
 </resources>
