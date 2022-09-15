@@ -22,6 +22,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
+import com.parasoft.demoapp.util.RefreshOrderUtil;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView errorMessage;
     private PDAService pdaService;
+    public boolean isRefreshSuccess;
+    private int orderSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         initCustomActionBar();
         FooterUtil.setFooterInfo(this);
+        RefreshOrderUtil.refresh(this);
 
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.order_error_message);
@@ -85,23 +89,40 @@ public class HomeActivity extends AppCompatActivity {
                 public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                        @NonNull Response<ResultResponse<OrderListResponse>> response) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    isRefreshSuccess = true;
                     if (response.code() == 200) {
                         OrderListResponse res = response.body().getData();
                         if (res != null) {
-                            initRecyclerView(res.getContent());
+                            orderSize = res.getContent().size();
+                            if (orderSize == 0) {
+                                initNoOrderView();
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                errorMessage.setVisibility(View.GONE);
+                                findViewById(R.id.display_no_orders_info).setVisibility(View.GONE);
+                                initRecyclerView(res.getContent());
+                            }
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    errorMessage.setVisibility(View.VISIBLE);
-                    errorMessage.setText(R.string.orders_loading_error);
-                    Log.e("onFailure", t.getMessage());
+                    isRefreshSuccess = false;
+                    System.out.println(orderSize);
+                    if (orderSize == 0) {
+                        findViewById(R.id.display_no_orders_info).setVisibility(View.GONE);
+                        findViewById(R.id.order_recycler_view).setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        errorMessage.setVisibility(View.VISIBLE);
+                        errorMessage.setText(R.string.orders_loading_error);
+                        Log.e("onFailure", t.getMessage());
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        errorMessage.setVisibility(View.GONE);
+                    }
                 }
             });
-
     }
 
     public void signOut() {
@@ -119,5 +140,13 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         OrderAdapter orderAdapter = new OrderAdapter(orders);
         recyclerView.setAdapter(orderAdapter);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void initNoOrderView () {
+        findViewById(R.id.display_no_orders_info).setVisibility(View.VISIBLE);
+        findViewById(R.id.order_recycler_view).setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        errorMessage.setVisibility(View.GONE);
     }
 }
