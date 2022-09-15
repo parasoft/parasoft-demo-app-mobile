@@ -25,5 +25,8 @@
     <string name="password_label">Password:</string>
     <string name="no_users_available">No users available</string>
     <string name="order_requests_title">ORDER REQUESTS</string>
+    <string name="order_dialog_title">Order request: #%1$s</string>
     <string name="orders_loading_error">Error loading orders</string>
+    <string name="order_loading_error">Error loading order</string>
+    <string name="order_not_found">Order: #%1$s not found</string>
 </resources>
