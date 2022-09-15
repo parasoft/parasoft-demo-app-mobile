@@ -32,6 +32,7 @@ import retrofit2.Response;
 
 
 public class HomeActivity extends AppCompatActivity {
+    public static final String TAG = "HomeActivity";
 
     private ProgressBar progressBar;
     private TextView errorMessage;
@@ -116,7 +117,7 @@ public class HomeActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                         errorMessage.setVisibility(View.VISIBLE);
                         errorMessage.setText(R.string.orders_loading_error);
-                        Log.e("onFailure", t.getMessage());
+                        Log.e(TAG, t.getMessage());
                     } else {
                         progressBar.setVisibility(View.GONE);
                         errorMessage.setVisibility(View.GONE);

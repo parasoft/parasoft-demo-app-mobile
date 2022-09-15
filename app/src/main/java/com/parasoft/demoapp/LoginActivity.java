@@ -39,6 +39,7 @@ import com.parasoft.demoapp.util.SettingsUtil;
 
 @Getter
 public class LoginActivity extends AppCompatActivity {
+    public static final String TAG = "LoginActivity";
 
     private EditText usernameInput;
     private EditText passwordInput;
@@ -132,12 +133,12 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<Void>> call, @NonNull Throwable t) {
                         errorMessage.setText(getResources().getString(R.string.wrong_base_url));
-                        Log.e("LoginActivity", "Login error", t);
+                        Log.e(TAG, "Login error", t);
                         setElementsEnabledStatus(true);
                     }
                 });
         } catch (IllegalArgumentException e) {
-            Log.e("LoginActivity", "Base URL error", e);
+            Log.e(TAG, "Base URL error", e);
             errorMessage.setText(getResources().getString(R.string.wrong_base_url));
             setElementsEnabledStatus(true);
         }
