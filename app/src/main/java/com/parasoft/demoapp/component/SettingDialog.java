@@ -31,15 +31,15 @@ import lombok.Getter;
 
 @Getter
 public class SettingDialog extends DialogFragment {
+    public static final String TAG = "SettingDialog";
+    public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
+
     private LoginActivity loginActivity;
     private EditText baseUrlInput;
     private Button cancelButton;
     private Button saveButton;
     private TextView errorMessage;
     private TextView resetBaseURL;
-
-    public static final String TAG = "SettingDialog";
-    public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
 
     @Nullable
     @Override
@@ -54,9 +54,7 @@ public class SettingDialog extends DialogFragment {
 
         setClickEvent();
         baseUrlInput.addTextChangedListener(new BaseUrlTextWatcher());
-        resetBaseURL.setOnClickListener(v -> {
-            baseUrlInput.setText(R.string.default_url);
-        });
+        resetBaseURL.setOnClickListener(v -> baseUrlInput.setText(R.string.default_url));
 
         fillBaseUrl();
 
@@ -117,12 +115,7 @@ public class SettingDialog extends DialogFragment {
                 if(Looper.myLooper() == null) {
                     Looper.prepare();
                 }
-                loginActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        saveButton.setEnabled(false);
-                    }
-                });
+                loginActivity.runOnUiThread(() -> saveButton.setEnabled(false));
                 saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
                 String baseUrlErrorMessage;
                 if (TextUtils.isEmpty(baseUrl)) {
