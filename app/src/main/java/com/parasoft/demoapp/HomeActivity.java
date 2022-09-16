@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
@@ -135,11 +136,16 @@ public class HomeActivity extends AppCompatActivity {
         HomeActivity.this.finish();
     }
 
+    public void openOrderDialog(String orderNumber) {
+        OrderDialog orderDialog = new OrderDialog(orderNumber);
+        orderDialog.show(getSupportFragmentManager(), OrderDialog.TAG);
+    }
+
     public void initRecyclerView(List<OrderResponse> orders) {
         RecyclerView recyclerView = findViewById(R.id.order_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders);
+        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
     }
