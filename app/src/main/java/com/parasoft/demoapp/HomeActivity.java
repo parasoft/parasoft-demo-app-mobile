@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -38,6 +39,8 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView errorMessage;
     private PDAService pdaService;
+    private RecyclerView recyclerView;
+    private TextView noOrderInfo;
     public boolean isRefreshSuccess;
     private int orderSize = 0;
 
@@ -53,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.order_error_message);
+        recyclerView = findViewById(R.id.order_recycler_view);
+        noOrderInfo = findViewById(R.id.display_no_orders_info);
         errorMessage.setText("");
         errorMessage.setVisibility(View.INVISIBLE);
         loadOrderList();
@@ -101,20 +106,20 @@ public class HomeActivity extends AppCompatActivity {
                             } else {
                                 progressBar.setVisibility(View.GONE);
                                 errorMessage.setVisibility(View.GONE);
-                                findViewById(R.id.display_no_orders_info).setVisibility(View.GONE);
+                                noOrderInfo.setVisibility(View.GONE);
                                 initRecyclerView(res.getContent());
                             }
                         }
                     }
+                    showToast();
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
                     isRefreshSuccess = false;
-                    System.out.println(orderSize);
                     if (orderSize == 0) {
-                        findViewById(R.id.display_no_orders_info).setVisibility(View.GONE);
-                        findViewById(R.id.order_recycler_view).setVisibility(View.GONE);
+                        noOrderInfo.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.INVISIBLE);
                         errorMessage.setVisibility(View.VISIBLE);
                         errorMessage.setText(R.string.orders_loading_error);
@@ -123,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         errorMessage.setVisibility(View.GONE);
                     }
+                    showToast();
                 }
             });
     }
@@ -142,7 +148,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initRecyclerView(List<OrderResponse> orders) {
-        RecyclerView recyclerView = findViewById(R.id.order_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
@@ -151,9 +156,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initNoOrderView () {
-        findViewById(R.id.display_no_orders_info).setVisibility(View.VISIBLE);
-        findViewById(R.id.order_recycler_view).setVisibility(View.GONE);
+        noOrderInfo.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
+    }
+
+    public void showToast() {
+        Toast.makeText(this, isRefreshSuccess? R.string.loading_orders_successful:R.string.loading_orders_failed, Toast.LENGTH_SHORT).show();
     }
 }

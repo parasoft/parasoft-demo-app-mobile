@@ -13,7 +13,6 @@ public class RefreshOrderUtil {
             public void onRefresh() {
                 activity.loadOrderList();
                 order_refresh.setRefreshing(false);
-                Toast.makeText(activity, activity.isRefreshSuccess? R.string.refresh_successful:R.string.refresh_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
