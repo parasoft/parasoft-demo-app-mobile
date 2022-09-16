@@ -1,9 +1,9 @@
 package com.parasoft.demoapp.retrofitConfig;
 
-import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
-import com.parasoft.demoapp.retrofitConfig.response.OrderInfo;
+import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfoResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
-import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
+import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
@@ -26,14 +26,14 @@ public interface ApiInterface {
     Call<ResultResponse<Void>> logout();
 
     @GET("/forgotPassword")
-    Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword();
+    Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword();
 
     @GET("/v1/orders")
     Call<ResultResponse<OrderListResponse>> getOrderList();
 
     @GET("/v1/orders/{orderNumber}")
-    Call<ResultResponse<OrderInfo>> orderDetails(@Path("orderNumber") String orderNumber);
+    Call<ResultResponse<OrderResponse>> orderDetails(@Path("orderNumber") String orderNumber);
 
     @PUT("/v1/orders/{orderNumber}")
-    Call<ResultResponse<OrderInfo>> orderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatus orderStatusDTO);
+    Call<ResultResponse<OrderResponse>> orderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatusRequest orderStatusRequest);
 }

@@ -1,10 +1,9 @@
-package com.parasoft.demoapp.retrofitConfig.response;
+package com.parasoft.demoapp.retrofitConfig.request;
 
 import lombok.Data;
 
 @Data
-public class OrderStatus {
-
+public class OrderStatusRequest {
     private String status;
     private String comments;
     private boolean reviewedByPRCH;

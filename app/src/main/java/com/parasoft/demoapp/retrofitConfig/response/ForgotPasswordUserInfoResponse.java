@@ -3,7 +3,7 @@ package com.parasoft.demoapp.retrofitConfig.response;
 import lombok.Data;
 
 @Data
-public class ForgotPasswordUserInfo {
+public class ForgotPasswordUserInfoResponse {
     private String roleName;
     private boolean hasPrimaryUser;
     private PrimaryUserInfo primaryUserInfo;

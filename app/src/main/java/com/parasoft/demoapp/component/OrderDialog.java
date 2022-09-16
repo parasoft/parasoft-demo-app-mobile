@@ -23,8 +23,8 @@ import androidx.fragment.app.DialogFragment;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
-import com.parasoft.demoapp.retrofitConfig.response.OrderInfo;
-import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
+import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import retrofit2.Call;
@@ -32,19 +32,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OrderDialog extends DialogFragment {
+    public static final String TAG = "OrderDialog";
+
     private final String orderNumber;
     private Button cancelButton;
     private Button saveButton;
     private ImageButton closeButton;
     private TextView errorMessage;
-    private OrderInfo orderInfo;
+    private OrderResponse orderInfo;
     private PDAService pdaService;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
     }
-
-    public static final String TAG = "OrderDialog";
 
     @Nullable
     @Override
@@ -56,8 +56,8 @@ public class OrderDialog extends DialogFragment {
         closeButton = view.findViewById(R.id.order_close_button);
         errorMessage = view.findViewById(R.id.order_info_error_message );
         setClickEvent();
-        TextView textView = view.findViewById(R.id.order_dialog_title);
-        textView.setText(getString(R.string.order_dialog_title, orderNumber));
+        TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
+        orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
         getOrderDetails();
 
         return view;
@@ -92,47 +92,47 @@ public class OrderDialog extends DialogFragment {
     public void getOrderDetails() {
         errorMessage.setText("");
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
-                .enqueue(new Callback<ResultResponse<OrderInfo>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Response<ResultResponse<OrderInfo>> response) {
-                        int code = response.code();
-                        if(code == 200) {
-                            orderInfo = response.body().getData();
-                            if (!orderInfo.getReviewedByAPV()) {
-                                updateOrderStatus(orderInfo);
-                            }
-                        } else if(code == 404) {
-                            errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
+            .enqueue(new Callback<ResultResponse<OrderResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
+                    int code = response.code();
+                    if(code == 200) {
+                        orderInfo = response.body().getData();
+                        if (!orderInfo.getReviewedByAPV()) {
+                            updateOrderStatus(orderInfo);
                         }
-                        else {
-                            errorMessage.setText(getResources().getString(R.string.order_loading_error));
-                        }
+                    } else if(code == 404) {
+                        errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
                     }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Throwable t) {
+                    else {
                         errorMessage.setText(getResources().getString(R.string.order_loading_error));
-                        Log.e("OrderDialog", "Load order info error", t);
                     }
-                });
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
+                    errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    Log.e("OrderDialog", "Load order info error", t);
+                }
+            });
     }
 
-    public void updateOrderStatus(OrderInfo oldOrderInfo) {
-        OrderStatus orderStatusDTO = new OrderStatus();
-        orderStatusDTO.setStatus(oldOrderInfo.getStatus());
-        orderStatusDTO.setReviewedByAPV(true);
+    public void updateOrderStatus(OrderResponse oldOrderInfo) {
+        OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
+        orderStatusRequest.setReviewedByAPV(true);
 
-        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusDTO)
-                .enqueue(new Callback<ResultResponse<OrderInfo>>() {
+        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
+                .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
-                    public void onResponse(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Response<ResultResponse<OrderInfo>> response) {
+                    public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                         if(response.code() == 200) {
                             orderInfo = response.body().getData();
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<ResultResponse<OrderInfo>> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                         Log.e("OrderDialog", "Update Order status failed", t);
                     }
                 });
