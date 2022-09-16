@@ -27,4 +27,21 @@
     <string name="orders_loading_error">加载订单错误</string>
     <string name="order_loading_error">加载订单错误</string>
     <string name="order_not_found">订单: #%1$s 未找到</string>
+    <string name="comments">原因描述:</string>
+    <string name="requested_by">请求人:</string>
+    <string name="ship_items_to">部署商品到:</string>
+    <string name="location">地点:</string>
+    <string name="receiver_name">接收者:</string>
+    <string name="gps_coordinates">GPS定位:</string>
+    <string name="status_open">等待处理</string>
+    <string name="status_approved">已同意</string>
+    <string name="status_denied">已拒绝</string>
+    <string name="location_1">区域-1</string>
+    <string name="location_2">区域-2</string>
+    <string name="location_3">区域-3</string>
+    <string name="location_4">区域-4</string>
+    <string name="location_5">区域-5</string>
+    <string name="location_6">区域-6</string>
+    <string name="location_7">区域-7</string>
+    <string name="location_8">区域-8</string>
 </resources>

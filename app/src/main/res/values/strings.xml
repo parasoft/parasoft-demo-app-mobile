@@ -29,4 +29,21 @@
     <string name="orders_loading_error">Error loading orders</string>
     <string name="order_loading_error">Error loading order</string>
     <string name="order_not_found">Order: #%1$s not found</string>
+    <string name="comments">Comments:</string>
+    <string name="requested_by">Requested by:</string>
+    <string name="ship_items_to">Ship items to:</string>
+    <string name="location">Location:</string>
+    <string name="receiver_name">Receiver name:</string>
+    <string name="gps_coordinates">GPS Coordinates:</string>
+    <string name="status_open">OPEN</string>
+    <string name="status_approved">APPROVED</string>
+    <string name="status_denied">DENIED</string>
+    <string name="location_1">Western General Store</string>
+    <string name="location_2">Riverwalk Traveler Gear</string>
+    <string name="location_3">Parkside General Store</string>
+    <string name="location_4">Hillside Camping Goods</string>
+    <string name="location_5">Eastern General Store</string>
+    <string name="location_6">Central Camp Gear Outlet</string>
+    <string name="location_7">Industry Park Camp Gear</string>
+    <string name="location_8">Industry Park General Store</string>
 </resources>

@@ -19,5 +19,6 @@
     <color name="error">#FF0000</color>
     <color name="button_text_disabled">#808080</color>
     <color name="button_disabled">#cccccc</color>
+    <color name="color_green">#3B853B</color>
 
 </resources>
