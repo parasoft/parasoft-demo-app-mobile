@@ -23,7 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
-import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
+import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfoResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
@@ -67,24 +67,24 @@ public class UserInformationDialog extends DialogFragment {
 
         try {
             pdaService.getClient(ApiInterface.class).forgotPassword()
-                .enqueue(new Callback<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+                .enqueue(new Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                     @Override
-                    public void onResponse(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfo>>> call,
-                                           @NonNull Response<ResultResponse<List<ForgotPasswordUserInfo>>> response) {
+                    public void onResponse(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call,
+                                           @NonNull Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response) {
                         if (response.code() != 200) {
                             loadContent(LOAD_ERROR, null);
                             return;
                         }
 
-                        ResultResponse<List<ForgotPasswordUserInfo>> resultResponse = response.body();
+                        ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = response.body();
                         if (resultResponse == null || resultResponse.getData() == null) {
                             loadContent(NO_DATA, null);
                             return;
                         }
 
-                        List<ForgotPasswordUserInfo> userInfoList = resultResponse.getData();
-                        ForgotPasswordUserInfo approverUserInfo = null;
-                        for (ForgotPasswordUserInfo userInfo: userInfoList) {
+                        List<ForgotPasswordUserInfoResponse> userInfoList = resultResponse.getData();
+                        ForgotPasswordUserInfoResponse approverUserInfo = null;
+                        for (ForgotPasswordUserInfoResponse userInfo: userInfoList) {
                             if ("ROLE_APPROVER".equals(userInfo.getRoleName())) {
                                 approverUserInfo = userInfo;
                                 break;
@@ -98,7 +98,7 @@ public class UserInformationDialog extends DialogFragment {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfo>>> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call, @NonNull Throwable t) {
                         Log.e(TAG, "Forgot password request error", t);
                         loadContent(LOAD_ERROR, null);
                     }
@@ -127,7 +127,7 @@ public class UserInformationDialog extends DialogFragment {
         super.onStart();
     }
 
-    private void loadContent(int loadStatus, @Nullable ForgotPasswordUserInfo userInfo) {
+    private void loadContent(int loadStatus, @Nullable ForgotPasswordUserInfoResponse userInfo) {
         if(isAdded()) {
             switch (loadStatus) {
                 case LOADING: // when loading

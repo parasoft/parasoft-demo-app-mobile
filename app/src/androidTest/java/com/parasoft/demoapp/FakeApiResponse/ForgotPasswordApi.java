@@ -1,7 +1,7 @@
 package com.parasoft.demoapp.FakeApiResponse;
 
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
-import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfo;
+import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfoResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.ArrayList;
@@ -35,29 +35,29 @@ public class ForgotPasswordApi {
 
     private static class With200Response extends ApiInterfaceImplForTest {
         @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
+            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                 @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfo>>> callback) {
+                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
 
                     // Prepare approver user info
-                    ForgotPasswordUserInfo.PrimaryUserInfo approverPrimaryUserInfo = new ForgotPasswordUserInfo.PrimaryUserInfo();
+                    ForgotPasswordUserInfoResponse.PrimaryUserInfo approverPrimaryUserInfo = new ForgotPasswordUserInfoResponse.PrimaryUserInfo();
                     approverPrimaryUserInfo.setPassword("fakePassword");
                     approverPrimaryUserInfo.setUserName("fakeUsername");
-                    ForgotPasswordUserInfo approverUserInfo = new ForgotPasswordUserInfo();
+                    ForgotPasswordUserInfoResponse approverUserInfo = new ForgotPasswordUserInfoResponse();
                     approverUserInfo.setHasPrimaryUser(true);
                     approverUserInfo.setRoleName("ROLE_APPROVER");
                     approverUserInfo.setPrimaryUserInfo(approverPrimaryUserInfo);
 
-                    List<ForgotPasswordUserInfo> data = new ArrayList<>();
+                    List<ForgotPasswordUserInfoResponse> data = new ArrayList<>();
                     data.add(approverUserInfo);
 
-                    ResultResponse<List<ForgotPasswordUserInfo>> resultResponse = new ResultResponse<>();
+                    ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = new ResultResponse<>();
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("User info got successfully.");
                     resultResponse.setData(data);
 
-                    Response<ResultResponse<List<ForgotPasswordUserInfo>>> response = Response.success(200, resultResponse);
+                    Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.success(200, resultResponse);
                     callback.onResponse(null, response);
                 }
             };
@@ -66,16 +66,16 @@ public class ForgotPasswordApi {
 
     private static class With200ButNoDataResponse extends ApiInterfaceImplForTest {
         @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
+            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                 @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfo>>> callback) {
+                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
 
-                    ResultResponse<List<ForgotPasswordUserInfo>> resultResponse = new ResultResponse<>();
+                    ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = new ResultResponse<>();
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("User info got successfully.");
 
-                    Response<ResultResponse<List<ForgotPasswordUserInfo>>> response = Response.success(200, resultResponse);
+                    Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.success(200, resultResponse);
                     callback.onResponse(null, response);
                 }
             };
@@ -84,25 +84,25 @@ public class ForgotPasswordApi {
 
     private static class With200ButNoUserInfoResponse extends ApiInterfaceImplForTest {
         @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
+            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                 @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfo>>> callback) {
+                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
 
                     // Prepare approver user info
-                    ForgotPasswordUserInfo approverUserInfo = new ForgotPasswordUserInfo();
+                    ForgotPasswordUserInfoResponse approverUserInfo = new ForgotPasswordUserInfoResponse();
                     approverUserInfo.setHasPrimaryUser(false);
                     approverUserInfo.setRoleName("ROLE_APPROVER");
 
-                    List<ForgotPasswordUserInfo> data = new ArrayList<>();
+                    List<ForgotPasswordUserInfoResponse> data = new ArrayList<>();
                     data.add(approverUserInfo);
 
-                    ResultResponse<List<ForgotPasswordUserInfo>> resultResponse = new ResultResponse<>();
+                    ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = new ResultResponse<>();
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("User info got successfully.");
                     resultResponse.setData(data);
 
-                    Response<ResultResponse<List<ForgotPasswordUserInfo>>> response = Response.success(200, resultResponse);
+                    Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.success(200, resultResponse);
                     callback.onResponse(null, response);
                 }
             };
@@ -111,11 +111,11 @@ public class ForgotPasswordApi {
 
     private static class With500Response extends ApiInterfaceImplForTest {
         @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
+            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                 @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfo>>> callback) {
-                    Response<ResultResponse<List<ForgotPasswordUserInfo>>> response = Response.error(500, ResponseBody.create(null, "Internal error."));
+                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
+                    Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.error(500, ResponseBody.create(null, "Internal error."));
                     callback.onResponse(null, response);
                 }
             };
@@ -124,10 +124,10 @@ public class ForgotPasswordApi {
 
     private static class OnFailure extends ApiInterfaceImplForTest {
         @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfo>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfo>>>() {
+        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
+            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                 @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfo>>> callback) {
+                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
                     callback.onFailure(null, new RuntimeException("On failure"));
                 }
             };

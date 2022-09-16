@@ -15,11 +15,13 @@ import java.util.List;
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+    private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
 
-    public OrderAdapter(List<OrderResponse> orderList){
+    public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList =  orderList;
+        listener = customListener;
     }
 
     @Override
@@ -43,6 +45,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 orderList.getSubmissionDate().lastIndexOf('.')));
         viewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
         viewHolder.orderStatus.setText(parseOrderStatus(viewHolder, orderList.getStatus()));
+        viewHolder.bind(orderList, listener);
     }
 
     // Set the list size to Recycler View
@@ -71,6 +74,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             orderStatus = itemView.findViewById(R.id.order_status);
             orderNewStatus = itemView.findViewById(R.id.order_new_status);
         }
+
+        public void bind(final OrderResponse item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
+        }
     }
 
     private String parseOrderStatus(@NonNull ViewHolder viewHolder, OrderStatus orderStatus) {
@@ -85,5 +92,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             default:
                 return "";
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(OrderResponse item);
     }
 }
