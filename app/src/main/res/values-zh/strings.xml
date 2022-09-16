@@ -25,6 +25,10 @@
     <string name="order_requests_title">订单请求</string>
     <string name="order_dialog_title">订单请求： #%1$s</string>
     <string name="orders_loading_error">加载订单错误</string>
+    <string name="status_new">新</string>
+    <string name="status_open">等待处理</string>
+    <string name="status_approved">已同意</string>
+    <string name="status_denied">已拒绝</string>
     <string name="order_loading_error">加载订单错误</string>
     <string name="order_not_found">订单: #%1$s 未找到</string>
     <string name="no_order_requests">没有订单请求</string>
