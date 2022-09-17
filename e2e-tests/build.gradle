@@ -25,7 +25,8 @@ test {
             'device.name',
             'appium.server.url',
             'demo.app.apk.path',
-            'pda.server.base-url'
+            'pda.server.base-url',
+            'duration.of.seconds'
     ]
 }
 

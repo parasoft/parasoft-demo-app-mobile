@@ -14,6 +14,8 @@ public final class AppiumConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppiumConfig.class);
 
+    private static final String DEFAULT_APP_PACKAGE = "com.parasoft.demoapp";
+
     private static final String APPIUM_PROFILE_NAME_KEY = "appium.profile.name";
 
     private static final String DEFAULT_PROFILE_NAME = "dev";
@@ -28,11 +30,15 @@ public final class AppiumConfig {
 
     private static final String DEVICE_NAME_KEY = "device.name";
 
+    private static final String APP_PACKAGE_KEY = "app.package";
+
     private static final String APPIUM_SERVER_URL_KEY = "appium.server.url";
 
     private static final String PDA_SERVER_BASE_URL_KEY = "pda.server.base-url";
 
     private static final String DEMO_APP_APK_PATH_KEY = "demo.app.apk.path";
+
+    private static final String DURATION_OF_SECONDS_KEY = "duration.of.seconds";
 
     private static final String DEFAULT_DEVICE_NAME = "emulator-5554";
 
@@ -42,12 +48,18 @@ public final class AppiumConfig {
 
     private static final String DEFAULT_PDA_SERVER_BASE_URL = "http://10.0.2.2:8080";
 
+    private static final String DEFAULT_DURATION_OF_SECONDS = "30";
+
     static {
         try {
             loadConfig();
         } catch (IOException e) {
             LOGGER.warn("Failed to load Appium profile config file.");
         }
+    }
+
+    public static String appPackage() {
+        return getConfigValue(APP_PACKAGE_KEY, DEFAULT_APP_PACKAGE);
     }
 
     public static String deviceName() {
@@ -65,6 +77,10 @@ public final class AppiumConfig {
 
     public static String pdaServerUrl() {
         return getConfigValue(PDA_SERVER_BASE_URL_KEY, DEFAULT_PDA_SERVER_BASE_URL);
+    }
+
+    public static int durationOfSeconds() {
+        return Integer.parseInt(getConfigValue(DURATION_OF_SECONDS_KEY, DEFAULT_DURATION_OF_SECONDS));
     }
 
     private static String getConfigValue(String configKey, String defaultValue) {
