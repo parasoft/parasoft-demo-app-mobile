@@ -34,6 +34,6 @@
     <string name="order_loading_error">Error loading order</string>
     <string name="order_not_found">Order: #%1$s not found</string>
     <string name="no_order_requests">There are no order requests</string>
-    <string name="loading_orders_failed">Loading orders failed</string>
-    <string name="loading_orders_successful">Loading orders successful</string>
+    <string name="loading_orders_failed">Loading failed</string>
+    <string name="loading_orders_successful">Loading succeeded</string>
 </resources>

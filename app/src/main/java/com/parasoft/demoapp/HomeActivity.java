@@ -101,7 +101,7 @@ public class HomeActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if(response.code() != 200) {
                             if(hasOrders) {
-                                Toast.makeText(HomeActivity.this, R.string.orders_loading_error, Toast.LENGTH_LONG).show();
+                                Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
                             } else {
                                 showErrorView(getResources().getString(R.string.orders_loading_error));
                             }
@@ -126,9 +126,9 @@ public class HomeActivity extends AppCompatActivity {
                         ordersLoader.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         if(!hasOrders) {
-                            showErrorView(getResources().getString(R.string.wrong_base_url));
+                            showErrorView(getResources().getString(R.string.orders_loading_error));
                         } else {
-                            Toast.makeText(HomeActivity.this, R.string.wrong_base_url, Toast.LENGTH_LONG).show();
+                            Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
                         }
                         Log.e(TAG, t.getMessage());
                     }

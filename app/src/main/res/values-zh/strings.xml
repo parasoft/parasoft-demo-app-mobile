@@ -32,6 +32,6 @@
     <string name="order_loading_error">加载订单错误</string>
     <string name="order_not_found">订单: #%1$s 未找到</string>
     <string name="no_order_requests">没有订单请求</string>
-    <string name="loading_orders_failed">加载订单失败</string>
-    <string name="loading_orders_successful">加载订单成功</string>
+    <string name="loading_orders_failed">加载失败</string>
+    <string name="loading_orders_successful">加载成功</string>
 </resources>
