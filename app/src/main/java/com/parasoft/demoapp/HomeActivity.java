@@ -23,6 +23,7 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
 
 import java.util.List;
@@ -50,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_home);
         initCustomActionBar();
+        FooterUtil.setFooterInfo(this);
 
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.order_error_message);
@@ -87,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void loadOrderList(boolean loadFirstTime) {
-        if(loadFirstTime) {
+        if (loadFirstTime) {
             progressBar.setVisibility(View.VISIBLE);
         }
         errorMessage.setText("");
@@ -99,8 +101,8 @@ public class HomeActivity extends AppCompatActivity {
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
                         ordersLoader.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
-                        if(response.code() != 200) {
-                            if(hasOrders) {
+                        if (response.code() != 200) {
+                            if (hasOrders) {
                                 Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
                             } else {
                                 showErrorView(getResources().getString(R.string.orders_loading_error));
@@ -109,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                         OrderListResponse res = response.body().getData();
-                        if(res.getContent().size() == 0) {
+                        if (res.getContent().size() == 0) {
                             hasOrders = false;
                             showNoOrderView();
                         } else {
@@ -125,7 +127,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
                         ordersLoader.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
-                        if(!hasOrders) {
+                        if (!hasOrders) {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                         } else {
                             Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
