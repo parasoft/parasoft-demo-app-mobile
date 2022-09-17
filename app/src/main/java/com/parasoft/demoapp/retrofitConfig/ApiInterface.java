@@ -25,6 +25,9 @@ public interface ApiInterface {
     @GET("/logout")
     Call<ResultResponse<Void>> logout();
 
+    @GET("/localize/{lang}/{key}")
+    Call<ResultResponse<String>> localizedValue(@Path("lang") String lang, @Path("key") String key);
+
     @GET("/forgotPassword")
     Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword();
 

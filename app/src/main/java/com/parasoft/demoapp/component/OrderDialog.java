@@ -31,6 +31,7 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.SystemUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -129,6 +130,7 @@ public class OrderDialog extends DialogFragment {
                     if(code == 200) {
                         orderInfo = response.body().getData();
                         setOrderLayout();
+                        getLocation(orderInfo.getRegion());
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
@@ -146,6 +148,33 @@ public class OrderDialog extends DialogFragment {
                     Log.e("OrderDialog", "Load order info error", t);
                 }
             });
+    }
+
+    public void getLocation(String locationKey) {
+        pdaService.getClient(ApiInterface.class)
+            .localizedValue(SystemUtil.getLocalizedLanguage(getContext()), locationKey)
+                .enqueue(new Callback<ResultResponse<String>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
+                        int code = response.code();
+                        if(code == 200) {
+                            String locationValue = response.body().getData();
+                            if(locationValue != null) {
+                                location.setText(locationValue);
+                            } else {
+                                // TODO
+                            }
+                        } else {
+                            // TODO
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResultResponse<String>> call, @NonNull Throwable t) {
+                        // TODO
+                        Log.e("OrderDialog", "Load location error", t);
+                    }
+                });
     }
 
     public void updateOrderStatus(OrderResponse oldOrderInfo) {
@@ -187,7 +216,6 @@ public class OrderDialog extends DialogFragment {
         orderTimeHour.setText(date.substring(11));
         orderStatus.setText(getStatus(orderInfo.getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
-        location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
         gpsCoordinates.setText(orderInfo.getLocation());
         map.setImageDrawable(getMap(orderInfo.getOrderImage()));
