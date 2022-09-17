@@ -27,46 +27,49 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/footer"
         app:layout_constraintTop_toBottomOf="@+id/order_requests_title">
-
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@id/footer"
-            app:layout_constraintTop_toBottomOf="@+id/order_requests_title">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/order_recycler_view"
+            android:layout_height="match_parent">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="50dp" />
+                app:layout_constraintBottom_toTopOf="@id/footer"
+                app:layout_constraintTop_toBottomOf="@+id/order_requests_title">
 
-            <TextView
-                android:id="@+id/order_error_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/order_recycler_view"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginRight="15dp"
-                android:gravity="center"
-                android:textColor="@color/error"
-                android:textSize="18sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/order_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="50dp" />
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="70dp"
-                android:indeterminateTint="@color/app_status_bar" />
+                <TextView
+                    android:id="@+id/order_error_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/order_recycler_view"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:textColor="@color/error"
+                    android:textSize="18sp" />
 
-        </RelativeLayout>
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="70dp"
+                    android:indeterminateTint="@color/app_status_bar" />
+
+            </RelativeLayout>
+        </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
