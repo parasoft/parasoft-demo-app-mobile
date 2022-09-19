@@ -11,13 +11,21 @@ import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
+    private Map<String, TextView> orderNewStatusMap = new HashMap<>();
+
+    public Map<String, TextView> getOrderNewStatusMap() {
+        return orderNewStatusMap;
+    }
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList =  orderList;
@@ -36,6 +44,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         OrderResponse orderList = mOrderList.get(position);
         if (!orderList.getReviewedByAPV()) {
+            orderNewStatusMap.put(orderList.getOrderNumber(), viewHolder.orderNewStatus);
             viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
         }
         viewHolder.orderIndex.setText(position + 1 + "");

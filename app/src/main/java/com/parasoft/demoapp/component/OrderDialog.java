@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -100,6 +101,9 @@ public class OrderDialog extends DialogFragment {
                         orderInfo = response.body().getData();
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
+                            HomeActivity homeActivity = (HomeActivity) getActivity();
+                            TextView orderNewStatus = homeActivity.getOrderAdapter().getOrderNewStatusMap().get(orderInfo.getOrderNumber());
+                            orderNewStatus.setVisibility(View.INVISIBLE);
                         }
                     } else if(code == 404) {
                         errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
@@ -119,7 +123,7 @@ public class OrderDialog extends DialogFragment {
 
     public void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)

@@ -41,6 +41,11 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
+    private OrderAdapter orderAdapter;
+
+    public OrderAdapter getOrderAdapter() {
+        return orderAdapter;
+    }
 
     private boolean hasOrders = false;
 
@@ -154,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
     public void initRecyclerView(List<OrderResponse> orders) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
+        orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
     }
