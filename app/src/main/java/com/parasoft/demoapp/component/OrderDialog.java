@@ -12,14 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -41,6 +46,10 @@ public class OrderDialog extends DialogFragment {
     private TextView errorMessage;
     private OrderResponse orderInfo;
     private PDAService pdaService;
+    private Spinner responseSpinner;
+    private String responseValue;
+    private HomeActivity homeActivity;
+    private EditText comments_field;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -55,6 +64,10 @@ public class OrderDialog extends DialogFragment {
         cancelButton = view.findViewById(R.id.order_dismiss_button);
         closeButton = view.findViewById(R.id.order_close_button);
         errorMessage = view.findViewById(R.id.order_info_error_message );
+        comments_field = view.findViewById(R.id.comments_field);
+        responseSpinner = view.findViewById(R.id.order_response_spinner);
+        homeActivity = (HomeActivity) getActivity();
+        initSpinner();
         setClickEvent();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
@@ -136,5 +149,43 @@ public class OrderDialog extends DialogFragment {
                         Log.e("OrderDialog", "Update Order status failed", t);
                     }
                 });
+    }
+
+    public void initSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_dropdown_item_layout, R.id.order_response_value, getResources().getStringArray(R.array.order_response)){
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+
+        responseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItemText = (String) adapterView.getItemAtPosition(i);
+                if (i > 0) {
+                    responseValue = selectedItemText;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        responseSpinner.setAdapter(adapter);
     }
 }

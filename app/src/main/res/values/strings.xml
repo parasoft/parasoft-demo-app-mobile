@@ -36,4 +36,9 @@
     <string name="no_order_requests">There are no order requests</string>
     <string name="loading_orders_failed">Loading failed</string>
     <string name="loading_orders_successful">Loading succeeded</string>
+    <string name="Comments_field">Comments</string>
+    <string name="order_response">Order response</string>
+    <string name="order_response_approve">Approve</string>
+    <string name="order_response_deny">Deny</string>
+    <string name="select_order_response_error">Please select Order Response value</string>
 </resources>

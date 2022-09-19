@@ -34,4 +34,9 @@
     <string name="no_order_requests">没有订单请求</string>
     <string name="loading_orders_failed">加载失败</string>
     <string name="loading_orders_successful">加载成功</string>
+    <string name="Comments_field">评论</string>
+    <string name="order_response">订单回执</string>
+    <string name="order_response_approve">通过</string>
+    <string name="order_response_deny">拒绝</string>
+    <string name="select_order_response_error">请选择订单回执结果</string>
 </resources>
