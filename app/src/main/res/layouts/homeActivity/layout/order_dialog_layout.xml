@@ -151,7 +151,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/green"
+                    android:textColor="@color/color_green"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:gravity="end"/>

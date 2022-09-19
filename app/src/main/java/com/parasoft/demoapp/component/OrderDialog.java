@@ -191,11 +191,9 @@ public class OrderDialog extends DialogFragment {
                 commentsDetail.setGravity(Gravity.START);
             }
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String date = sdf.format(orderInfo.getSubmissionDate());
-        orderTimeYear.setText(date.substring(0, 10));
-        orderTimeHour.setText(date.substring(11));
-        orderStatus.setText(getStatus(orderInfo.getStatus()));
+        orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
+        orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
+        orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
@@ -239,14 +237,14 @@ public class OrderDialog extends DialogFragment {
 
     public String getStatus(String status) {
         switch (status) {
-            case "SUBMITTED":
+            case "Submitted":
                 status = getResources().getString(R.string.status_open);
                 break;
-            case "DECLINED":
+            case "Declined":
                 status = getResources().getString(R.string.status_denied);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
-            case "APPROVED":
+            case "Approved":
                 status = getResources().getString(R.string.status_approved);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;

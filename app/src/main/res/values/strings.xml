@@ -42,9 +42,6 @@
     <string name="location">Location:</string>
     <string name="receiver_name">Receiver name:</string>
     <string name="gps_coordinates">GPS Coordinates:</string>
-    <string name="status_open">OPEN</string>
-    <string name="status_approved">APPROVED</string>
-    <string name="status_denied">DENIED</string>
     <string name="location_1">Western General Store</string>
     <string name="location_2">Riverwalk Traveler Gear</string>
     <string name="location_3">Parkside General Store</string>
