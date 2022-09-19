@@ -34,4 +34,22 @@
     <string name="no_order_requests">没有订单请求</string>
     <string name="loading_orders_failed">加载失败</string>
     <string name="loading_orders_successful">加载成功</string>
+    <string name="comments">原因描述:</string>
+    <string name="requested_by">请求人:</string>
+    <string name="ship_items_to">部署商品到:</string>
+    <string name="location">地点:</string>
+    <string name="receiver_name">接收者:</string>
+    <string name="gps_coordinates">GPS定位:</string>
+    <string name="location_1">区域-1</string>
+    <string name="location_2">区域-2</string>
+    <string name="location_3">区域-3</string>
+    <string name="location_4">区域-4</string>
+    <string name="location_5">区域-5</string>
+    <string name="location_6">区域-6</string>
+    <string name="location_7">区域-7</string>
+    <string name="location_8">区域-8</string>
+    <string name="requested_items_title">需求的商品:</string>
+    <string name="invoice_assignment_title">发票信息:</string>
+    <string name="invoice_number">任务ID:</string>
+    <string name="purchase_order">员工编号:</string>
 </resources>
