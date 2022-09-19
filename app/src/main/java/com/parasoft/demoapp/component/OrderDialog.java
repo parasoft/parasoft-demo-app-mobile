@@ -160,7 +160,7 @@ public class OrderDialog extends DialogFragment {
 
     public void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)

@@ -50,11 +50,11 @@ public class UserInformationDialogTest {
         onView(withId(R.id.forgot_password_link)).perform(click());
 
         onView(withId(R.id.user_information_dialog_title)).check(matches(withText(R.string.user_information)));
-        onView(withId(R.id.close_button)).check(matches(withText(R.string.close)));
+        onView(withId(R.id.user_information_close_button)).check(matches(withText(R.string.close)));
     }
 
     public void closeUserInformationDialog() {
-        onView(withId(R.id.close_button)).perform(click());
+        onView(withId(R.id.user_information_close_button)).perform(click());
     }
 
     @Test

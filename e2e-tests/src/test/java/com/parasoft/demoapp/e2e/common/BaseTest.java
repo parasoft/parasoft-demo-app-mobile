@@ -14,8 +14,6 @@ import io.appium.java_client.remote.MobileCapabilityType;
 
 public class BaseTest {
 
-    protected static final String APP_PACKAGE = "com.parasoft.demoapp";
-
     protected static AndroidDriver driver;
 
     @BeforeAll

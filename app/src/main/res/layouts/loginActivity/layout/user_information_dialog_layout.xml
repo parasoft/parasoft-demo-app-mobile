@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/close_button"
+        android:id="@+id/user_information_close_button"
         style="@style/dialog_button_template_style"
         android:text="@string/close"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         android:layout_marginBottom="8dp"
         android:background="@color/dialog_divider"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/close_button"
+        app:layout_constraintBottom_toTopOf="@+id/user_information_close_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />

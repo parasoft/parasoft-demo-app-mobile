@@ -14,7 +14,7 @@ public class OrderResponse {
 
     private String requestedBy;
 
-    private String status;
+    private OrderStatus status;
 
     private Boolean reviewedByAPV;
 
@@ -36,7 +36,7 @@ public class OrderResponse {
 
     private String eventNumber;
 
-    private Date submissionDate;
+    private String submissionDate;
 
     private Date approverReplyDate;
 
@@ -63,5 +63,4 @@ public class OrderResponse {
             this.quantity = quantity;
         }
     }
-
 }

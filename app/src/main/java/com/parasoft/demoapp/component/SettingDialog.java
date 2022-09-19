@@ -46,8 +46,8 @@ public class SettingDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.setting_dialog_layout, container, false);
         baseUrlInput = view.findViewById(R.id.base_url_input);
-        saveButton = view.findViewById(R.id.save_button);
-        cancelButton = view.findViewById(R.id.dismiss_button);
+        saveButton = view.findViewById(R.id.base_url_save_button);
+        cancelButton = view.findViewById(R.id.base_url_dismiss_button);
         errorMessage = view.findViewById(R.id.base_url_error_message);
         resetBaseURL = view.findViewById(R.id.reset_base_url);
         loginActivity = (LoginActivity) getActivity();
