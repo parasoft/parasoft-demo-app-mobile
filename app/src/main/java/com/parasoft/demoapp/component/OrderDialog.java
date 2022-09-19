@@ -1,10 +1,13 @@
 package com.parasoft.demoapp.component;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,7 +24,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.DialogFragment;
 
 import com.parasoft.demoapp.HomeActivity;
@@ -31,7 +33,11 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.SettingsUtil;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -60,6 +66,10 @@ public class OrderDialog extends DialogFragment {
     private TextView gpsCoordinates;
     private ImageView map;
     private HomeActivity homeActivity;
+    private final Handler handler = new Handler(msg -> {
+        map.setImageBitmap((Bitmap) msg.obj);
+        return true;
+    });
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -190,7 +200,11 @@ public class OrderDialog extends DialogFragment {
         location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
         gpsCoordinates.setText(orderInfo.getLocation());
-        map.setImageDrawable(getMap(orderInfo.getOrderImage()));
+        new Thread(() -> {
+            Message message = new Message();
+            message.obj = getImage(orderInfo.getOrderImage());
+            handler.sendMessage(message);
+        }).start();
     }
 
     public String getRegion(String region) {
@@ -240,35 +254,22 @@ public class OrderDialog extends DialogFragment {
         return status;
     }
 
-    public Drawable getMap(String image) {
-        Drawable drawable = null;
-        image = image.substring(image.lastIndexOf("-") + 1);
-        switch (image) {
-            case "1.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_1);
-                break;
-            case "2.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_2);
-                break;
-            case "3.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_3);
-                break;
-            case "4.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_4);
-                break;
-            case "5.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_5);
-                break;
-            case "6.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_6);
-                break;
-            case "7.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_7);
-                break;
-            case "8.png":
-                drawable = AppCompatResources.getDrawable( homeActivity, R.drawable.generic_map_8);
-                break;
+    public Bitmap getImage(String orderImage) {
+        Bitmap bmp = null;
+        String imageUrl = SettingsUtil.getBaseUrl(homeActivity) + orderImage;
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(6000);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return drawable;
+        return bmp;
     }
 }
