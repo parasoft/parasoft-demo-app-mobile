@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,21 +24,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
-import com.parasoft.demoapp.util.SettingsUtil;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,11 +56,6 @@ public class OrderDialog extends DialogFragment {
     private TextView receiverName;
     private TextView gpsCoordinates;
     private ImageView map;
-    private HomeActivity homeActivity;
-    private final Handler handler = new Handler(msg -> {
-        map.setImageBitmap((Bitmap) msg.obj);
-        return true;
-    });
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -94,7 +80,6 @@ public class OrderDialog extends DialogFragment {
         receiverName = view.findViewById(R.id.receiver_name);
         gpsCoordinates = view.findViewById(R.id.gps_coordinates);
         map = view.findViewById(R.id.map);
-        homeActivity = (HomeActivity) getActivity();
         setClickEvent();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
@@ -123,13 +108,13 @@ public class OrderDialog extends DialogFragment {
         super.onStart();
     }
 
-    public void setClickEvent() {
+    private void setClickEvent() {
         cancelButton.setOnClickListener(v -> dismiss());
         saveButton.setOnClickListener(v -> dismiss());
         closeButton.setOnClickListener(v -> dismiss());
     }
 
-    public void getOrderDetails() {
+    private void getOrderDetails() {
         errorMessage.setText("");
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
@@ -158,7 +143,7 @@ public class OrderDialog extends DialogFragment {
             });
     }
 
-    public void updateOrderStatus(OrderResponse oldOrderInfo) {
+    private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
         orderStatusRequest.setReviewedByAPV(true);
@@ -179,7 +164,7 @@ public class OrderDialog extends DialogFragment {
                 });
     }
 
-    public void setOrderLayout() {
+    private void setOrderLayout() {
         if (orderInfo.getComments() == null || orderInfo.getComments().length() == 0) {
             comments.setVisibility(View.GONE);
         } else {
@@ -198,14 +183,10 @@ public class OrderDialog extends DialogFragment {
         location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
         gpsCoordinates.setText(orderInfo.getLocation());
-        new Thread(() -> {
-            Message message = new Message();
-            message.obj = getImage(orderInfo.getOrderImage());
-            handler.sendMessage(message);
-        }).start();
+        loadImage(map, orderInfo.getOrderImage());
     }
 
-    public String getRegion(String region) {
+    private String getRegion(String region) {
         switch (region) {
             case "LOCATION_1" :
                 region = getResources().getString(R.string.location_1);
@@ -235,7 +216,7 @@ public class OrderDialog extends DialogFragment {
         return region;
     }
 
-    public String getStatus(String status) {
+    private String getStatus(String status) {
         switch (status) {
             case "Submitted":
                 status = getResources().getString(R.string.status_open);
@@ -252,22 +233,24 @@ public class OrderDialog extends DialogFragment {
         return status;
     }
 
-    public Bitmap getImage(String orderImage) {
-        Bitmap bmp = null;
-        String imageUrl = SettingsUtil.getBaseUrl(homeActivity) + orderImage;
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(6000);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bmp;
+    private void loadImage(ImageView imageView, String orderImage) {
+        pdaService.getClient(ApiInterface.class).getImage(orderImage)
+            .enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.code() == 200) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+                        // TODO: Set a default local image when load image failed
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("OrderDialog", "Load image " + orderImage + " failed", t);
+                    // TODO: Set a default local image when load image failed
+                }
+            });
     }
 }
