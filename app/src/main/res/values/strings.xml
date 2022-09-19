@@ -50,4 +50,8 @@
     <string name="location_6">Central Camp Gear Outlet</string>
     <string name="location_7">Industry Park Camp Gear</string>
     <string name="location_8">Industry Park General Store</string>
+    <string name="requested_items_title">Requested items:</string>
+    <string name="invoice_assignment_title">Invoice assignment:</string>
+    <string name="invoice_number">Invoice number:</string>
+    <string name="purchase_order">Purchase order:</string>
 </resources>

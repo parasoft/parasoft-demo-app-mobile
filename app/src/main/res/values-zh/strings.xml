@@ -48,4 +48,8 @@
     <string name="location_6">区域-6</string>
     <string name="location_7">区域-7</string>
     <string name="location_8">区域-8</string>
+    <string name="requested_items_title">需求的商品:</string>
+    <string name="invoice_assignment_title">发票信息:</string>
+    <string name="invoice_number">任务ID:</string>
+    <string name="purchase_order">员工编号:</string>
 </resources>

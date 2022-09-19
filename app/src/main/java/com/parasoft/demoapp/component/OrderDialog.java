@@ -1,8 +1,6 @@
 package com.parasoft.demoapp.component;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,15 +21,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.ImageUtil;
+import com.parasoft.demoapp.util.OrderItemAdapter;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +59,11 @@ public class OrderDialog extends DialogFragment {
     private TextView receiverName;
     private TextView gpsCoordinates;
     private ImageView map;
+    private TextView invoiceNumber;
+    private TextView totalQuantity;
+    private TextView purchaseOrderNumber;
+    private HomeActivity homeActivity;
+    private RecyclerView recyclerView;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -80,6 +88,12 @@ public class OrderDialog extends DialogFragment {
         receiverName = view.findViewById(R.id.receiver_name);
         gpsCoordinates = view.findViewById(R.id.gps_coordinates);
         map = view.findViewById(R.id.map);
+        totalQuantity = view.findViewById(R.id.requested_item_total_quantity);
+        invoiceNumber = view.findViewById(R.id.invoice_number);
+        purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
+
+        homeActivity = (HomeActivity) getActivity();
+        recyclerView = view.findViewById(R.id.order_items_recycler_view);
         setClickEvent();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
@@ -183,7 +197,12 @@ public class OrderDialog extends DialogFragment {
         location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
         gpsCoordinates.setText(orderInfo.getLocation());
-        loadImage(map, orderInfo.getOrderImage());
+        ImageUtil.loadImage(map, orderInfo.getOrderImage());
+        totalQuantity.setText(getTotalQuantity() + "");
+        invoiceNumber.setText(orderInfo.getEventId());
+        purchaseOrderNumber.setText(orderInfo.getEventNumber());
+
+        initOrderItemRecyclerView();
     }
 
     private String getRegion(String region) {
@@ -233,24 +252,18 @@ public class OrderDialog extends DialogFragment {
         return status;
     }
 
-    private void loadImage(ImageView imageView, String orderImage) {
-        pdaService.getClient(ApiInterface.class).getImage(orderImage)
-            .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    if(response.code() == 200) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        // TODO: Set a default local image when load image failed
-                    }
-                }
+    private void initOrderItemRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(homeActivity);
+        recyclerView.setLayoutManager(layoutManager);
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderInfo.getOrderItems());
+        recyclerView.setAdapter(orderItemAdapter);
+    }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e("OrderDialog", "Load image " + orderImage + " failed", t);
-                    // TODO: Set a default local image when load image failed
-                }
-            });
+    private Integer getTotalQuantity() {
+        Integer totalQuantity = 0;
+        for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
+            totalQuantity += orderItem.getQuantity();
+        };
+        return totalQuantity;
     }
 }
