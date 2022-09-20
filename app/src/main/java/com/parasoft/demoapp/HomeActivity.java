@@ -42,8 +42,6 @@ public class HomeActivity extends AppCompatActivity {
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
 
-    private boolean hasOrders = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         pdaService = new PDAService();
@@ -99,8 +97,7 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
-                        ordersLoader.setRefreshing(false);
-                        progressBar.setVisibility(View.GONE);
+                        ordersLoadFinished();
                         if (response.code() != 200) {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
@@ -108,23 +105,17 @@ public class HomeActivity extends AppCompatActivity {
 
                         OrderListResponse res = response.body().getData();
                         if (res.getContent().size() == 0) {
-                            hasOrders = false;
                             showNoOrderView();
                         } else {
-                            hasOrders = true;
                             showOrderListView(res.getContent());
-                        }
-                        if(!loadFirstTime) {
-                            Toast.makeText(HomeActivity.this, R.string.loading_orders_successful, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
-                        ordersLoader.setRefreshing(false);
-                        progressBar.setVisibility(View.GONE);
+                        ordersLoadFinished();
                         showErrorView(getResources().getString(R.string.orders_loading_error));
-                        Log.e(TAG, t.getMessage());
+                        Log.e(TAG, "Load orders error", t);
                     }
                 });
     }
@@ -168,5 +159,10 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.GONE);
         errorMessage.setText(errorString);
         errorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void ordersLoadFinished() {
+        ordersLoader.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
     }
 }
