@@ -2,6 +2,7 @@ package com.parasoft.demoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +26,14 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
+import com.parasoft.demoapp.util.RecycleOnScrollListener;
 
+import org.apache.commons.collections4.ListUtils;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +41,7 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = "HomeActivity";
+    private static final int ITEMS_PER_PAGE = 15;
 
     private ProgressBar progressBar;
     private TextView errorMessage;
@@ -41,6 +49,12 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
+
+    private OrderAdapter orderAdapter;
+    private List<OrderResponse> orderDisplayList = new ArrayList<>();
+    private List<OrderResponse> orderResponseList = new ArrayList<>();
+    private List<List<OrderResponse>> orderPagination;
+    private int page = 0;
 
     private boolean hasOrders = false;
 
@@ -116,7 +130,9 @@ public class HomeActivity extends AppCompatActivity {
                             showNoOrderView();
                         } else {
                             hasOrders = true;
-                            showOrderListView(res.getContent());
+                            orderResponseList = res.getContent();
+                            orderPagination = ListUtils.partition(res.getContent(), ITEMS_PER_PAGE);
+                            showOrderListView(loadFirstTime);
                         }
                         if(!loadFirstTime) {
                             Toast.makeText(HomeActivity.this, R.string.loading_orders_successful, Toast.LENGTH_SHORT).show();
@@ -151,12 +167,78 @@ public class HomeActivity extends AppCompatActivity {
         orderDialog.show(getSupportFragmentManager(), OrderDialog.TAG);
     }
 
-    public void initRecyclerView(List<OrderResponse> orders) {
+    public void initRecyclerView() {
+        page = 0;
+        getData(page);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
+        orderAdapter = new OrderAdapter(orderDisplayList, item -> openOrderDialog(item.getOrderNumber()));
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
+
+        initListener();
+    }
+
+    private void initListener() {
+        // slide-up load more
+        recyclerView.addOnScrollListener(new RecycleOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                // to avoid possible repeated slide-up operation
+                if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
+                    orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
+                    return;
+                }
+
+                orderAdapter.setLoadState(OrderAdapter.LOADING);
+                if (orderDisplayList.size() < orderResponseList.size()) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    page++;
+                                    getData(page);
+                                    orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
+                                }
+                            });
+                        }
+                    }, 3000);
+                } else {
+                    page = 0;
+                    orderAdapter.setLoadState(OrderAdapter.LOAD_END);
+                }
+            }
+        });
+        // slide-down refresh
+        ordersLoader.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // to avoid possible repeated slide-down operation
+                if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
+                    orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
+                    return;
+                }
+
+                orderAdapter.setLoadState(OrderAdapter.LOADING);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadOrderList(false);
+                    }
+                }, 3000);
+            }
+        });
+    }
+
+    private void getData(int page) {
+        if (page == 0) {
+            orderDisplayList.addAll(orderPagination.get(0));
+        } else {
+            orderAdapter.addFooterItem(orderPagination.get(page));
+        }
     }
 
     private void showNoOrderView() {
@@ -165,10 +247,15 @@ public class HomeActivity extends AppCompatActivity {
         noOrderInfo.setVisibility(View.VISIBLE);
     }
 
-    private void showOrderListView(List<OrderResponse> orderList) {
+    private void showOrderListView(boolean loadFirstTime) {
         noOrderInfo.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
-        initRecyclerView(orderList);
+        if (loadFirstTime) {
+            initRecyclerView();
+        } else {
+            orderAdapter.addHeaderItem(orderPagination.get(0));
+        }
+        orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
     }
 
     private void showErrorView (String errorString) {
