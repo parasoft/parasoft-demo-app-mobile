@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -41,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
+    private boolean orderItemClickable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void initCustomActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null){
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             actionBar.setCustomView(R.layout.home_title_layout);
         }
@@ -90,6 +90,7 @@ public class HomeActivity extends AppCompatActivity {
         if (loadFirstTime) {
             progressBar.setVisibility(View.VISIBLE);
         }
+        orderItemClickable = false;
         errorMessage.setText("");
         errorMessage.setVisibility(View.GONE);
         pdaService.getClient(ApiInterface.class).getOrderList()
@@ -102,19 +103,20 @@ public class HomeActivity extends AppCompatActivity {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
                         }
-
-                        OrderListResponse res = response.body().getData();
-                        if (res.getContent().size() == 0) {
+                        List<OrderResponse> orderList = response.body() != null ? response.body().getData().getContent() : null;
+                        if (orderList == null || orderList.size() == 0) {
                             showNoOrderView();
                         } else {
-                            showOrderListView(res.getContent());
+                            showOrderListView(orderList);
                         }
+                        orderItemClickable = true;
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
                         ordersLoadFinished();
                         showErrorView(getResources().getString(R.string.orders_loading_error));
+                        orderItemClickable = true;
                         Log.e(TAG, "Load orders error", t);
                     }
                 });
@@ -137,7 +139,11 @@ public class HomeActivity extends AppCompatActivity {
     public void initRecyclerView(List<OrderResponse> orders) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
+        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> {
+            if (orderItemClickable) {
+                openOrderDialog(item.getOrderNumber());
+            }
+        });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
     }
