@@ -188,13 +188,13 @@ public class OrderDialog extends DialogFragment {
                         if(response.code() == 200) {
                             location.setText(response.body().getData());
                         } else {
-                            location.setText(getResources().getString(R.string.location_loading_error));
-                            location.setTextColor(getResources().getColor(R.color.error));
+                            showErrorView();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultResponse<String>> call, Throwable t) {
+                        showErrorView();
                         Log.e("OrderDialog", "Load location error", t);
                     }
                 });
@@ -257,5 +257,10 @@ public class OrderDialog extends DialogFragment {
             totalQuantity += orderItem.getQuantity();
         };
         return totalQuantity;
+    }
+
+    private void showErrorView() {
+        location.setText(getResources().getString(R.string.location_loading_error));
+        location.setTextColor(getResources().getColor(R.color.error));
     }
 }

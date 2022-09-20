@@ -44,6 +44,5 @@
     <string name="invoice_assignment_title">发票信息:</string>
     <string name="invoice_number">任务ID:</string>
     <string name="purchase_order">员工编号:</string>
-    <string name="location_value_is_null">位置 %1$s 的值为空</string>
     <string name="location_loading_error">位置加载失败</string>
 </resources>
