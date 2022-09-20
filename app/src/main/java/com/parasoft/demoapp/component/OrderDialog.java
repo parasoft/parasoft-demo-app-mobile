@@ -70,7 +70,6 @@ public class OrderDialog extends DialogFragment {
     private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
-    private HomeActivity homeActivity;
     private EditText comments_field;
 
     public OrderDialog(String orderNumber) {
@@ -99,11 +98,10 @@ public class OrderDialog extends DialogFragment {
         totalQuantity = view.findViewById(R.id.requested_item_total_quantity);
         invoiceNumber = view.findViewById(R.id.invoice_number);
         purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
-
-        homeActivity = (HomeActivity) getActivity();
         recyclerView = view.findViewById(R.id.order_items_recycler_view);
         comments_field = view.findViewById(R.id.comments_field);
         responseSpinner = view.findViewById(R.id.order_response_spinner);
+
         homeActivity = (HomeActivity) getActivity();
         initSpinner();
         setClickEvent();
@@ -275,7 +273,7 @@ public class OrderDialog extends DialogFragment {
         Integer totalQuantity = 0;
         for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
             totalQuantity += orderItem.getQuantity();
-        };
+        }
         return totalQuantity;
     }
 
@@ -292,8 +290,6 @@ public class OrderDialog extends DialogFragment {
                 TextView textView = (TextView) view;
                 if (position == 0) {
                     textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
                 }
                 return view;
             }
