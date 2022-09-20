@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -66,11 +68,14 @@ public class OrderDialog extends DialogFragment {
     private TextView invoiceNumber;
     private TextView totalQuantity;
     private TextView purchaseOrderNumber;
+    private ScrollView scrollView;
+    private ProgressBar progressBar;
     private HomeActivity homeActivity;
     private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
     private EditText comments_field;
+    private View content_divider;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -101,10 +106,14 @@ public class OrderDialog extends DialogFragment {
         recyclerView = view.findViewById(R.id.order_items_recycler_view);
         comments_field = view.findViewById(R.id.comments_field);
         responseSpinner = view.findViewById(R.id.order_response_spinner);
+        scrollView = view.findViewById(R.id.order_scroll_view);
+        progressBar = view.findViewById(R.id.order_dialog_progressBar);
+        content_divider = view.findViewById(R.id.order_content_divider);
 
         homeActivity = (HomeActivity) getActivity();
         initSpinner();
         setClickEvent();
+        showLoadingPage();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
         getOrderDetails();
@@ -148,6 +157,7 @@ public class OrderDialog extends DialogFragment {
                     if(code == 200) {
                         orderInfo = response.body().getData();
                         setOrderLayout();
+                        showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
@@ -311,5 +321,21 @@ public class OrderDialog extends DialogFragment {
         });
 
         responseSpinner.setAdapter(adapter);
+    }
+
+    public void showLoadingPage() {
+        progressBar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
+        comments_field.setVisibility(View.GONE);
+        responseSpinner.setVisibility(View.GONE);
+        content_divider.setVisibility(View.GONE);
+    }
+
+    public void showOrderPage() {
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
+        comments_field.setVisibility(View.VISIBLE);
+        responseSpinner.setVisibility(View.VISIBLE);
+        content_divider.setVisibility(View.VISIBLE);
     }
 }
