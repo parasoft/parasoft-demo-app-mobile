@@ -8,6 +8,7 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -16,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 public interface ApiInterface {
     @FormUrlEncoded
@@ -36,4 +38,7 @@ public interface ApiInterface {
 
     @PUT("/v1/orders/{orderNumber}")
     Call<ResultResponse<OrderResponse>> orderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatusRequest orderStatusRequest);
+
+    @GET
+    Call<ResponseBody> getImage(@Url String imagePath);
 }

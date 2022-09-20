@@ -17,12 +17,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
@@ -30,7 +34,10 @@ import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
+import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.ImageUtil;
+import com.parasoft.demoapp.util.OrderItemAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +53,21 @@ public class OrderDialog extends DialogFragment {
     private TextView errorMessage;
     private OrderResponse orderInfo;
     private PDAService pdaService;
+    private LinearLayout comments;
+    private TextView commentsDetail;
+    private TextView orderStatus;
+    private TextView orderTimeYear;
+    private TextView orderTimeHour;
+    private TextView purchaserName;
+    private TextView location;
+    private TextView receiverName;
+    private TextView gpsCoordinates;
+    private ImageView map;
+    private TextView invoiceNumber;
+    private TextView totalQuantity;
+    private TextView purchaseOrderNumber;
+    private HomeActivity homeActivity;
+    private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
     private HomeActivity homeActivity;
@@ -64,6 +86,22 @@ public class OrderDialog extends DialogFragment {
         cancelButton = view.findViewById(R.id.order_dismiss_button);
         closeButton = view.findViewById(R.id.order_close_button);
         errorMessage = view.findViewById(R.id.order_info_error_message );
+        comments = view.findViewById(R.id.comments);
+        commentsDetail = view.findViewById(R.id.comments_detail);
+        orderStatus = view.findViewById(R.id.order_status);
+        orderTimeYear = view.findViewById(R.id.order_time_year);
+        orderTimeHour = view.findViewById(R.id.order_time_hour);
+        purchaserName = view.findViewById(R.id.purchaser_name);
+        location = view.findViewById(R.id.location);
+        receiverName = view.findViewById(R.id.receiver_name);
+        gpsCoordinates = view.findViewById(R.id.gps_coordinates);
+        map = view.findViewById(R.id.map);
+        totalQuantity = view.findViewById(R.id.requested_item_total_quantity);
+        invoiceNumber = view.findViewById(R.id.invoice_number);
+        purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
+
+        homeActivity = (HomeActivity) getActivity();
+        recyclerView = view.findViewById(R.id.order_items_recycler_view);
         comments_field = view.findViewById(R.id.comments_field);
         responseSpinner = view.findViewById(R.id.order_response_spinner);
         homeActivity = (HomeActivity) getActivity();
@@ -96,13 +134,13 @@ public class OrderDialog extends DialogFragment {
         super.onStart();
     }
 
-    public void setClickEvent() {
+    private void setClickEvent() {
         cancelButton.setOnClickListener(v -> dismiss());
         saveButton.setOnClickListener(v -> dismiss());
         closeButton.setOnClickListener(v -> dismiss());
     }
 
-    public void getOrderDetails() {
+    private void getOrderDetails() {
         errorMessage.setText("");
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
@@ -111,6 +149,7 @@ public class OrderDialog extends DialogFragment {
                     int code = response.code();
                     if(code == 200) {
                         orderInfo = response.body().getData();
+                        setOrderLayout();
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
@@ -130,7 +169,7 @@ public class OrderDialog extends DialogFragment {
             });
     }
 
-    public void updateOrderStatus(OrderResponse oldOrderInfo) {
+    private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
         orderStatusRequest.setReviewedByAPV(true);
@@ -149,6 +188,95 @@ public class OrderDialog extends DialogFragment {
                         Log.e("OrderDialog", "Update Order status failed", t);
                     }
                 });
+    }
+
+    private void setOrderLayout() {
+        if (orderInfo.getComments() == null || orderInfo.getComments().length() == 0) {
+            comments.setVisibility(View.GONE);
+        } else {
+            comments.setVisibility(View.VISIBLE);
+            commentsDetail.setText(orderInfo.getComments());
+            if(commentsDetail.getLineCount() == 1) {
+                commentsDetail.setGravity(Gravity.END);
+            } else {
+                commentsDetail.setGravity(Gravity.START);
+            }
+        }
+        orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
+        orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
+        orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
+        purchaserName.setText(orderInfo.getRequestedBy());
+        location.setText(getRegion(orderInfo.getRegion()));
+        receiverName.setText(orderInfo.getReceiverId());
+        gpsCoordinates.setText(orderInfo.getLocation());
+        ImageUtil.loadImage(map, orderInfo.getOrderImage());
+        totalQuantity.setText(getTotalQuantity() + "");
+        invoiceNumber.setText(orderInfo.getEventId());
+        purchaseOrderNumber.setText(orderInfo.getEventNumber());
+
+        initOrderItemRecyclerView();
+    }
+
+    private String getRegion(String region) {
+        switch (region) {
+            case "LOCATION_1" :
+                region = getResources().getString(R.string.location_1);
+                break;
+            case "LOCATION_2" :
+                region = getResources().getString(R.string.location_2);
+                break;
+            case "LOCATION_3" :
+                region = getResources().getString(R.string.location_3);
+                break;
+            case "LOCATION_4" :
+                region = getResources().getString(R.string.location_4);
+                break;
+            case "LOCATION_5" :
+                region = getResources().getString(R.string.location_5);
+                break;
+            case "LOCATION_6" :
+                region = getResources().getString(R.string.location_6);
+                break;
+            case "LOCATION_7" :
+                region = getResources().getString(R.string.location_7);
+                break;
+            case "LOCATION_8" :
+                region = getResources().getString(R.string.location_8);
+                break;
+        }
+        return region;
+    }
+
+    private String getStatus(String status) {
+        switch (status) {
+            case "Submitted":
+                status = getResources().getString(R.string.status_open);
+                break;
+            case "Declined":
+                status = getResources().getString(R.string.status_denied);
+                orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                break;
+            case "Approved":
+                status = getResources().getString(R.string.status_approved);
+                orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                break;
+        }
+        return status;
+    }
+
+    private void initOrderItemRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(homeActivity);
+        recyclerView.setLayoutManager(layoutManager);
+        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderInfo.getOrderItems());
+        recyclerView.setAdapter(orderItemAdapter);
+    }
+
+    private Integer getTotalQuantity() {
+        Integer totalQuantity = 0;
+        for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
+            totalQuantity += orderItem.getQuantity();
+        };
+        return totalQuantity;
     }
 
     public void initSpinner() {
