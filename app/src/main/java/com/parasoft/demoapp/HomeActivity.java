@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     private SwipeRefreshLayout ordersLoader;
 
     private boolean hasOrders = false;
+    private boolean orderItemClickable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class HomeActivity extends AppCompatActivity {
         if (loadFirstTime) {
             progressBar.setVisibility(View.VISIBLE);
         }
+        orderItemClickable = false;
         errorMessage.setText("");
         errorMessage.setVisibility(View.GONE);
         pdaService.getClient(ApiInterface.class).getOrderList()
@@ -121,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                         if(!loadFirstTime) {
                             Toast.makeText(HomeActivity.this, R.string.loading_orders_successful, Toast.LENGTH_SHORT).show();
                         }
+                        orderItemClickable = true;
                     }
 
                     @Override
@@ -133,6 +136,7 @@ public class HomeActivity extends AppCompatActivity {
                             Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
                         }
                         Log.e(TAG, t.getMessage());
+                        orderItemClickable = true;
                     }
                 });
     }
@@ -154,7 +158,11 @@ public class HomeActivity extends AppCompatActivity {
     public void initRecyclerView(List<OrderResponse> orders) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> openOrderDialog(item.getOrderNumber()));
+        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> {
+            if (orderItemClickable) {
+                openOrderDialog(item.getOrderNumber());
+            }
+        });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
     }
