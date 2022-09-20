@@ -102,11 +102,7 @@ public class HomeActivity extends AppCompatActivity {
                         ordersLoader.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         if (response.code() != 200) {
-                            if (hasOrders) {
-                                Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
-                            } else {
-                                showErrorView(getResources().getString(R.string.orders_loading_error));
-                            }
+                            showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
                         }
 
@@ -127,11 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
                         ordersLoader.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
-                        if (!hasOrders) {
-                            showErrorView(getResources().getString(R.string.orders_loading_error));
-                        } else {
-                            Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
-                        }
+                        showErrorView(getResources().getString(R.string.orders_loading_error));
                         Log.e(TAG, t.getMessage());
                     }
                 });
