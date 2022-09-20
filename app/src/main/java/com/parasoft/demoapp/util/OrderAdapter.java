@@ -56,6 +56,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     // Define ViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final int MIN_CLICK_DELAY_TIME = 1000;
+        private long lastClickTime;
+
         TextView orderIndex;
         TextView orderNumber;
         TextView orderDetailDate;
@@ -76,7 +79,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         }
 
         public void bind(final OrderResponse item, final OnItemClickListener listener) {
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            itemView.setOnClickListener(v -> {
+                if(System.currentTimeMillis() - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                    listener.onItemClick(item);
+                    lastClickTime = System.currentTimeMillis();
+                }
+            });
         }
     }
 
