@@ -123,9 +123,14 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void setClickEvent() {
-        cancelButton.setOnClickListener(v -> dismiss());
-        saveButton.setOnClickListener(v -> dismiss());
-        closeButton.setOnClickListener(v -> dismiss());
+        cancelButton.setOnClickListener(v -> closeAndRefresh());
+        saveButton.setOnClickListener(v -> closeAndRefresh());
+        closeButton.setOnClickListener(v -> closeAndRefresh());
+    }
+
+    private void closeAndRefresh() {
+        dismiss();
+        homeActivity.loadOrderList(false);
     }
 
     private void getOrderDetails() {
@@ -151,7 +156,9 @@ public class OrderDialog extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    if (getDialog() != null) {
+                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    }
                     Log.e("OrderDialog", "Load order info error", t);
                 }
             });
