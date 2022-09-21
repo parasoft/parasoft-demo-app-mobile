@@ -13,6 +13,7 @@
         style="@style/dialog_button_template_style"
         android:layout_marginBottom="4dp"
         android:text="@string/save"
+        android:textColor="@color/dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -21,6 +22,7 @@
         style="@style/dialog_button_template_style"
         android:layout_marginEnd="0dp"
         android:text="@string/cancel"
+        android:textColor="@color/dark_blue"
         app:layout_constraintEnd_toStartOf="@+id/order_save_button"
         app:layout_constraintTop_toTopOf="@+id/order_save_button" />
 
@@ -91,7 +93,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -106,6 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/gray_text"
                         android:textSize="18sp"
                         android:layout_alignParentStart="true"/>
 
@@ -114,6 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:textColor="@color/gray_text"
                         android:textSize="18sp"
                         android:layout_marginEnd="10dp"
                         android:layout_alignEnd="@+id/order_time_year"
@@ -144,14 +148,23 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
                     android:text="@string/comments"/>
 
-                <TextView
-                    android:id="@+id/comments_detail"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:textColor="@color/light_black"
+                        android:id="@+id/comments_detail"/>
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -165,6 +178,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
                     android:text="@string/requested_by"/>
 
                 <TextView
@@ -174,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:gravity="end"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/light_black"/>
             </LinearLayout>
 
             <TextView
@@ -183,7 +197,7 @@
                 android:text="@string/ship_items_to"
                 android:layout_marginTop="40dp"
                 android:textSize="20sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/light_black"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -196,6 +210,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
                     android:text="@string/location"/>
 
                 <TextView
@@ -205,7 +220,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:gravity="end"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/light_black"/>
             </LinearLayout>
 
             <LinearLayout
@@ -219,6 +234,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
                     android:text="@string/receiver_name"/>
 
                 <TextView
@@ -228,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:gravity="end"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/light_black"/>
             </LinearLayout>
 
             <LinearLayout
@@ -242,6 +258,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
                     android:text="@string/gps_coordinates"/>
 
                 <TextView
@@ -251,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:gravity="end"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/light_black"/>
             </LinearLayout>
 
             <ImageView
@@ -272,7 +289,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/requested_items_title"
                     android:textSize="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/light_black"
                     android:gravity="center_vertical" />
                 <TextView
                     android:id="@+id/requested_item_total_quantity"
@@ -280,36 +297,32 @@
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:gravity="end"
-                    android:textColor="@color/black"
+                    android:textColor="@color/light_black"
                     android:layout_weight="1" />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="@id/invoice_title"
+                app:layout_constraintTop_toBottomOf="@+id/requested_item_total_quantity">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/order_items_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:scrollbars="vertical"
-                    android:scrollbarSize="2dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constrainedHeight="true"
-                    app:layout_constraintHeight_max="250dp" />
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginTop="5dp" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </RelativeLayout>
 
             <TextView
+                android:id="@+id/invoice_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/invoice_assignment_title"
                 android:textSize="20sp"
-                android:textColor="@color/black"
+                android:textColor="@color/light_black"
                 android:layout_marginBottom="10dp"/>
 
             <TableLayout
@@ -324,6 +337,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gray_text"
                         android:text="@string/invoice_number"/>
 
                     <TextView
@@ -332,7 +346,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:layout_weight="1"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/light_black" />
                 </TableRow>
 
                 <TableRow
@@ -341,6 +355,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/gray_text"
                         android:text="@string/purchase_order" />
                     <TextView
                         android:id="@+id/purchase_order_number"
@@ -348,7 +363,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:layout_weight="1"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/light_black" />
                 </TableRow>
             </TableLayout>
         </LinearLayout>

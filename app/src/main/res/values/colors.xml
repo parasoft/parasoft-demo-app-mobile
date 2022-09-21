@@ -12,6 +12,7 @@
     <color name="app_status_bar">#122D62</color>
     <color name="app_title">#CBD7F0</color>
     <color name="light_gray">#F5F5F5</color>
+    <color name="gray_text">#6F6F6F</color>
     <color name="orange_button">#FF9900</color>
     <color name="dark_blue">#001F55</color>
     <color name="light_black">#333333</color>

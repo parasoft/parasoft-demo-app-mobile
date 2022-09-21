@@ -242,11 +242,6 @@ public class OrderDialog extends DialogFragment {
         } else {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
-            if(commentsDetail.getLineCount() == 1) {
-                commentsDetail.setGravity(Gravity.END);
-            } else {
-                commentsDetail.setGravity(Gravity.START);
-            }
         }
         orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
         orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
@@ -345,14 +340,27 @@ public class OrderDialog extends DialogFragment {
         responseSpinner.setVisibility(View.GONE);
         contentDivider.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
     }
 
     public void showOrderPage() {
         progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
-        commentsField.setVisibility(View.VISIBLE);
-        responseSpinner.setVisibility(View.VISIBLE);
-        contentDivider.setVisibility(View.VISIBLE);
+        String status = orderInfo.getStatus().getStatus();
+        if ("Submitted".equals(status)) {
+            commentsField.setVisibility(View.VISIBLE);
+            responseSpinner.setVisibility(View.VISIBLE);
+            contentDivider.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+        } else {
+            commentsField.setVisibility(View.GONE);
+            responseSpinner.setVisibility(View.GONE);
+            contentDivider.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+        }
         errorMessage.setVisibility(View.GONE);
     }
 
@@ -364,5 +372,7 @@ public class OrderDialog extends DialogFragment {
         contentDivider.setVisibility(View.GONE);
         errorMessage.setText(errMsg);
         errorMessage.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
     }
 }

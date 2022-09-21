@@ -92,8 +92,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.color_green));
                 return context.getResources().getString(R.string.status_open);
             case APPROVED:
+                viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.light_black));
                 return context.getResources().getString(R.string.status_approved);
             case DECLINED:
+                viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.light_black));
                 return context.getResources().getString(R.string.status_denied);
             default:
                 return "";
