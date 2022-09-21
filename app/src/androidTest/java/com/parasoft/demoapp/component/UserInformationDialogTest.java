@@ -70,13 +70,13 @@ public class UserInformationDialogTest {
         openUserInformationDialog();
 
         // Then
-        onView(withId(R.id.textDisplayArea)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.user_info_message)).check(matches(not(isDisplayed())));
         onView(withId(R.id.user_information_table)).check(matches(isDisplayed()));
         onView(withId(R.id.username_label)).check(matches(withText(R.string.user_name_label)));
         onView(withId(R.id.username_value)).check(matches(withText("fakeUsername")));
         onView(withId(R.id.password_label)).check(matches(withText(R.string.password_label)));
         onView(withId(R.id.password_value)).check(matches(withText("fakePassword")));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText("")));
+        onView(withId(R.id.user_info_message)).check(matches(withText("")));
         closeUserInformationDialog();
     }
 
@@ -94,7 +94,7 @@ public class UserInformationDialogTest {
 
         // Then
         onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText(R.string.no_users_available)));
+        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.no_users_available)));
         closeUserInformationDialog();
     }
 
@@ -112,7 +112,7 @@ public class UserInformationDialogTest {
 
         // Then
         onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText(R.string.no_users_available)));
+        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.no_users_available)));
         closeUserInformationDialog();
     }
 
@@ -130,7 +130,7 @@ public class UserInformationDialogTest {
 
         // Then
         onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText(R.string.wrong_base_url)));
+        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
         closeUserInformationDialog();
     }
 
@@ -148,7 +148,7 @@ public class UserInformationDialogTest {
 
         // Then
         onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText(R.string.wrong_base_url)));
+        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
         closeUserInformationDialog();
     }
 
@@ -166,7 +166,7 @@ public class UserInformationDialogTest {
 
         // Then
         onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.textDisplayArea)).check(matches(withText(R.string.wrong_base_url)));
+        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
         closeUserInformationDialog();
     }
 }
