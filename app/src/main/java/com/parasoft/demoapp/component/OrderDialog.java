@@ -72,7 +72,7 @@ public class OrderDialog extends DialogFragment {
     private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
-    private EditText comments_field;
+    private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -101,7 +101,7 @@ public class OrderDialog extends DialogFragment {
         invoiceNumber = view.findViewById(R.id.invoice_number);
         purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
         recyclerView = view.findViewById(R.id.order_items_recycler_view);
-        comments_field = view.findViewById(R.id.comments_field);
+        commentsField = view.findViewById(R.id.comments_field);
         responseSpinner = view.findViewById(R.id.order_response_spinner);
 
         homeActivity = (HomeActivity) getActivity();
@@ -126,7 +126,7 @@ public class OrderDialog extends DialogFragment {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
-        params.height = (int) (displayMetrics.heightPixels * 0.95);
+        params.height = (displayMetrics.heightPixels / 100) * 95; // Fix the cast violation of `(int) (displayMetrics.heightPixels * 0.95)`
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -180,16 +180,18 @@ public class OrderDialog extends DialogFragment {
 
     private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
-                            orderInfo = response.body().getData();
+                        if(response.code() != 200) {
+                            Log.e("OrderDialog", "Update Order status failed");
+                            return;
                         }
+                        orderInfo = response.body().getData();
                     }
 
                     @Override
@@ -262,6 +264,8 @@ public class OrderDialog extends DialogFragment {
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 hideBottomSection();
                 break;
+            default:
+                status = "";
         }
         return status;
     }
@@ -320,7 +324,7 @@ public class OrderDialog extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // do nothing
             }
         });
 

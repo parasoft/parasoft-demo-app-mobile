@@ -146,6 +146,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
+        orderAdapter.setCanStart(true);
     }
 
     private void showNoOrderView() {
