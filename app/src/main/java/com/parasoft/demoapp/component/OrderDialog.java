@@ -71,7 +71,7 @@ public class OrderDialog extends DialogFragment {
     private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
-    private EditText comments_field;
+    private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -100,7 +100,7 @@ public class OrderDialog extends DialogFragment {
         invoiceNumber = view.findViewById(R.id.invoice_number);
         purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
         recyclerView = view.findViewById(R.id.order_items_recycler_view);
-        comments_field = view.findViewById(R.id.comments_field);
+        commentsField = view.findViewById(R.id.comments_field);
         responseSpinner = view.findViewById(R.id.order_response_spinner);
 
         homeActivity = (HomeActivity) getActivity();
@@ -303,7 +303,7 @@ public class OrderDialog extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // do nothing
             }
         });
 
