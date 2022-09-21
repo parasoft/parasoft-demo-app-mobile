@@ -18,6 +18,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
+    private static boolean canStart = true;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList =  orderList;
@@ -76,7 +77,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         }
 
         public void bind(final OrderResponse item, final OnItemClickListener listener) {
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            itemView.setOnClickListener(v -> {
+                if(canStart){
+                    listener.onItemClick(item);
+                    canStart = false;
+                }
+            });
         }
     }
 
@@ -96,5 +102,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     public interface OnItemClickListener {
         void onItemClick(OrderResponse item);
+    }
+
+    public void setCanStart(boolean can) {
+        canStart = can;
     }
 }
