@@ -9,6 +9,7 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -44,6 +45,16 @@ public class ApiInterfaceImplForTest implements ApiInterface {
 
     @Override
     public Call<ResultResponse<OrderResponse>> orderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+        throw new UnsupportedOperationException("Need to override this method in subclass");
+    }
+
+    @Override
+    public Call<ResponseBody> getImage(String imagePath) {
+        throw new UnsupportedOperationException("Need to override this method in subclass");
+    }
+
+    @Override
+    public Call<ResultResponse<String>> localizedValue(String lang, String key) {
         throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 }

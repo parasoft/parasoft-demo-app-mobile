@@ -26,6 +26,7 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.ForgotPasswordUserInfoResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +58,7 @@ public class UserInformationDialog extends DialogFragment {
 
         progressBar = view.findViewById(R.id.progressBar);
         userInformationTable = view.findViewById(R.id.user_information_table);
-        textDisplayArea = view.findViewById(R.id.textDisplayArea);
+        textDisplayArea = view.findViewById(R.id.user_info_message);
         usernameMessage = view.findViewById(R.id.username_value);
         passwordMessage = view.findViewById(R.id.password_value);
         closeButton = view.findViewById(R.id.user_information_close_button);
@@ -120,7 +121,7 @@ public class UserInformationDialog extends DialogFragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (displayMetrics.widthPixels * 0.9);
+        params.width = (displayMetrics.widthPixels / 100) * 90; // Fix the cast violation of `(int) (displayMetrics.widthPixels * 0.9)`
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -152,6 +153,8 @@ public class UserInformationDialog extends DialogFragment {
                     textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
                     progressBar.setVisibility(View.INVISIBLE);
                     textDisplayArea.setVisibility(View.VISIBLE);
+                default:
+                    throw new RuntimeException(MessageFormat.format("Load status code {0} is not supported", loadStatus));
             }
         }
     }

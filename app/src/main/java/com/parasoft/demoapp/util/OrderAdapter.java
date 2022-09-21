@@ -18,6 +18,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
+    private static boolean canStart = true;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList =  orderList;
@@ -38,7 +39,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         if (!orderList.getReviewedByAPV()) {
             viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
         }
-        viewHolder.orderIndex.setText(position + 1 + "");
+        viewHolder.orderIndex.setText((position + 1) + "");
         viewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
         viewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
         viewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
@@ -76,7 +77,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         }
 
         public void bind(final OrderResponse item, final OnItemClickListener listener) {
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            itemView.setOnClickListener(v -> {
+                if(canStart){
+                    listener.onItemClick(item);
+                    canStart = false;
+                }
+            });
         }
     }
 
@@ -96,5 +102,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     public interface OnItemClickListener {
         void onItemClick(OrderResponse item);
+    }
+
+    public void setCanStart(boolean can) {
+        canStart = can;
     }
 }

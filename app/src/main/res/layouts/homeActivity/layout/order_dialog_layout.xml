@@ -381,6 +381,8 @@
     <EditText
         android:id="@+id/comments_field"
         style="@style/input_template_style"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:hint="@string/Comments_field"
         android:importantForAutofill="no"
@@ -392,8 +394,10 @@
     <Spinner
         android:id="@+id/order_response_spinner"
         style="@style/spinner_template_style"
-        android:layout_width="361dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:dropDownWidth="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/comments_field"
