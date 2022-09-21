@@ -170,16 +170,18 @@ public class OrderDialog extends DialogFragment {
 
     private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
-                            orderInfo = response.body().getData();
+                        if(response.code() != 200) {
+                            Log.e("OrderDialog", "Update Order status failed");
+                            return;
                         }
+                        orderInfo = response.body().getData();
                     }
 
                     @Override
