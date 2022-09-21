@@ -76,7 +76,7 @@ public class OrderDialog extends DialogFragment {
     private RecyclerView recyclerView;
     private Spinner responseSpinner;
     private String responseValue;
-    private View content_divider;
+    private View contentDivider;
     private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
@@ -110,7 +110,7 @@ public class OrderDialog extends DialogFragment {
         responseSpinner = view.findViewById(R.id.order_response_spinner);
         scrollView = view.findViewById(R.id.order_scroll_view);
         progressBar = view.findViewById(R.id.order_dialog_progressBar);
-        content_divider = view.findViewById(R.id.order_content_divider);
+        contentDivider = view.findViewById(R.id.order_content_divider);
 
         homeActivity = (HomeActivity) getActivity();
         initSpinner();
@@ -157,33 +157,35 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void getOrderDetails() {
-        errorMessage.setText("");
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
-                    if(code == 200) {
+                    if (code == 200) {
                         orderInfo = response.body().getData();
                         setOrderLayout();
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
-                    } else if(code == 404) {
-                        errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
-                    }
-                    else {
-                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    } else if (code == 404) {
+                        String errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                        showErrorPage(errMsg);
+                        Log.e(TAG, errMsg);
+                    } else {
+                        String errMsg = getResources().getString(R.string.order_loading_error);
+                        showErrorPage(errMsg);
+                        Log.e(TAG, errMsg);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                     if (getDialog() != null) {
-                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                        showErrorPage(getResources().getString(R.string.order_loading_error));
                     }
-                    Log.e("OrderDialog", "Load order info error", t);
+                    Log.e(TAG, "Load order info error", t);
                 }
             });
     }
@@ -197,8 +199,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() != 200) {
-                            Log.e("OrderDialog", "Update Order status failed");
+                        if (response.code() != 200) {
+                            // TODO waiting for feedback on where to display error
+                            Log.e(TAG, "Update Order status failed");
                             return;
                         }
                         orderInfo = response.body().getData();
@@ -206,7 +209,8 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                        Log.e("OrderDialog", "Update Order status failed", t);
+                        // TODO waiting for feedback on where to display error
+                        Log.e(TAG, "Update Order status failed", t);
                     }
                 });
     }
@@ -220,14 +224,14 @@ public class OrderDialog extends DialogFragment {
                         if(response.code() == 200) {
                             location.setText(response.body().getData());
                         } else {
-                            showErrorView();
+                            showLocationError();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultResponse<String>> call, Throwable t) {
-                        showErrorView();
-                        Log.e("OrderDialog", "Load location error", t);
+                        showLocationError();
+                        Log.e(TAG, "Load location error", t);
                     }
                 });
     }
@@ -293,7 +297,7 @@ public class OrderDialog extends DialogFragment {
         return totalQuantity;
     }
 
-    private void showErrorView() {
+    private void showLocationError() {
         location.setText(getResources().getString(R.string.location_loading_error));
         location.setTextColor(getResources().getColor(R.color.error));
     }
@@ -339,7 +343,8 @@ public class OrderDialog extends DialogFragment {
         scrollView.setVisibility(View.GONE);
         commentsField.setVisibility(View.GONE);
         responseSpinner.setVisibility(View.GONE);
-        content_divider.setVisibility(View.GONE);
+        contentDivider.setVisibility(View.GONE);
+        errorMessage.setVisibility(View.GONE);
     }
 
     public void showOrderPage() {
@@ -347,6 +352,17 @@ public class OrderDialog extends DialogFragment {
         scrollView.setVisibility(View.VISIBLE);
         commentsField.setVisibility(View.VISIBLE);
         responseSpinner.setVisibility(View.VISIBLE);
-        content_divider.setVisibility(View.VISIBLE);
+        contentDivider.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(View.GONE);
+    }
+
+    public void showErrorPage(String errMsg) {
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+        commentsField.setVisibility(View.GONE);
+        responseSpinner.setVisibility(View.GONE);
+        contentDivider.setVisibility(View.GONE);
+        errorMessage.setText(errMsg);
+        errorMessage.setVisibility(View.VISIBLE);
     }
 }

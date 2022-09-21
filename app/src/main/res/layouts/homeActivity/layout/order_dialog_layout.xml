@@ -48,28 +48,13 @@
         app:layout_constraintTop_toBottomOf="@+id/order_dialog_title" />
 
     <TextView
-        android:id="@+id/base_url_error_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:textColor="@color/error"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/header_divider">
-
-    </TextView>
-
-    <TextView
         android:id="@+id/order_info_error_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:textColor="@color/error"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="18sp"
         app:layout_constraintTop_toTopOf="@+id/header_divider">
 
     </TextView>
