@@ -77,6 +77,7 @@ public class OrderDialog extends DialogFragment {
     private Spinner responseSpinner;
     private String responseValue;
     private View content_divider;
+    private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -336,7 +337,7 @@ public class OrderDialog extends DialogFragment {
     public void showLoadingPage() {
         progressBar.setVisibility(View.VISIBLE);
         scrollView.setVisibility(View.GONE);
-        comments_field.setVisibility(View.GONE);
+        commentsField.setVisibility(View.GONE);
         responseSpinner.setVisibility(View.GONE);
         content_divider.setVisibility(View.GONE);
     }
@@ -344,7 +345,7 @@ public class OrderDialog extends DialogFragment {
     public void showOrderPage() {
         progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
-        comments_field.setVisibility(View.VISIBLE);
+        commentsField.setVisibility(View.VISIBLE);
         responseSpinner.setVisibility(View.VISIBLE);
         content_divider.setVisibility(View.VISIBLE);
     }
