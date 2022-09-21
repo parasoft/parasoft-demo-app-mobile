@@ -57,7 +57,7 @@ public class UserInformationDialog extends DialogFragment {
 
         progressBar = view.findViewById(R.id.progressBar);
         userInformationTable = view.findViewById(R.id.user_information_table);
-        textDisplayArea = view.findViewById(R.id.textDisplayArea);
+        textDisplayArea = view.findViewById(R.id.user_info_message);
         usernameMessage = view.findViewById(R.id.username_value);
         passwordMessage = view.findViewById(R.id.password_value);
         closeButton = view.findViewById(R.id.user_information_close_button);
