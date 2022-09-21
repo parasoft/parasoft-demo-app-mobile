@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
@@ -131,6 +132,8 @@ public class OrderDialog extends DialogFragment {
 
     private void closeAndRefresh() {
         dismiss();
+        SwipeRefreshLayout ordersLoader = homeActivity.findViewById(R.id.order_refresh);
+        ordersLoader.setRefreshing(true);
         homeActivity.loadOrderList(false);
     }
 
