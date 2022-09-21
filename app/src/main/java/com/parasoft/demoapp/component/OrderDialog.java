@@ -235,13 +235,19 @@ public class OrderDialog extends DialogFragment {
             case "Declined":
                 status = getResources().getString(R.string.status_denied);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                hideButton();
                 break;
             case "Approved":
                 status = getResources().getString(R.string.status_approved);
-                orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                hideButton();
                 break;
         }
         return status;
+    }
+
+    private void hideButton() {
+        saveButton.setVisibility(View.INVISIBLE);
+        cancelButton.setVisibility(View.INVISIBLE);
     }
 
     private void initOrderItemRecyclerView() {
