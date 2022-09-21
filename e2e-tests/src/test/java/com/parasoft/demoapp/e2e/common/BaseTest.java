@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobileCapabilityType;
 
@@ -23,6 +24,7 @@ public class BaseTest {
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, Platform.ANDROID);
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, AutomationName.ANDROID_UIAUTOMATOR2);
         capabilities.setCapability(MobileCapabilityType.APP, AppiumConfig.demoAppApkPath());
+        capabilities.setCapability(AndroidMobileCapabilityType.ADB_PORT, AppiumConfig.adbServerPort());
 
         URL remoteUrl = new URL(AppiumConfig.appiumServerUrl());
 
