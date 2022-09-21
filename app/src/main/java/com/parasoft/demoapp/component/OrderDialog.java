@@ -122,9 +122,9 @@ public class OrderDialog extends DialogFragment {
         Window window = dialog.getWindow();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
-
         params.height = (int) (displayMetrics.heightPixels * 0.95);
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);

@@ -46,8 +46,7 @@
     <string name="purchase_order">Purchase order:</string>
     <string name="location_loading_error">Error loading location</string>
     <string name="Comments_field">Comments</string>
-    <string name="order_response">Order response</string>
+    <string name="order_response">Order response...</string>
     <string name="order_response_approve">Approve</string>
     <string name="order_response_deny">Deny</string>
-    <string name="select_order_response_error">Please select Order Response value</string>
 </resources>
