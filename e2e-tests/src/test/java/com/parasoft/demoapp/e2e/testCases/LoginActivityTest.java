@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.parasoft.demoapp.e2e.common.AppiumConfig;
 import com.parasoft.demoapp.e2e.common.BaseTest;
-import com.parasoft.demoapp.e2e.common.LoginUtil;
+import com.parasoft.demoapp.e2e.common.TestUtils;
 import com.parasoft.demoapp.e2e.locators.HomeActivityLocators;
 import com.parasoft.demoapp.e2e.locators.LoginActivityLocators;
 
@@ -17,15 +17,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.MalformedURLException;
 import java.time.Duration;
 
 public class LoginActivityTest extends BaseTest {
     private WebDriverWait wait;
 
     @BeforeEach
-    public void setUp() throws MalformedURLException {
-        beforeClass();
+    public void setUp() {
         wait = new WebDriverWait(driver, Duration.ofSeconds(AppiumConfig.durationOfSeconds()));
     }
 
@@ -42,8 +40,8 @@ public class LoginActivityTest extends BaseTest {
     public void testSetBaseUrl() {
         waitForLoginPageOpen();
 
-        WebElement SettingButton = driver.findElement(LoginActivityLocators.SETTING_BUTTON);
-        SettingButton.click();
+        WebElement settingButton = driver.findElement(LoginActivityLocators.SETTING_BUTTON);
+        settingButton.click();
         wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
 
         WebElement baseUrlInput = driver.findElement(LoginActivityLocators.BASE_URL_INPUT);
@@ -81,9 +79,9 @@ public class LoginActivityTest extends BaseTest {
         // Save base url
         baseUrlInput.clear();
         baseUrlInput.sendKeys("http://10.0.2.2:8081");
-        saveButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
-        SettingButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(settingButton)).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
         baseUrlInput = driver.findElement(LoginActivityLocators.BASE_URL_INPUT);
         assertEquals("http://10.0.2.2:8081", baseUrlInput.getText());
@@ -122,29 +120,20 @@ public class LoginActivityTest extends BaseTest {
     public void testLoginLogout() {
         waitForLoginPageOpen();
 
-        // Login with wrong username
-        LoginUtil.login(driver, "wrong username", "password");
-        WebElement loginErrorMessage = driver.findElement(LoginActivityLocators.LOGIN_ERROR_MESSAGE);
-        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.LOGIN_ERROR_MESSAGE));
-        assertEquals("Incorrect username or password", loginErrorMessage.getText());
-
         // Login with bad base url
-        WebElement settingButton = driver.findElement(LoginActivityLocators.SETTING_BUTTON);
-        settingButton.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
-        driver.findElement(LoginActivityLocators.BASE_URL_INPUT)
-                .sendKeys("http://10.0.2.2:7777");
-        driver.findElement(LoginActivityLocators.BASE_URL_SAVE_BUTTON).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
-        LoginUtil.login(driver, "approver", "password");
-        wait.until(ExpectedConditions.textToBe(LoginActivityLocators.LOGIN_ERROR_MESSAGE, "Base URL is not reachable"));
-        settingButton.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.BASE_URL_INPUT))
-                .sendKeys(AppiumConfig.pdaServerUrl());
-        driver.findElement(LoginActivityLocators.BASE_URL_SAVE_BUTTON).click();
+        TestUtils.setBaseUrl(driver, "http://10.0.2.2:7777");
+        TestUtils.login(driver, "approver", "password");
+        wait.until(ExpectedConditions.textToBe(
+                LoginActivityLocators.LOGIN_ERROR_MESSAGE, "Base URL is not reachable"));
+        TestUtils.setBaseUrl(driver, AppiumConfig.pdaServerUrl());
+
+        // Login with wrong username
+        TestUtils.login(driver, "wrong username", "password");
+        wait.until(ExpectedConditions.textToBe(
+                LoginActivityLocators.LOGIN_ERROR_MESSAGE, "Incorrect username or password"));
 
         // Login successfully
-        LoginUtil.login(driver, "approver", "password");
+        TestUtils.login(driver, "approver", "password");
         wait.until(ExpectedConditions.presenceOfElementLocated(HomeActivityLocators.HOME_TITLE));
         WebElement homeTitle = driver.findElement(HomeActivityLocators.HOME_TITLE);
         assertEquals("APPROVALS", homeTitle.getText());
@@ -158,13 +147,25 @@ public class LoginActivityTest extends BaseTest {
     public void testForgotPassword() {
         waitForLoginPageOpen();
 
+        // With bad base url
+        TestUtils.setBaseUrl(driver, "http://10.0.2.2:7777");
         driver.findElement(LoginActivityLocators.FORGOT_PASSWORD_LINK).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.USER_INFORMATION_DIALOG_TITLE));
-        assertEquals("Username:", driver.findElement(LoginActivityLocators.USER_INFORMATION_USERNAME_LABEL).getText());
-        assertEquals("approver", driver.findElement(LoginActivityLocators.USER_INFORMATION_USERNAME_VALUE).getText());
-        assertEquals("Password:", driver.findElement(LoginActivityLocators.USER_INFORMATION_PASSWORD_LABEL).getText());
-        assertEquals("password", driver.findElement(LoginActivityLocators.USER_INFORMATION_PASSWORD_VALUE).getText());
+        wait.until(ExpectedConditions.textToBe(
+                LoginActivityLocators.USER_INFORMATION_ERROR_MESSAGE, "Base URL is not reachable"));
+        driver.findElement(LoginActivityLocators.USER_INFORMATION_CLOSE_BUTTON).click();
 
+        // With good base url
+        TestUtils.setBaseUrl(driver, AppiumConfig.pdaServerUrl());
+        driver.findElement(LoginActivityLocators.FORGOT_PASSWORD_LINK).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.USER_INFORMATION_DIALOG_TITLE));
+        wait.until(ExpectedConditions.textToBe(LoginActivityLocators.USER_INFORMATION_USERNAME_LABEL, "Username:"));
+        assertEquals("approver",
+                driver.findElement(LoginActivityLocators.USER_INFORMATION_USERNAME_VALUE).getText());
+        assertEquals("Password:",
+                driver.findElement(LoginActivityLocators.USER_INFORMATION_PASSWORD_LABEL).getText());
+        assertEquals("password",
+                driver.findElement(LoginActivityLocators.USER_INFORMATION_PASSWORD_VALUE).getText());
         driver.findElement(LoginActivityLocators.USER_INFORMATION_CLOSE_BUTTON).click();
     }
 }

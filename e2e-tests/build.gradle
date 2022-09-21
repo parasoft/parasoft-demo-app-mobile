@@ -24,6 +24,7 @@ test {
             'appium.profile.name',
             'device.name',
             'appium.server.url',
+            'adb.server.port',
             'demo.app.apk.path',
             'pda.server.base-url',
             'duration.of.seconds'

@@ -40,6 +40,8 @@ public final class AppiumConfig {
 
     private static final String DURATION_OF_SECONDS_KEY = "duration.of.seconds";
 
+    private static final String ADB_SERVER_PORT_KEY = "adb.server.port";
+
     private static final String DEFAULT_DEVICE_NAME = "emulator-5554";
 
     private static final String DEFAULT_APPIUM_SERVER_URL = "http://127.0.0.1:4723/wd/hub";
@@ -49,6 +51,8 @@ public final class AppiumConfig {
     private static final String DEFAULT_PDA_SERVER_BASE_URL = "http://10.0.2.2:8080";
 
     private static final String DEFAULT_DURATION_OF_SECONDS = "30";
+
+    private static final String DEFAULT_ADB_SERVER_PORT = "5037";
 
     static {
         try {
@@ -81,6 +85,10 @@ public final class AppiumConfig {
 
     public static int durationOfSeconds() {
         return Integer.parseInt(getConfigValue(DURATION_OF_SECONDS_KEY, DEFAULT_DURATION_OF_SECONDS));
+    }
+
+    public static String adbServerPort() {
+        return getConfigValue(ADB_SERVER_PORT_KEY, DEFAULT_ADB_SERVER_PORT);
     }
 
     private static String getConfigValue(String configKey, String defaultValue) {

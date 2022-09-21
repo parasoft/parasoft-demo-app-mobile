@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
@@ -125,7 +126,7 @@ public class OrderDialog extends DialogFragment {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
-        params.height = (int) (displayMetrics.heightPixels * 0.95);
+        params.height = (displayMetrics.heightPixels / 100) * 95; // Fix the cast violation of `(int) (displayMetrics.heightPixels * 0.95)`
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -134,9 +135,16 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void setClickEvent() {
-        cancelButton.setOnClickListener(v -> dismiss());
-        saveButton.setOnClickListener(v -> dismiss());
-        closeButton.setOnClickListener(v -> dismiss());
+        cancelButton.setOnClickListener(v -> closeAndRefresh());
+        saveButton.setOnClickListener(v -> closeAndRefresh());
+        closeButton.setOnClickListener(v -> closeAndRefresh());
+    }
+
+    private void closeAndRefresh() {
+        dismiss();
+        SwipeRefreshLayout ordersLoader = homeActivity.findViewById(R.id.order_refresh);
+        ordersLoader.setRefreshing(true);
+        homeActivity.loadOrderList(false);
     }
 
     private void getOrderDetails() {
@@ -162,7 +170,9 @@ public class OrderDialog extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    if (getDialog() != null) {
+                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    }
                     Log.e("OrderDialog", "Load order info error", t);
                 }
             });
@@ -170,16 +180,18 @@ public class OrderDialog extends DialogFragment {
 
     private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
-                            orderInfo = response.body().getData();
+                        if(response.code() != 200) {
+                            Log.e("OrderDialog", "Update Order status failed");
+                            return;
                         }
+                        orderInfo = response.body().getData();
                     }
 
                     @Override
@@ -250,6 +262,8 @@ public class OrderDialog extends DialogFragment {
                 status = getResources().getString(R.string.status_approved);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
+            default:
+                status = "";
         }
         return status;
     }
