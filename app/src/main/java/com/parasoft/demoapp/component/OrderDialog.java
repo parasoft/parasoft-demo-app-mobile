@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,6 +70,9 @@ public class OrderDialog extends DialogFragment {
     private TextView purchaseOrderNumber;
     private HomeActivity homeActivity;
     private RecyclerView recyclerView;
+    private Spinner responseSpinner;
+    private String responseValue;
+    private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -93,9 +100,12 @@ public class OrderDialog extends DialogFragment {
         totalQuantity = view.findViewById(R.id.requested_item_total_quantity);
         invoiceNumber = view.findViewById(R.id.invoice_number);
         purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
+        recyclerView = view.findViewById(R.id.order_items_recycler_view);
+        commentsField = view.findViewById(R.id.comments_field);
+        responseSpinner = view.findViewById(R.id.order_response_spinner);
 
         homeActivity = (HomeActivity) getActivity();
-        recyclerView = view.findViewById(R.id.order_items_recycler_view);
+        initSpinner();
         setClickEvent();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
@@ -113,9 +123,9 @@ public class OrderDialog extends DialogFragment {
         Window window = dialog.getWindow();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
-
         params.height = (displayMetrics.heightPixels / 100) * 95; // Fix the cast violation of `(int) (displayMetrics.heightPixels * 0.95)`
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
@@ -276,5 +286,41 @@ public class OrderDialog extends DialogFragment {
     private void showErrorView() {
         location.setText(getResources().getString(R.string.location_loading_error));
         location.setTextColor(getResources().getColor(R.color.error));
+    }
+
+    public void initSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_dropdown_item_layout, R.id.order_response_value, getResources().getStringArray(R.array.order_response)){
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                }
+                return view;
+            }
+        };
+
+        responseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItemText = (String) adapterView.getItemAtPosition(i);
+                if (i > 0) {
+                    responseValue = selectedItemText;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+        responseSpinner.setAdapter(adapter);
     }
 }

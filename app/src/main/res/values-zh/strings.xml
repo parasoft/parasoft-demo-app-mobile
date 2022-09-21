@@ -43,4 +43,8 @@
     <string name="invoice_number">任务ID:</string>
     <string name="purchase_order">员工编号:</string>
     <string name="location_loading_error">位置加载失败</string>
+    <string name="Comments_field">评论</string>
+    <string name="order_response">订单回应...</string>
+    <string name="order_response_approve">通过</string>
+    <string name="order_response_deny">拒绝</string>
 </resources>
