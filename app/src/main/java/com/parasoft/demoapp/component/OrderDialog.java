@@ -38,6 +38,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
+import com.parasoft.demoapp.util.SystemUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -188,6 +189,27 @@ public class OrderDialog extends DialogFragment {
                 });
     }
 
+    private void getLocation(String locationKey) {
+        pdaService.getClient(ApiInterface.class)
+            .localizedValue(SystemUtil.getLocalizedLanguage(getContext()), locationKey)
+                .enqueue(new Callback<ResultResponse<String>>() {
+                    @Override
+                    public void onResponse(Call<ResultResponse<String>> call, Response<ResultResponse<String>> response) {
+                        if(response.code() == 200) {
+                            location.setText(response.body().getData());
+                        } else {
+                            showErrorView();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultResponse<String>> call, Throwable t) {
+                        showErrorView();
+                        Log.e("OrderDialog", "Load location error", t);
+                    }
+                });
+    }
+
     private void setOrderLayout() {
         if (orderInfo.getComments() == null || orderInfo.getComments().length() == 0) {
             comments.setVisibility(View.GONE);
@@ -204,8 +226,8 @@ public class OrderDialog extends DialogFragment {
         orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
-        location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
+        getLocation(orderInfo.getRegion());
         gpsCoordinates.setText(orderInfo.getLocation());
         ImageUtil.loadImage(map, orderInfo.getOrderImage());
         totalQuantity.setText(getTotalQuantity() + "");
@@ -213,36 +235,6 @@ public class OrderDialog extends DialogFragment {
         purchaseOrderNumber.setText(orderInfo.getEventNumber());
 
         initOrderItemRecyclerView();
-    }
-
-    private String getRegion(String region) {
-        switch (region) {
-            case "LOCATION_1" :
-                region = getResources().getString(R.string.location_1);
-                break;
-            case "LOCATION_2" :
-                region = getResources().getString(R.string.location_2);
-                break;
-            case "LOCATION_3" :
-                region = getResources().getString(R.string.location_3);
-                break;
-            case "LOCATION_4" :
-                region = getResources().getString(R.string.location_4);
-                break;
-            case "LOCATION_5" :
-                region = getResources().getString(R.string.location_5);
-                break;
-            case "LOCATION_6" :
-                region = getResources().getString(R.string.location_6);
-                break;
-            case "LOCATION_7" :
-                region = getResources().getString(R.string.location_7);
-                break;
-            case "LOCATION_8" :
-                region = getResources().getString(R.string.location_8);
-                break;
-        }
-        return region;
     }
 
     private String getStatus(String status) {
@@ -275,6 +267,11 @@ public class OrderDialog extends DialogFragment {
             totalQuantity += orderItem.getQuantity();
         }
         return totalQuantity;
+    }
+
+    private void showErrorView() {
+        location.setText(getResources().getString(R.string.location_loading_error));
+        location.setTextColor(getResources().getColor(R.color.error));
     }
 
     public void initSpinner() {

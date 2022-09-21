@@ -41,4 +41,7 @@ public interface ApiInterface {
 
     @GET
     Call<ResponseBody> getImage(@Url String imagePath);
+
+    @GET("/localize/{lang}/{key}")
+    Call<ResultResponse<String>> localizedValue(@Path("lang") String lang, @Path("key") String key);
 }
