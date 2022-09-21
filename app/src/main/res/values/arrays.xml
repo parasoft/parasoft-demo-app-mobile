@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="order_response">
+        <item>@string/order_response</item>
+        <item>@string/order_response_approve</item>
+        <item>@string/order_response_deny</item>
+    </string-array>
+</resources>
