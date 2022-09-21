@@ -116,7 +116,7 @@ public class OrderDialog extends DialogFragment {
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
 
-        params.height = (int) (displayMetrics.heightPixels * 0.95);
+        params.height = (displayMetrics.heightPixels / 100) * 95; // Fix the cast violation of `(int) (displayMetrics.heightPixels * 0.95)`
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -252,6 +252,8 @@ public class OrderDialog extends DialogFragment {
                 status = getResources().getString(R.string.status_approved);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
+            default:
+                status = "";
         }
         return status;
     }
@@ -267,7 +269,7 @@ public class OrderDialog extends DialogFragment {
         Integer totalQuantity = 0;
         for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
             totalQuantity += orderItem.getQuantity();
-        };
+        }
         return totalQuantity;
     }
 
