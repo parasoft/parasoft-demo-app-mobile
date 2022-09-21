@@ -141,7 +141,9 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         OrderAdapter orderAdapter = new OrderAdapter(orders, item -> {
             if (orderItemClickable) {
+                orderItemClickable = false;
                 openOrderDialog(item.getOrderNumber());
+                orderItemClickable = true;
             }
         });
         recyclerView.setAdapter(orderAdapter);
