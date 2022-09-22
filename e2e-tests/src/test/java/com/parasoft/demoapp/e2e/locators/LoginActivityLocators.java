@@ -48,4 +48,5 @@ public class LoginActivityLocators {
 
     public static final By USER_INFORMATION_CLOSE_BUTTON = By.id("com.parasoft.demoapp:id/user_information_close_button");
 
+    public static final By USER_INFORMATION_ERROR_MESSAGE = By.id("com.parasoft.demoapp:id/user_info_message");
 }

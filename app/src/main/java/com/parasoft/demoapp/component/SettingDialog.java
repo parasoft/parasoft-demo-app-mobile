@@ -71,7 +71,7 @@ public class SettingDialog extends DialogFragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int) (displayMetrics.widthPixels * 0.9);
+        params.width = (displayMetrics.widthPixels / 100) * 90; // Fix the cast violation of `(int) (displayMetrics.widthPixels * 0.9)`
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

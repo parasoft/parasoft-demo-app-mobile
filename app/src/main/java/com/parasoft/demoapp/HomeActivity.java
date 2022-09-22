@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -49,14 +48,13 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
+    private boolean orderItemClickable = false;
 
     private OrderAdapter orderAdapter;
     private List<OrderResponse> orderDisplayList = new ArrayList<>();
     private List<OrderResponse> orderResponseList = new ArrayList<>();
     private List<List<OrderResponse>> orderPagination;
     private int page = 0;
-
-    private boolean hasOrders = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void initCustomActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null){
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             actionBar.setCustomView(R.layout.home_title_layout);
         }
@@ -106,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
         if (loadFirstTime) {
             progressBar.setVisibility(View.VISIBLE);
         }
+        orderItemClickable = false;
         errorMessage.setText("");
         errorMessage.setVisibility(View.GONE);
         pdaService.getClient(ApiInterface.class).getOrderList()
@@ -113,42 +112,28 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
-                        ordersLoader.setRefreshing(false);
-                        progressBar.setVisibility(View.GONE);
+                        ordersLoadFinished();
                         if (response.code() != 200) {
-                            if (hasOrders) {
-                                Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
-                            } else {
-                                showErrorView(getResources().getString(R.string.orders_loading_error));
-                            }
+                            showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
                         }
-
-                        OrderListResponse res = response.body().getData();
-                        if (res.getContent().size() == 0) {
-                            hasOrders = false;
+                        List<OrderResponse> orderList = response.body() != null ? response.body().getData().getContent() : null;
+                        if (orderList == null || orderList.size() == 0) {
                             showNoOrderView();
                         } else {
-                            hasOrders = true;
-                            orderResponseList = res.getContent();
-                            orderPagination = ListUtils.partition(res.getContent(), ITEMS_PER_PAGE);
+                            orderResponseList = orderList;
+                            orderPagination = ListUtils.partition(orderList, ITEMS_PER_PAGE);
                             showOrderListView(loadFirstTime);
                         }
-                        if(!loadFirstTime) {
-                            Toast.makeText(HomeActivity.this, R.string.loading_orders_successful, Toast.LENGTH_SHORT).show();
-                        }
+                        orderItemClickable = true;
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderListResponse>> call, @NonNull Throwable t) {
-                        ordersLoader.setRefreshing(false);
-                        progressBar.setVisibility(View.GONE);
-                        if (!hasOrders) {
-                            showErrorView(getResources().getString(R.string.orders_loading_error));
-                        } else {
-                            Toast.makeText(HomeActivity.this, R.string.loading_orders_failed, Toast.LENGTH_LONG).show();
-                        }
-                        Log.e(TAG, t.getMessage());
+                        ordersLoadFinished();
+                        showErrorView(getResources().getString(R.string.orders_loading_error));
+                        orderItemClickable = true;
+                        Log.e(TAG, "Load orders error", t);
                     }
                 });
     }
@@ -170,12 +155,16 @@ public class HomeActivity extends AppCompatActivity {
     public void initRecyclerView() {
         page = 0;
         getData(page);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        orderAdapter = new OrderAdapter(orderDisplayList, item -> openOrderDialog(item.getOrderNumber()));
+        orderAdapter = new OrderAdapter(orderDisplayList, item -> {
+            if (orderItemClickable) {
+                openOrderDialog(item.getOrderNumber());
+            }
+        });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
+        orderAdapter.setCanStart(true);
 
         initListener();
     }
@@ -236,7 +225,7 @@ public class HomeActivity extends AppCompatActivity {
     private void getData(int page) {
         if (page == 0) {
             orderDisplayList.addAll(orderPagination.get(0));
-        } else {
+        } else if (page < orderPagination.size()){
             orderAdapter.addFooterItem(orderPagination.get(page));
         }
     }
@@ -263,5 +252,10 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.GONE);
         errorMessage.setText(errorString);
         errorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void ordersLoadFinished() {
+        ordersLoader.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
-
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +19,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
+    private static boolean canStart = true;
 
     private final int ITEM_TYPE = 0;
     private final int FOOTER_TYPE = 1;
@@ -57,7 +55,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (!orderList.getReviewedByAPV()) {
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }
-            itemViewHolder.orderIndex.setText(position + 1 + "");
+            itemViewHolder.orderIndex.setText((position + 1) + "");
             itemViewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
             itemViewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
             itemViewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
@@ -153,7 +151,12 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         public void bind(final OrderResponse item, final OnItemClickListener listener) {
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            itemView.setOnClickListener(v -> {
+                if(canStart){
+                    listener.onItemClick(item);
+                    canStart = false;
+                }
+            });
         }
     }
 
@@ -163,8 +166,10 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.color_green));
                 return context.getResources().getString(R.string.status_open);
             case APPROVED:
+                viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.light_black));
                 return context.getResources().getString(R.string.status_approved);
             case DECLINED:
+                viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.light_black));
                 return context.getResources().getString(R.string.status_denied);
             default:
                 return "";
@@ -173,5 +178,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public interface OnItemClickListener {
         void onItemClick(OrderResponse item);
+    }
+
+    public void setCanStart(boolean can) {
+        canStart = can;
     }
 }

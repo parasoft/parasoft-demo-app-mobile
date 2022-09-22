@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class LoginUtil {
+public class TestUtils {
 
     public static void login(WebDriver driver, String username, String password) {
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppiumConfig.durationOfSeconds()));
@@ -26,5 +26,17 @@ public class LoginUtil {
 
         WebElement singInButton = driver.findElement(LoginActivityLocators.SIGN_IN_BUTTON);
         wait.until(ExpectedConditions.elementToBeClickable(singInButton)).click();
+    }
+
+    public static void setBaseUrl(WebDriver driver, String baseUrl) {
+        final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppiumConfig.durationOfSeconds()));
+        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.APP_TITLE));
+
+        WebElement settingButton = driver.findElement(LoginActivityLocators.SETTING_BUTTON);
+        settingButton.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
+        driver.findElement(LoginActivityLocators.BASE_URL_INPUT).sendKeys(baseUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(LoginActivityLocators.BASE_URL_SAVE_BUTTON)).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
     }
 }

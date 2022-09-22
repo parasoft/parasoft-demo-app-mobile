@@ -12,10 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.parasoft.demoapp.HomeActivity;
 import com.parasoft.demoapp.R;
@@ -34,6 +41,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
+import com.parasoft.demoapp.util.SystemUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,8 +70,14 @@ public class OrderDialog extends DialogFragment {
     private TextView invoiceNumber;
     private TextView totalQuantity;
     private TextView purchaseOrderNumber;
+    private ScrollView scrollView;
+    private ProgressBar progressBar;
     private HomeActivity homeActivity;
     private RecyclerView recyclerView;
+    private Spinner responseSpinner;
+    private String responseValue;
+    private View contentDivider;
+    private EditText commentsField;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -91,10 +105,17 @@ public class OrderDialog extends DialogFragment {
         totalQuantity = view.findViewById(R.id.requested_item_total_quantity);
         invoiceNumber = view.findViewById(R.id.invoice_number);
         purchaseOrderNumber = view.findViewById(R.id.purchase_order_number);
+        recyclerView = view.findViewById(R.id.order_items_recycler_view);
+        commentsField = view.findViewById(R.id.comments_field);
+        responseSpinner = view.findViewById(R.id.order_response_spinner);
+        scrollView = view.findViewById(R.id.order_scroll_view);
+        progressBar = view.findViewById(R.id.order_dialog_progressBar);
+        contentDivider = view.findViewById(R.id.order_content_divider);
 
         homeActivity = (HomeActivity) getActivity();
-        recyclerView = view.findViewById(R.id.order_items_recycler_view);
+        initSpinner();
         setClickEvent();
+        showLoadingPage();
         TextView orderDialogTitle = view.findViewById(R.id.order_dialog_title);
         orderDialogTitle.setText(getString(R.string.order_dialog_title, orderNumber));
         getOrderDetails();
@@ -111,10 +132,10 @@ public class OrderDialog extends DialogFragment {
         Window window = dialog.getWindow();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         window.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = displayMetrics.widthPixels;
-
-        params.height = (int) (displayMetrics.heightPixels * 0.95);
+        params.height = (displayMetrics.heightPixels / 100) * 95; // Fix the cast violation of `(int) (displayMetrics.heightPixels * 0.95)`
         params.gravity = Gravity.BOTTOM;
         window.setAttributes(params);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -123,57 +144,94 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void setClickEvent() {
-        cancelButton.setOnClickListener(v -> dismiss());
-        saveButton.setOnClickListener(v -> dismiss());
-        closeButton.setOnClickListener(v -> dismiss());
+        cancelButton.setOnClickListener(v -> closeAndRefresh());
+        saveButton.setOnClickListener(v -> closeAndRefresh());
+        closeButton.setOnClickListener(v -> closeAndRefresh());
+    }
+
+    private void closeAndRefresh() {
+        dismiss();
+        SwipeRefreshLayout ordersLoader = homeActivity.findViewById(R.id.order_refresh);
+        ordersLoader.setRefreshing(true);
+        homeActivity.loadOrderList(false);
     }
 
     private void getOrderDetails() {
-        errorMessage.setText("");
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
-                    if(code == 200) {
+                    if (code == 200) {
                         orderInfo = response.body().getData();
                         setOrderLayout();
+                        showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
-                    } else if(code == 404) {
-                        errorMessage.setText(getResources().getString(R.string.order_not_found, orderNumber));
-                    }
-                    else {
-                        errorMessage.setText(getResources().getString(R.string.order_loading_error));
+                    } else if (code == 404) {
+                        String errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                        showErrorPage(errMsg);
+                        Log.e(TAG, errMsg);
+                    } else {
+                        String errMsg = getResources().getString(R.string.order_loading_error);
+                        showErrorPage(errMsg);
+                        Log.e(TAG, errMsg);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    errorMessage.setText(getResources().getString(R.string.order_loading_error));
-                    Log.e("OrderDialog", "Load order info error", t);
+                    if (getDialog() != null) {
+                        showErrorPage(getResources().getString(R.string.order_loading_error));
+                    }
+                    Log.e(TAG, "Load order info error", t);
                 }
             });
     }
 
     private void updateOrderStatus(OrderResponse oldOrderInfo) {
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus().getStatus());
+        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
         orderStatusRequest.setReviewedByAPV(true);
 
         pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
-                            orderInfo = response.body().getData();
+                        if (response.code() != 200) {
+                            // TODO waiting for feedback on where to display error
+                            Log.e(TAG, "Update Order status failed");
+                            return;
                         }
+                        orderInfo = response.body().getData();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                        Log.e("OrderDialog", "Update Order status failed", t);
+                        // TODO waiting for feedback on where to display error
+                        Log.e(TAG, "Update Order status failed", t);
+                    }
+                });
+    }
+
+    private void getLocation(String locationKey) {
+        pdaService.getClient(ApiInterface.class)
+            .localizedValue(SystemUtil.getLocalizedLanguage(getContext()), locationKey)
+                .enqueue(new Callback<ResultResponse<String>>() {
+                    @Override
+                    public void onResponse(Call<ResultResponse<String>> call, Response<ResultResponse<String>> response) {
+                        if(response.code() == 200) {
+                            location.setText(response.body().getData());
+                        } else {
+                            showLocationError();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultResponse<String>> call, Throwable t) {
+                        showLocationError();
+                        Log.e(TAG, "Load location error", t);
                     }
                 });
     }
@@ -184,18 +242,13 @@ public class OrderDialog extends DialogFragment {
         } else {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
-            if(commentsDetail.getLineCount() == 1) {
-                commentsDetail.setGravity(Gravity.END);
-            } else {
-                commentsDetail.setGravity(Gravity.START);
-            }
         }
         orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
         orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
-        location.setText(getRegion(orderInfo.getRegion()));
         receiverName.setText(orderInfo.getReceiverId());
+        getLocation(orderInfo.getRegion());
         gpsCoordinates.setText(orderInfo.getLocation());
         ImageUtil.loadImage(map, orderInfo.getOrderImage());
         totalQuantity.setText(getTotalQuantity() + "");
@@ -203,36 +256,6 @@ public class OrderDialog extends DialogFragment {
         purchaseOrderNumber.setText(orderInfo.getEventNumber());
 
         initOrderItemRecyclerView();
-    }
-
-    private String getRegion(String region) {
-        switch (region) {
-            case "LOCATION_1" :
-                region = getResources().getString(R.string.location_1);
-                break;
-            case "LOCATION_2" :
-                region = getResources().getString(R.string.location_2);
-                break;
-            case "LOCATION_3" :
-                region = getResources().getString(R.string.location_3);
-                break;
-            case "LOCATION_4" :
-                region = getResources().getString(R.string.location_4);
-                break;
-            case "LOCATION_5" :
-                region = getResources().getString(R.string.location_5);
-                break;
-            case "LOCATION_6" :
-                region = getResources().getString(R.string.location_6);
-                break;
-            case "LOCATION_7" :
-                region = getResources().getString(R.string.location_7);
-                break;
-            case "LOCATION_8" :
-                region = getResources().getString(R.string.location_8);
-                break;
-        }
-        return region;
     }
 
     private String getStatus(String status) {
@@ -248,6 +271,8 @@ public class OrderDialog extends DialogFragment {
                 status = getResources().getString(R.string.status_approved);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
+            default:
+                status = "";
         }
         return status;
     }
@@ -263,7 +288,91 @@ public class OrderDialog extends DialogFragment {
         Integer totalQuantity = 0;
         for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
             totalQuantity += orderItem.getQuantity();
-        };
+        }
         return totalQuantity;
+    }
+
+    private void showLocationError() {
+        location.setText(getResources().getString(R.string.location_loading_error));
+        location.setTextColor(getResources().getColor(R.color.error));
+    }
+
+    public void initSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_dropdown_item_layout, R.id.order_response_value, getResources().getStringArray(R.array.order_response)){
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                }
+                return view;
+            }
+        };
+
+        responseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItemText = (String) adapterView.getItemAtPosition(i);
+                if (i > 0) {
+                    responseValue = selectedItemText;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+        responseSpinner.setAdapter(adapter);
+    }
+
+    public void showLoadingPage() {
+        progressBar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
+        commentsField.setVisibility(View.GONE);
+        responseSpinner.setVisibility(View.GONE);
+        contentDivider.setVisibility(View.GONE);
+        errorMessage.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
+    }
+
+    public void showOrderPage() {
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
+        String status = orderInfo.getStatus().getStatus();
+        if ("Submitted".equals(status)) {
+            commentsField.setVisibility(View.VISIBLE);
+            responseSpinner.setVisibility(View.VISIBLE);
+            contentDivider.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+        } else {
+            commentsField.setVisibility(View.GONE);
+            responseSpinner.setVisibility(View.GONE);
+            contentDivider.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+        }
+        errorMessage.setVisibility(View.GONE);
+    }
+
+    public void showErrorPage(String errMsg) {
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+        commentsField.setVisibility(View.GONE);
+        responseSpinner.setVisibility(View.GONE);
+        contentDivider.setVisibility(View.GONE);
+        errorMessage.setText(errMsg);
+        errorMessage.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
     }
 }
