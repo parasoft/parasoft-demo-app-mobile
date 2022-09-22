@@ -52,6 +52,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewHolder instanceof ItemViewHolder) {
             OrderResponse orderList = mOrderList.get(position);
             ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
+            itemViewHolder.orderNewStatus.setVisibility(View.GONE);
             if (!orderList.getReviewedByAPV()) {
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }

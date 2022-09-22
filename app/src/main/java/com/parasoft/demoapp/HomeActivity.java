@@ -51,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
     private boolean orderItemClickable = false;
 
     private OrderAdapter orderAdapter;
-    private List<OrderResponse> orderDisplayList = new ArrayList<>();
+    private final List<OrderResponse> orderDisplayList = new ArrayList<>();
     private List<OrderResponse> orderResponseList = new ArrayList<>();
     private List<List<OrderResponse>> orderPagination;
     private int page = 0;
@@ -185,13 +185,10 @@ public class HomeActivity extends AppCompatActivity {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    page++;
-                                    getData(page);
-                                    orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
-                                }
+                            runOnUiThread(() -> {
+                                page++;
+                                getData(page);
+                                orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
                             });
                         }
                     }, 3000);
@@ -202,30 +199,22 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         // slide-down refresh
-        ordersLoader.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // to avoid possible repeated slide-down operation
-                if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
-                    orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
-                    return;
-                }
-
-                orderAdapter.setLoadState(OrderAdapter.LOADING);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadOrderList(false);
-                    }
-                }, 3000);
+        ordersLoader.setOnRefreshListener(() -> {
+            // to avoid possible repeated slide-down operation
+            if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
+                orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
+                return;
             }
+
+            orderAdapter.setLoadState(OrderAdapter.LOADING);
+            new Handler().postDelayed(() -> loadOrderList(false), 3000);
         });
     }
 
     private void getData(int page) {
         if (page == 0) {
             orderDisplayList.addAll(orderPagination.get(0));
-        } else if (page < orderPagination.size()){
+        } else if (page < orderPagination.size()) {
             orderAdapter.addFooterItem(orderPagination.get(page));
         }
     }
@@ -239,7 +228,7 @@ public class HomeActivity extends AppCompatActivity {
     private void showOrderListView(boolean loadFirstTime) {
         noOrderInfo.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
-        if (loadFirstTime) {
+        if (loadFirstTime || orderDisplayList.size() == 0) {
             initRecyclerView();
         } else {
             orderAdapter.addHeaderItem(orderPagination.get(0));

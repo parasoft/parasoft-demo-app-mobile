@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -11,12 +11,12 @@
         android:maxHeight="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingVertical="10dp"
         android:indeterminateTint="@color/app_status_bar" />
 
     <TextView
         android:id="@+id/bottom_blank"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
