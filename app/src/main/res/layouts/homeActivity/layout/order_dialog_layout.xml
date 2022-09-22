@@ -107,7 +107,6 @@
                         android:id="@+id/order_time_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:textColor="@color/gray_text"
                         android:textSize="18sp"
                         android:layout_alignParentStart="true"/>
@@ -116,7 +115,6 @@
                         android:id="@+id/order_time_hour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
                         android:textColor="@color/gray_text"
                         android:textSize="18sp"
                         android:layout_marginEnd="10dp"
@@ -129,7 +127,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:textColor="@color/color_green"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -160,7 +157,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="start"
                         android:textColor="@color/light_black"
                         android:id="@+id/comments_detail"/>
                 </LinearLayout>
@@ -186,7 +182,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:gravity="end"
                     android:textColor="@color/light_black"/>
             </LinearLayout>
@@ -213,14 +208,18 @@
                     android:textColor="@color/gray_text"
                     android:text="@string/location"/>
 
-                <TextView
-                    android:id="@+id/location"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:gravity="end"
-                    android:textColor="@color/light_black"/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/light_black"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -237,14 +236,18 @@
                     android:textColor="@color/gray_text"
                     android:text="@string/receiver_name"/>
 
-                <TextView
-                    android:id="@+id/receiver_name"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:gravity="end"
-                    android:textColor="@color/light_black"/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+                    <TextView
+                        android:id="@+id/receiver_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/light_black"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -266,7 +269,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text=""
                     android:gravity="end"
                     android:textColor="@color/light_black"/>
             </LinearLayout>
@@ -325,47 +327,62 @@
                 android:textColor="@color/light_black"
                 android:layout_marginBottom="10dp"/>
 
-            <TableLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="60dp" >
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <TableRow
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/gray_text"
-                        android:text="@string/invoice_number"/>
+                    android:textColor="@color/gray_text"
+                    android:text="@string/invoice_number"/>
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="end">
                     <TextView
                         android:id="@+id/invoice_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:layout_weight="1"
-                        android:textColor="@color/light_black" />
-                </TableRow>
+                        android:textColor="@color/light_black"/>
+                </LinearLayout>
+            </LinearLayout>
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/gray_text"
-                        android:text="@string/purchase_order" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="60dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_text"
+                    android:text="@string/purchase_order"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="end">
                     <TextView
                         android:id="@+id/purchase_order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:layout_weight="1"
-                        android:textColor="@color/light_black" />
-                </TableRow>
-            </TableLayout>
+                        android:textColor="@color/light_black"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
