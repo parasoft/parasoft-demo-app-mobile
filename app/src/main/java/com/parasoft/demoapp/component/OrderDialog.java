@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -38,6 +39,7 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
+import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
@@ -78,6 +80,7 @@ public class OrderDialog extends DialogFragment {
     private String responseValue;
     private View contentDivider;
     private EditText commentsField;
+    private OrderStatusRequest orderStatusRequest;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -145,7 +148,7 @@ public class OrderDialog extends DialogFragment {
 
     private void setClickEvent() {
         cancelButton.setOnClickListener(v -> closeAndRefresh());
-        saveButton.setOnClickListener(v -> closeAndRefresh());
+        saveButton.setOnClickListener(v -> saveOrderDetails());
         closeButton.setOnClickListener(v -> closeAndRefresh());
     }
 
@@ -157,7 +160,13 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void getOrderDetails() {
-        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber)
+        if(Looper.myLooper() == null) {
+            Looper.prepare();
+        }
+        homeActivity.runOnUiThread(() -> saveButton.setEnabled(false));
+        saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
+        orderStatusRequest = new OrderStatusRequest();
+        pdaService.getClient(ApiInterface.class).getOrderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
@@ -167,7 +176,9 @@ public class OrderDialog extends DialogFragment {
                         setOrderLayout();
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
-                            updateOrderStatus(orderInfo);
+                            orderStatusRequest.setStatus(orderInfo.getStatus());
+                            orderStatusRequest.setReviewedByAPV(true);
+                            updateOrderDetails(orderStatusRequest);
                         }
                     } else if (code == 404) {
                         String errMsg = getResources().getString(R.string.order_not_found, orderNumber);
@@ -190,27 +201,31 @@ public class OrderDialog extends DialogFragment {
             });
     }
 
-    private void updateOrderStatus(OrderResponse oldOrderInfo) {
-        OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        orderStatusRequest.setStatus(oldOrderInfo.getStatus());
-        orderStatusRequest.setReviewedByAPV(true);
-
-        pdaService.getClient(ApiInterface.class).orderDetails(orderNumber, orderStatusRequest)
+    private void updateOrderDetails(OrderStatusRequest orderStatusRequest) {
+        pdaService.getClient(ApiInterface.class).updateOrderDetails(orderNumber, orderStatusRequest)
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if (response.code() != 200) {
+                        if(response.code() == 200) {
+                            orderInfo = response.body().getData();
+                            if (saveButton.isEnabled()) {
+                                closeAndRefresh();
+                            }
+                        } else if (response.code() == 404) {
                             // TODO waiting for feedback on where to display error
-                            Log.e(TAG, "Update Order status failed");
+                            Log.e(TAG, "Order not found");
+                            return;
+                        } else {
+                            // TODO waiting for feedback on where to display error
+                            Log.e(TAG, "Comments are too long");
                             return;
                         }
-                        orderInfo = response.body().getData();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                         // TODO waiting for feedback on where to display error
-                        Log.e(TAG, "Update Order status failed", t);
+                        Log.e(TAG, "Update Order details failed", t);
                     }
                 });
     }
@@ -321,6 +336,10 @@ public class OrderDialog extends DialogFragment {
                 String selectedItemText = (String) adapterView.getItemAtPosition(i);
                 if (i > 0) {
                     responseValue = selectedItemText;
+                    if(!saveButton.isEnabled()) {
+                        saveButton.setEnabled(true);
+                        saveButton.setTextColor(getResources().getColor(R.color.dark_blue));
+                    }
                 }
             }
 
@@ -374,5 +393,15 @@ public class OrderDialog extends DialogFragment {
         errorMessage.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
+    }
+
+    private void saveOrderDetails() {
+        if (responseValue.equals("Deny")) {
+            orderStatusRequest.setStatus(OrderStatus.DECLINED);
+        } else {
+            orderStatusRequest.setStatus(OrderStatus.APPROVED);
+        }
+        orderStatusRequest.setComments(commentsField.getText().toString());
+        updateOrderDetails(orderStatusRequest);
     }
 }
