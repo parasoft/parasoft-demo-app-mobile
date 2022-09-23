@@ -43,7 +43,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
-import com.parasoft.demoapp.util.KeyboardUtil;
+import com.parasoft.demoapp.util.CommonUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
 import com.parasoft.demoapp.util.SystemUtil;
 
@@ -153,15 +153,16 @@ public class OrderDialog extends DialogFragment {
         return new Dialog(getActivity(), getTheme()) {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public boolean dispatchTouchEvent(@NonNull MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     View view = getCurrentFocus();
-                    // Determine if the clicked area is outside the input box
-                    if (KeyboardUtil.isShouldHideInput(view, motionEvent)) {
-                        KeyboardUtil.hideKeyboard(getContext(), getCurrentFocus());
+                    if (view instanceof EditText) {
+                        if (CommonUtil.isFocusInsideView(view, event)) {
+                            CommonUtil.hideKeyboardForView(getContext(), view);
+                        }
                     }
                 }
-                return super.dispatchTouchEvent(motionEvent);
+                return super.dispatchTouchEvent(event);
             }
         };
     }
