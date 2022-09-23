@@ -190,6 +190,7 @@ public class OrderDialog extends DialogFragment {
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
                     if (code == 200) {
+                        assert response.body() != null;
                         orderInfo = response.body().getData();
                         setOrderLayout();
                         showOrderPage();
@@ -225,10 +226,10 @@ public class OrderDialog extends DialogFragment {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                         if(response.code() == 200) {
+                            assert response.body() != null;
                             orderInfo = response.body().getData();
                             if (closeDialog) {
                                 closeAndRefresh();
-                                return;
                             }
                         } else if (response.code() == 404) {
                             // TODO waiting for feedback on where to display error
@@ -256,7 +257,8 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
-                        if(response.code() == 200) {
+                        if (response.code() == 200) {
+                            assert response.body() != null;
                             location.setText(response.body().getData());
                         } else {
                             showLocationError();

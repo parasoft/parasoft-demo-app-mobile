@@ -24,6 +24,7 @@ public class ImageUtil {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.code() == 200) {
+                        assert response.body() != null;
                         Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
                         imageView.setImageBitmap(bitmap);
                     } else {

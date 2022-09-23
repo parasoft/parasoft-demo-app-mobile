@@ -16,12 +16,12 @@ import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     private final OnItemClickListener listener;
-    private List<OrderResponse> mOrderList;
+    private final List<OrderResponse> mOrderList;
     private Context context;
     private static boolean canStart = true;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
-        mOrderList =  orderList;
+        mOrderList = orderList;
         listener = customListener;
     }
 

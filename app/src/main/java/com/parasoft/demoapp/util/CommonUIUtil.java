@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parasoft.demoapp.BuildConfig;
@@ -17,7 +16,6 @@ import com.parasoft.demoapp.R;
 public class CommonUIUtil {
     /**
      * Determines if the focus of a motion event is inside specified view
-     * @param view
      * @param event motion event which triggered the focus
      */
     public static boolean isFocusInsideView(View view, MotionEvent event) {
