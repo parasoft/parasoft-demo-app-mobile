@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,7 +79,6 @@ public class OrderDialog extends DialogFragment {
     private String responseValue;
     private View contentDivider;
     private EditText commentsField;
-    private OrderStatusRequest orderStatusRequest;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -160,12 +158,6 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void getOrderDetails() {
-        if(Looper.myLooper() == null) {
-            Looper.prepare();
-        }
-        homeActivity.runOnUiThread(() -> saveButton.setEnabled(false));
-        saveButton.setTextColor(getResources().getColor(R.color.button_disabled));
-        orderStatusRequest = new OrderStatusRequest();
         pdaService.getClient(ApiInterface.class).getOrderDetails(orderNumber)
             .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                 @Override
@@ -176,6 +168,7 @@ public class OrderDialog extends DialogFragment {
                         setOrderLayout();
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
+                            OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
                             orderStatusRequest.setStatus(orderInfo.getStatus());
                             orderStatusRequest.setReviewedByAPV(true);
                             updateOrderDetails(orderStatusRequest);
@@ -396,6 +389,7 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void saveOrderDetails() {
+        OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         if (responseValue.equals("Deny")) {
             orderStatusRequest.setStatus(OrderStatus.DECLINED);
         } else {
