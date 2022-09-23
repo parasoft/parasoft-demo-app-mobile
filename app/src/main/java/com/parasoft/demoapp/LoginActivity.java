@@ -34,8 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.parasoft.demoapp.util.FooterUtil;
-import com.parasoft.demoapp.util.SettingsUtil;
+import com.parasoft.demoapp.util.CommonUIUtil;
+import com.parasoft.demoapp.util.CommonUtil;
 
 @Getter
 public class LoginActivity extends AppCompatActivity {
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_login);
         initCustomActionBar();
-        FooterUtil.setFooterInfo(this);
+        CommonUIUtil.initializedFooter(this);
 
         usernameInput = findViewById(R.id.username);
         passwordInput = findViewById(R.id.password);
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         setElementEnabledStatus(signInButton, false);
 
         // Set default base url or existing base url
-        PDAService.setBaseUrl(SettingsUtil.getBaseUrl(this));
+        PDAService.setBaseUrl(CommonUtil.getBaseUrl(this));
     }
 
     public void initCustomActionBar() {

@@ -34,10 +34,10 @@ public interface ApiInterface {
     Call<ResultResponse<OrderListResponse>> getOrderList();
 
     @GET("/v1/orders/{orderNumber}")
-    Call<ResultResponse<OrderResponse>> orderDetails(@Path("orderNumber") String orderNumber);
+    Call<ResultResponse<OrderResponse>> getOrderDetails(@Path("orderNumber") String orderNumber);
 
     @PUT("/v1/orders/{orderNumber}")
-    Call<ResultResponse<OrderResponse>> orderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatusRequest orderStatusRequest);
+    Call<ResultResponse<OrderResponse>> updateOrderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatusRequest orderStatusRequest);
 
     @GET
     Call<ResponseBody> getImage(@Url String imagePath);

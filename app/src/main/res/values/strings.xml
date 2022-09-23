@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Parademo</string>
     <string name="app_title" translatable="false">PARASOFT DEMO APP</string>
     <string name="sign_in">Sign In</string>
@@ -7,7 +7,7 @@
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="settings">Settings</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="save">SAVE</string>
     <string name="base_url">Base URL</string>
     <string name="default_url" translatable="false">http://10.0.2.2:8080</string>
@@ -46,7 +46,9 @@
     <string name="purchase_order">Purchase order:</string>
     <string name="location_loading_error">Error loading location</string>
     <string name="Comments_field">Comments</string>
-    <string name="order_response">Order response...</string>
+    <string name="order_response" tools:ignore="TypographyEllipsis">Order response...</string>
     <string name="order_response_approve">Approve</string>
     <string name="order_response_deny">Deny</string>
+    <string name="order_number">#%1$s</string>
+    <string name="order_item_quantity">x%1$d</string>
 </resources>
