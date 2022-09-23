@@ -169,6 +169,10 @@ public class OrderDialog extends DialogFragment {
                         if (!orderInfo.getReviewedByAPV()) {
                             updateOrderStatus(orderInfo);
                         }
+                    } else if (code == 401) {
+                        String errMsg = getResources().getString(R.string.no_permission_to_get_order);
+                        showErrorPage(errMsg);
+                        Log.e(TAG, errMsg);
                     } else if (code == 404) {
                         String errMsg = getResources().getString(R.string.order_not_found, orderNumber);
                         showErrorPage(errMsg);
