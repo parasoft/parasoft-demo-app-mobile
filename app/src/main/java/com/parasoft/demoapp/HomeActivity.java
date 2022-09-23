@@ -113,6 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
                         ordersLoadFinished();
+                        orderDisplayList.clear();
                         if (response.code() != 200) {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
@@ -164,7 +165,6 @@ public class HomeActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
-        orderAdapter.setCanStart(true);
 
         initListener();
     }
@@ -199,16 +199,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         // slide-down refresh
-        ordersLoader.setOnRefreshListener(() -> {
-            // to avoid possible repeated slide-down operation
-            if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
-                orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
-                return;
-            }
-
-            orderAdapter.setLoadState(OrderAdapter.LOADING);
-            new Handler().postDelayed(() -> loadOrderList(false), 3000);
-        });
+        ordersLoader.setOnRefreshListener(() -> new Handler().postDelayed(() -> loadOrderList(false), 3000));
     }
 
     private void getData(int page) {
@@ -233,6 +224,8 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             orderAdapter.addHeaderItem(orderPagination.get(0));
         }
+
+        orderAdapter.setCanStart(true);
         orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
     }
 
