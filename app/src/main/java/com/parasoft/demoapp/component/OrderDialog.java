@@ -250,7 +250,7 @@ public class OrderDialog extends DialogFragment {
         receiverName.setText(orderInfo.getReceiverId());
         getLocation(orderInfo.getRegion());
         gpsCoordinates.setText(orderInfo.getLocation());
-        ImageUtil.loadImage(map, orderInfo.getOrderImage());
+        ImageUtil.loadImage(map, orderInfo.getOrderImage(), null);
         totalQuantity.setText(getTotalQuantity() + "");
         invoiceNumber.setText(orderInfo.getEventId());
         purchaseOrderNumber.setText(orderInfo.getEventNumber());

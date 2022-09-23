@@ -12,6 +12,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/order_item_img"
             android:layout_width="115dp"
             android:layout_height="65dp"
@@ -28,6 +29,7 @@
             tools:ignore="ContentDescription" />
 
         <LinearLayout
+            android:id="@+id/order_item_name_layout"
             android:layout_width="150dp"
             android:layout_height="65dp"
             android:gravity="center"

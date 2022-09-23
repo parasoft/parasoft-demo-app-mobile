@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         orderItem = mOrderItemList.get(position);
 
-        ImageUtil.loadImage(viewHolder.orderItemImage, orderItem.getImage());
+        ImageUtil.loadImage(viewHolder.orderItemImage, orderItem.getImage(), viewHolder);
         viewHolder.orderItemTitle.setText(orderItem.getName());
         viewHolder.orderItemQuantity.setText("x" + orderItem.getQuantity());
     }
@@ -47,14 +48,18 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView orderItemImage;
+        ImageView darkOverlay;
         TextView orderItemTitle;
         TextView orderItemQuantity;
+        LinearLayout orderItemNameLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             orderItemImage = itemView.findViewById(R.id.order_item_img);
             orderItemTitle = itemView.findViewById(R.id.order_item_name);
             orderItemQuantity = itemView.findViewById(R.id.order_item_quantity);
+            darkOverlay = itemView.findViewById(R.id.order_item_dark_overlay);
+            orderItemNameLayout = itemView.findViewById(R.id.order_item_name_layout);
         }
     }
 }
