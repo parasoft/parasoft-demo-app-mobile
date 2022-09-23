@@ -22,7 +22,7 @@ import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
-import com.parasoft.demoapp.util.FooterUtil;
+import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
 import com.parasoft.demoapp.util.TimeUtil;
 
@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_home);
         initCustomActionBar();
-        FooterUtil.setFooterInfo(this);
+        CommonUIUtil.initializedFooter(this);
 
         progressBar = findViewById(R.id.progress_bar);
         errorMessage = findViewById(R.id.order_error_message);
