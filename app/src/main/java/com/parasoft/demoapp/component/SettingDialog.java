@@ -25,7 +25,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.parasoft.demoapp.LoginActivity;
 import com.parasoft.demoapp.R;
-import com.parasoft.demoapp.util.SettingsUtil;
+import com.parasoft.demoapp.util.CommonUtil;
 
 import lombok.Getter;
 
@@ -90,11 +90,11 @@ public class SettingDialog extends DialogFragment {
 
     public void saveBaseUrl() {
         String baseUrl = baseUrlInput.getText().toString();
-        SettingsUtil.saveBaseUrl(loginActivity, baseUrl);
+        CommonUtil.saveBaseUrl(loginActivity, baseUrl);
     }
 
     public void fillBaseUrl() {
-        baseUrlInput.setText(SettingsUtil.getBaseUrl(loginActivity));
+        baseUrlInput.setText(CommonUtil.getBaseUrl(loginActivity));
     }
 
     private class BaseUrlTextWatcher implements TextWatcher {
