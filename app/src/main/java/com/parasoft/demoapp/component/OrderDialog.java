@@ -3,11 +3,13 @@ package com.parasoft.demoapp.component;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +43,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
+import com.parasoft.demoapp.util.KeyboardUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
 import com.parasoft.demoapp.util.SystemUtil;
 
@@ -142,6 +146,27 @@ public class OrderDialog extends DialogFragment {
 
         super.onStart();
     }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getActivity(), getTheme()) {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public boolean dispatchTouchEvent(@NonNull MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    View view = getCurrentFocus();
+                    // Determine if the clicked area is outside the input box
+                    if (KeyboardUtil.isShouldHideInput(view, motionEvent)) {
+                        KeyboardUtil.hideKeyboard(getContext(), getCurrentFocus());
+                    }
+                }
+                return super.dispatchTouchEvent(motionEvent);
+            }
+        };
+    }
+
+
 
     private void setClickEvent() {
         cancelButton.setOnClickListener(v -> closeAndRefresh());
