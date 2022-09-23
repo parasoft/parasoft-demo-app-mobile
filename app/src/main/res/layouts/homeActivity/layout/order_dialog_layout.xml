@@ -71,7 +71,8 @@
         android:contentDescription="@string/order_dialog_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_clear_24" />
+        app:srcCompat="@drawable/ic_baseline_clear_24"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <ScrollView
         android:id="@+id/order_scroll_view"
@@ -416,6 +417,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
+        android:contentDescription="@string/order_response"
         android:dropDownWidth="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/comments_field"
         app:layout_constraintEnd_toEndOf="parent"

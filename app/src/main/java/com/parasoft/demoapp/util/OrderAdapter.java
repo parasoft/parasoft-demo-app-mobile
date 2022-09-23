@@ -15,7 +15,7 @@ import java.util.List;
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
     private List<OrderResponse> mOrderList;
     private Context context;
     private static boolean canStart = true;
@@ -25,6 +25,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         listener = customListener;
     }
 
+    @androidx.annotation.NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -34,12 +35,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     // Set values of the views in Recycler View
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@androidx.annotation.NonNull @NonNull ViewHolder viewHolder, int position) {
         OrderResponse orderList = mOrderList.get(position);
         if (!orderList.getReviewedByAPV()) {
             viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
         }
-        viewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
+        viewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
         viewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
         viewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
                 orderList.getSubmissionDate().lastIndexOf('.')));

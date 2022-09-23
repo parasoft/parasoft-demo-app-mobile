@@ -24,6 +24,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         mOrderItemList =  orderItemList;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -37,7 +38,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
 
         ImageUtil.loadImage(viewHolder.orderItemImage, orderItem.getImage());
         viewHolder.orderItemTitle.setText(orderItem.getName());
-        viewHolder.orderItemQuantity.setText("x" + orderItem.getQuantity());
+        viewHolder.orderItemQuantity.setText(context.getResources().getString(R.string.order_item_quantity, orderItem.getQuantity()));
     }
 
     @Override
