@@ -24,6 +24,7 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.FooterUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
+import com.parasoft.demoapp.util.TimeUtil;
 
 import java.util.List;
 
@@ -107,6 +108,9 @@ public class HomeActivity extends AppCompatActivity {
                         if (orderList == null || orderList.size() == 0) {
                             showNoOrderView();
                         } else {
+                            for (OrderResponse orderResponse : orderList) {
+                                orderResponse.setSubmissionDate(TimeUtil.convertToLocalTime(orderResponse.getSubmissionDate()));
+                            }
                             showOrderListView(orderList);
                         }
                         orderItemClickable = true;

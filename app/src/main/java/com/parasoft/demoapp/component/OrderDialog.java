@@ -42,6 +42,7 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
 import com.parasoft.demoapp.util.SystemUtil;
+import com.parasoft.demoapp.util.TimeUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -164,6 +165,7 @@ public class OrderDialog extends DialogFragment {
                     int code = response.code();
                     if (code == 200) {
                         orderInfo = response.body().getData();
+                        orderInfo.setSubmissionDate(TimeUtil.convertToLocalTime(orderInfo.getSubmissionDate()));
                         setOrderLayout();
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
