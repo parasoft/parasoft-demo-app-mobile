@@ -191,6 +191,7 @@ public class OrderDialog extends DialogFragment {
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
                     if (code == 200) {
+                        assert response.body() != null;
                         orderInfo = response.body().getData();
                         orderInfo.setSubmissionDate(TimeUtil.convertToLocalTime(orderInfo.getSubmissionDate()));
                         setOrderLayout();
@@ -227,10 +228,10 @@ public class OrderDialog extends DialogFragment {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                         if(response.code() == 200) {
+                            assert response.body() != null;
                             orderInfo = response.body().getData();
                             if (closeDialog) {
                                 closeAndRefresh();
-                                return;
                             }
                         } else if (response.code() == 404) {
                             // TODO waiting for feedback on where to display error
@@ -257,8 +258,9 @@ public class OrderDialog extends DialogFragment {
             .localizedValue(CommonUtil.getLocalizedLanguage(getContext()), locationKey)
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
-                    public void onResponse(Call<ResultResponse<String>> call, Response<ResultResponse<String>> response) {
-                        if(response.code() == 200) {
+                    public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
+                        if (response.code() == 200) {
+                            assert response.body() != null;
                             location.setText(response.body().getData());
                         } else {
                             showLocationError();
@@ -266,7 +268,7 @@ public class OrderDialog extends DialogFragment {
                     }
 
                     @Override
-                    public void onFailure(Call<ResultResponse<String>> call, Throwable t) {
+                    public void onFailure(@NonNull Call<ResultResponse<String>> call, @NonNull Throwable t) {
                         showLocationError();
                         Log.e(TAG, "Load location error", t);
                     }
@@ -288,7 +290,7 @@ public class OrderDialog extends DialogFragment {
         getLocation(orderInfo.getRegion());
         gpsCoordinates.setText(orderInfo.getLocation());
         ImageUtil.loadImage(map, orderInfo.getOrderImage());
-        totalQuantity.setText(getTotalQuantity() + "");
+        totalQuantity.setText(getTotalQuantity());
         invoiceNumber.setText(orderInfo.getEventId());
         purchaseOrderNumber.setText(orderInfo.getEventNumber());
 
@@ -321,12 +323,12 @@ public class OrderDialog extends DialogFragment {
         recyclerView.setAdapter(orderItemAdapter);
     }
 
-    private Integer getTotalQuantity() {
+    private String getTotalQuantity() {
         Integer totalQuantity = 0;
         for (OrderItemInfo orderItem : orderInfo.getOrderItems()) {
             totalQuantity += orderItem.getQuantity();
         }
-        return totalQuantity;
+        return totalQuantity.toString();
     }
 
     private void showLocationError() {

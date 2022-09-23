@@ -37,10 +37,12 @@ public class CommonUtil {
     }
 
     public static String getLocalizedLanguage(Context context) {
-        Locale locale = context.getResources().getConfiguration().locale;
-        String language = locale.getLanguage().toUpperCase();
-        if("ZH".equals(language)) {
-            return language;
+        if (context != null) {
+            Locale locale = context.getResources().getConfiguration().locale;
+            String language = locale.getLanguage().toUpperCase();
+            if("ZH".equals(language)) {
+                return language;
+            }
         }
         return "EN";
     }
