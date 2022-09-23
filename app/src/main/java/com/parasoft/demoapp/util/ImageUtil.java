@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
@@ -20,8 +22,9 @@ public class ImageUtil {
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
             .enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.code() == 200) {
+                        assert response.body() != null;
                         Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
                         imageView.setImageBitmap(bitmap);
                     } else {
@@ -30,7 +33,7 @@ public class ImageUtil {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     Log.e("OrderDialog", "Load image " + orderImage + " failed", t);
                     // TODO: Set a default local image when load image failed
                 }

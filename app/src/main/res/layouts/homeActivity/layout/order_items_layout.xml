@@ -17,7 +17,7 @@
             android:layout_height="65dp"
             android:layout_marginEnd="-115dp"
             android:scaleType="fitXY"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,ImageContrastCheck" />
 
         <ImageView
             android:id="@+id/order_item_dark_overlay"
