@@ -43,10 +43,10 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
-import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.CommonUtil;
+import com.parasoft.demoapp.util.ImageUtil;
+import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
-import com.parasoft.demoapp.util.SystemUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -158,8 +158,8 @@ public class OrderDialog extends DialogFragment {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     View view = getCurrentFocus();
                     if (view instanceof EditText) {
-                        if (CommonUtil.isFocusInsideView(view, event)) {
-                            CommonUtil.hideKeyboardForView(getContext(), view);
+                        if (CommonUIUtil.isFocusInsideView(view, event)) {
+                            CommonUIUtil.hideKeyboardForView(getContext(), view);
                         }
                     }
                 }
@@ -252,7 +252,7 @@ public class OrderDialog extends DialogFragment {
 
     private void getLocation(String locationKey) {
         pdaService.getClient(ApiInterface.class)
-            .localizedValue(SystemUtil.getLocalizedLanguage(getContext()), locationKey)
+            .localizedValue(CommonUtil.getLocalizedLanguage(getContext()), locationKey)
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
                     public void onResponse(Call<ResultResponse<String>> call, Response<ResultResponse<String>> response) {

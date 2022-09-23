@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FooterUtilTest {
+public class CommonUIUtilTest {
     @Mock
     private Activity activity;
     @Mock
@@ -31,7 +31,7 @@ public class FooterUtilTest {
     private ArgumentCaptor<Editable> captor;
 
     @Test
-    public void setFooterInfo() {
+    public void initializedFooter() {
         // Given
         String app_title = "PARASOFT DEMO APP";
         String footer_info = app_title + " v" +  BuildConfig.VERSION_CODE + '.' +
@@ -43,7 +43,7 @@ public class FooterUtilTest {
         when(activity.getResources()).thenReturn(resources);
 
         // When
-        FooterUtil.setFooterInfo(activity);
+        CommonUIUtil.initializedFooter(activity);
 
         // Then
         assertEquals(footer_info, textView.getText());

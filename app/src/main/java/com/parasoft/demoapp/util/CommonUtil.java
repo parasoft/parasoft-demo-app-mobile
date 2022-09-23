@@ -1,39 +1,47 @@
 package com.parasoft.demoapp.util;
 
 import android.content.Context;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.content.SharedPreferences;
 
-/**
- * Common utils on UI elements
- */
+import com.parasoft.demoapp.R;
+import com.parasoft.demoapp.retrofitConfig.PDAService;
+
+import java.util.Locale;
+
 public class CommonUtil {
-    /**
-     * Determines if the focus of a motion event is inside specified view
-     */
-    public static boolean isFocusInsideView(View view, MotionEvent event) {
-        int[] location = {0, 0};
-        view.getLocationOnScreen(location);
-        int left = location[0],
-            top = location[1],
-            right = left + view.getWidth(),
-            bottom = top + view.getHeight();
-        return event.getRawX() < left
-                || event.getRawX() > right
-                || event.getRawY() < top
-                || event.getRawY() > bottom;
+
+    public static final String BASE_URL_KEY = "baseUrl";
+
+    public static void saveSetting(Context context, String name, String value) {
+        SharedPreferences.Editor note = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE).edit();
+        note.putString(name, value);
+        note.apply();
     }
 
-    /**
-     * Hide keyboard attached to specified view
-     */
-    public static void hideKeyboardForView(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            view.clearFocus();
+    public static String getSetting(Context context, String name) {
+        SharedPreferences read = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE);
+        return read.getString(name, null);
+    }
+
+    public static String getBaseUrl(Context context) {
+        String baseUrl = getSetting(context, BASE_URL_KEY);
+        if (baseUrl == null) {
+            baseUrl = context.getString(R.string.default_url);
         }
+        return baseUrl;
+    }
+
+    public static void saveBaseUrl(Context context, String value) {
+        CommonUtil.saveSetting(context, BASE_URL_KEY, value);
+        PDAService.setBaseUrl(value);
+    }
+
+    public static String getLocalizedLanguage(Context context) {
+        Locale locale = context.getResources().getConfiguration().locale;
+        String language = locale.getLanguage().toUpperCase();
+        if("ZH".equals(language)) {
+            return language;
+        }
+        return "EN";
     }
 }
