@@ -56,7 +56,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (!orderList.getReviewedByAPV()) {
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }
-            itemViewHolder.orderIndex.setText((position + 1) + "");
             itemViewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
             itemViewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
             itemViewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
@@ -132,7 +131,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     // Define ItemViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView orderIndex;
         TextView orderNumber;
         TextView orderDetailDate;
         TextView orderDetailTime;
@@ -142,7 +140,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            orderIndex = itemView.findViewById(R.id.order_index);
             orderNumber = itemView.findViewById(R.id.order_number);
             orderDetailDate = itemView.findViewById(R.id.order_detail_date);
             orderDetailTime = itemView.findViewById(R.id.order_detail_time);
