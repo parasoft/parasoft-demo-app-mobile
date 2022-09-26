@@ -99,27 +99,17 @@ public class HomeActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
                         ordersLoadFinished();
-                        if (response.code() == 200) {
-                            List<OrderResponse> orderList = response.body() != null ? response.body().getData().getContent() : null;
-                            if (orderList == null || orderList.size() == 0) {
-                                showNoOrderView();
-                            } else {
-                                showOrderListView(orderList);
-                            }
-                            orderItemClickable = true;
-                        } else if (response.code() == 400) {
-                            String errMsg = getResources().getString(R.string.current_user_not_exist);
-                            showErrorView(errMsg);
-                            Log.e(TAG, errMsg);
-                        } else if (response.code() == 401) {
-                            String errMsg = getResources().getString(R.string.no_permission_to_get_order_list);
-                            showErrorView(errMsg);
-                            Log.e(TAG, errMsg);
-                        } else {
-                            String errMsg = getResources().getString(R.string.orders_loading_error);
-                            showErrorView(errMsg);
-                            Log.e(TAG, errMsg);
+                        if (response.code() != 200) {
+                            handleErrorMessages(response.code());
+                            return;
                         }
+                        List<OrderResponse> orderList = response.body() != null ? response.body().getData().getContent() : null;
+                        if (orderList == null || orderList.size() == 0) {
+                            showNoOrderView();
+                        } else {
+                            showOrderListView(orderList);
+                        }
+                        orderItemClickable = true;
                     }
 
                     @Override
@@ -181,5 +171,21 @@ public class HomeActivity extends AppCompatActivity {
     private void ordersLoadFinished() {
         ordersLoader.setRefreshing(false);
         progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorMessages (int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 400:
+                errMsg = getResources().getString(R.string.current_user_not_exist);
+                break;
+            case 401:
+                errMsg = getResources().getString(R.string.no_permission_to_get_order_list);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.orders_loading_error);
+        }
+        showErrorView(errMsg);
+        Log.e(TAG, errMsg);
     }
 }
