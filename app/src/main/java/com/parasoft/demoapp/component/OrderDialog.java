@@ -47,7 +47,6 @@ import com.parasoft.demoapp.util.CommonUtil;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.util.OrderItemAdapter;
-import com.parasoft.demoapp.util.TimeUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -193,7 +192,6 @@ public class OrderDialog extends DialogFragment {
                     if (code == 200) {
                         assert response.body() != null;
                         orderInfo = response.body().getData();
-                        orderInfo.setSubmissionDate(TimeUtil.convertToLocalTime(orderInfo.getSubmissionDate()));
                         setOrderLayout();
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
@@ -282,8 +280,11 @@ public class OrderDialog extends DialogFragment {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
         }
-        orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
-        orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
+        String SubmissionDate = CommonUtil.convertToLocalTime(orderInfo.getSubmissionDate());
+        if (SubmissionDate != null) {
+            orderTimeYear.setText(SubmissionDate.substring(0, 10));
+            orderTimeHour.setText(SubmissionDate.substring(11, 19));
+        }
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         receiverName.setText(orderInfo.getReceiverId());

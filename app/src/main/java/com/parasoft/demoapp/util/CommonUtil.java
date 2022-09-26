@@ -1,12 +1,18 @@
 package com.parasoft.demoapp.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class CommonUtil {
 
@@ -45,5 +51,17 @@ public class CommonUtil {
             }
         }
         return "EN";
+    }
+
+    public static String convertToLocalTime(String time) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        try {
+            Date date = simpleDateFormat.parse(time);
+            simpleDateFormat.setTimeZone(TimeZone.getDefault());
+            if (date != null) return simpleDateFormat.format(date);
+        } catch (ParseException e) {
+            Log.e("Common", "Convert to local time failed", e);
+        }
+        return null;
     }
 }
