@@ -49,4 +49,8 @@
     <string name="order_response_deny">拒绝</string>
     <string name="order_number">#%1$s</string>
     <string name="order_item_quantity">x%1$d</string>
+    <string name="no_authorization">未授权更改状态</string>
+    <string name="no_permission">没有修改状态的权限</string>
+    <string name="order_does_not_exist">该订单不存在</string>
+    <string name="comments_too_long">意见内容太长</string>
 </resources>

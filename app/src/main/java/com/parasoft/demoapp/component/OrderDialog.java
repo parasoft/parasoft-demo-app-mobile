@@ -226,20 +226,25 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
-                            assert response.body() != null;
-                            orderInfo = response.body().getData();
-                            if (closeDialog) {
-                                closeAndRefresh();
-                            }
-                        } else if (response.code() == 404) {
-                            // TODO waiting for feedback on where to display error
-                            enableSaveButton(true);
-                            Log.e(TAG, "Order not found");
-                        } else {
-                            // TODO waiting for feedback on where to display error
-                            enableSaveButton(true);
-                            Log.e(TAG, "Comments are too long");
+                        switch (response.code()) {
+                            case 200:
+                                assert response.body() != null;
+                                orderInfo = response.body().getData();
+                                if (closeDialog) {
+                                    closeAndRefresh();
+                                }
+                                break;
+                            case 401:
+                                errorLog(getResources().getString(R.string.no_authorization));
+                                break;
+                            case 403:
+                                errorLog(getResources().getString(R.string.no_permission));
+                                break;
+                            case 404:
+                                errorLog(getResources().getString(R.string.order_does_not_exist));
+                                break;
+                            default:
+                                errorLog(getResources().getString(R.string.comments_too_long));
                         }
                     }
 
@@ -250,6 +255,12 @@ public class OrderDialog extends DialogFragment {
                         Log.e(TAG, "Update Order details failed", t);
                     }
                 });
+    }
+
+    private void errorLog(String errorMessage) {
+        enableSaveButton(true);
+        // TODO waiting for feedback on where to display error
+        Log.e(TAG, errorMessage);
     }
 
     private void getLocation(String locationKey) {

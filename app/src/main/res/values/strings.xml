@@ -51,4 +51,8 @@
     <string name="order_response_deny">Deny</string>
     <string name="order_number">#%1$s</string>
     <string name="order_item_quantity">x%1$d</string>
+    <string name="no_authorization">No authorization to change the status</string>
+    <string name="no_permission">No permission to change the status</string>
+    <string name="order_does_not_exist">Order does not exist</string>
+    <string name="comments_too_long">Comments are too long</string>
 </resources>
