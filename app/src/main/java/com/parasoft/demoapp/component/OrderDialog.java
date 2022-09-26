@@ -196,6 +196,7 @@ public class OrderDialog extends DialogFragment {
                         showOrderPage();
                         if (!orderInfo.getReviewedByAPV()) {
                             OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
+                            orderStatusRequest.setStatus(orderInfo.getStatus());
                             orderStatusRequest.setReviewedByAPV(true);
                             updateOrderDetails(orderStatusRequest, false);
                         }
