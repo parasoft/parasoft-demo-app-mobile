@@ -81,24 +81,6 @@ public class UserInformationDialogTest {
     }
 
     @Test
-    public void test_loadUserInfo_200_noData() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200ButNoDataResponse());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
-
-        // When
-        openUserInformationDialog();
-
-        // Then
-        onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.no_users_available)));
-        closeUserInformationDialog();
-    }
-
-    @Test
     public void test_loadUserInfo_200_noUserInfo() {
         // Given
         loginActivityScenarioRule.getScenario().onActivity(activity -> {

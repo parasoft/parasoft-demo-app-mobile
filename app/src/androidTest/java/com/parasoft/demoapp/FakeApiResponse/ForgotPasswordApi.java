@@ -17,10 +17,6 @@ public class ForgotPasswordApi {
         return new With200Response();
     }
 
-    public static ApiInterface return200ButNoDataResponse() {
-        return new With200ButNoDataResponse();
-    }
-
     public static ApiInterface return200ButNoUserInfoResponse() {
         return new With200ButNoUserInfoResponse();
     }
@@ -56,24 +52,6 @@ public class ForgotPasswordApi {
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("User info got successfully.");
                     resultResponse.setData(data);
-
-                    Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.success(200, resultResponse);
-                    callback.onResponse(null, response);
-                }
-            };
-        }
-    }
-
-    private static class With200ButNoDataResponse extends ApiInterfaceImplForTest {
-        @Override
-        public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
-            return new CallInterfaceImplForTest<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
-                @Override
-                public void enqueue(Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>> callback) {
-
-                    ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = new ResultResponse<>();
-                    resultResponse.setStatus(1);
-                    resultResponse.setMessage("User info got successfully.");
 
                     Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response = Response.success(200, resultResponse);
                     callback.onResponse(null, response);
