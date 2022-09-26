@@ -77,21 +77,15 @@ public class UserInformationDialog extends DialogFragment {
                             return;
                         }
 
-                        ResultResponse<List<ForgotPasswordUserInfoResponse>> resultResponse = response.body();
-                        if (resultResponse == null || resultResponse.getData() == null) {
-                            loadContent(NO_DATA, null);
-                            return;
-                        }
-
-                        List<ForgotPasswordUserInfoResponse> userInfoList = resultResponse.getData();
+                        assert response.body() != null;
                         ForgotPasswordUserInfoResponse approverUserInfo = null;
-                        for (ForgotPasswordUserInfoResponse userInfo: userInfoList) {
+                        for (ForgotPasswordUserInfoResponse userInfo: response.body().getData()) {
                             if ("ROLE_APPROVER".equals(userInfo.getRoleName())) {
                                 approverUserInfo = userInfo;
                                 break;
                             }
                         }
-                        if(approverUserInfo == null || !approverUserInfo.isHasPrimaryUser()) {
+                        if (approverUserInfo == null || !approverUserInfo.isHasPrimaryUser()) {
                             loadContent(NO_DATA, null);
                         } else {
                             loadContent(LOADED, approverUserInfo);
@@ -153,6 +147,7 @@ public class UserInformationDialog extends DialogFragment {
                     textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
                     progressBar.setVisibility(View.INVISIBLE);
                     textDisplayArea.setVisibility(View.VISIBLE);
+                    break;
                 default:
                     throw new RuntimeException(MessageFormat.format("Load status code {0} is not supported", loadStatus));
             }

@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
-public class SettingsUtil {
+import java.util.Locale;
+
+public class CommonUtil {
 
     public static final String BASE_URL_KEY = "baseUrl";
 
@@ -30,7 +32,18 @@ public class SettingsUtil {
     }
 
     public static void saveBaseUrl(Context context, String value) {
-        SettingsUtil.saveSetting(context, BASE_URL_KEY, value);
+        CommonUtil.saveSetting(context, BASE_URL_KEY, value);
         PDAService.setBaseUrl(value);
+    }
+
+    public static String getLocalizedLanguage(Context context) {
+        if (context != null) {
+            Locale locale = context.getResources().getConfiguration().locale;
+            String language = locale.getLanguage().toUpperCase();
+            if("ZH".equals(language)) {
+                return language;
+            }
+        }
+        return "EN";
     }
 }

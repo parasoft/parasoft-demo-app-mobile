@@ -19,7 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SettingsUtilTest {
+public class CommonUtilTest {
 
     @Mock
     SharedPreferences sharedPrefs;
@@ -43,17 +43,17 @@ public class SettingsUtilTest {
 
     @Test
     public void getBaseUrl() {
-        Assert.assertEquals(BASE_URL_DEF, SettingsUtil.getBaseUrl(appContext));
+        Assert.assertEquals(BASE_URL_DEF, CommonUtil.getBaseUrl(appContext));
     }
 
     @Test
     public void setBaseUrl() {
-        SettingsUtil.saveBaseUrl(appContext, BASE_URL);
+        CommonUtil.saveBaseUrl(appContext, BASE_URL);
         verify(editor, times(1)).putString(anyString(), anyString());
         verify(editor, times(1)).apply();
 
         Mockito.when(sharedPrefs.getString(BASE_URL_KEY, null)).thenReturn(BASE_URL);
-        Assert.assertEquals(BASE_URL, SettingsUtil.getBaseUrl(appContext));
+        Assert.assertEquals(BASE_URL, CommonUtil.getBaseUrl(appContext));
     }
 
 }
