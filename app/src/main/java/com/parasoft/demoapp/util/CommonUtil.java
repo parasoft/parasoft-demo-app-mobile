@@ -58,7 +58,8 @@ public class CommonUtil {
         try {
             Date date = simpleDateFormat.parse(time);
             simpleDateFormat.setTimeZone(TimeZone.getDefault());
-            if (date != null) return simpleDateFormat.format(date);
+            assert date != null;
+            return simpleDateFormat.format(date);
         } catch (ParseException e) {
             Log.e("Common", "Convert to local time failed", e);
         }

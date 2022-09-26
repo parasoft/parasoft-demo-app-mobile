@@ -65,8 +65,8 @@ public class OrderDialog extends DialogFragment {
     private LinearLayout comments;
     private TextView commentsDetail;
     private TextView orderStatus;
-    private TextView orderTimeYear;
-    private TextView orderTimeHour;
+    private TextView orderSubmissionDate;
+    private TextView orderSubmissionTime;
     private TextView purchaserName;
     private TextView location;
     private TextView receiverName;
@@ -100,8 +100,8 @@ public class OrderDialog extends DialogFragment {
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
         orderStatus = view.findViewById(R.id.order_status);
-        orderTimeYear = view.findViewById(R.id.order_time_year);
-        orderTimeHour = view.findViewById(R.id.order_time_hour);
+        orderSubmissionDate = view.findViewById(R.id.order_time_year);
+        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
@@ -280,10 +280,10 @@ public class OrderDialog extends DialogFragment {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
         }
-        String SubmissionDate = CommonUtil.convertToLocalTime(orderInfo.getSubmissionDate());
-        if (SubmissionDate != null) {
-            orderTimeYear.setText(SubmissionDate.substring(0, 10));
-            orderTimeHour.setText(SubmissionDate.substring(11, 19));
+        String submissionDate = CommonUtil.convertToLocalTime(orderInfo.getSubmissionDate());
+        if (submissionDate != null) {
+            orderSubmissionDate.setText(submissionDate.substring(0, 10));
+            orderSubmissionTime.setText(submissionDate.substring(11, 19));
         }
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
