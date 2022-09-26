@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/order_requests_title">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/footer"
             app:layout_constraintTop_toBottomOf="@+id/order_requests_title">
 

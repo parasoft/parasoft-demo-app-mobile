@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="sign_in">登录</string>
     <string name="sign_in_button">登录</string>
     <string name="user_name">用户名</string>
@@ -44,7 +44,9 @@
     <string name="purchase_order">员工编号:</string>
     <string name="location_loading_error">位置加载失败</string>
     <string name="Comments_field">评论</string>
-    <string name="order_response">订单回应...</string>
+    <string name="order_response" tools:ignore="TypographyEllipsis">订单回应...</string>
     <string name="order_response_approve">通过</string>
     <string name="order_response_deny">拒绝</string>
+    <string name="order_number">#%1$s</string>
+    <string name="order_item_quantity">x%1$d</string>
 </resources>

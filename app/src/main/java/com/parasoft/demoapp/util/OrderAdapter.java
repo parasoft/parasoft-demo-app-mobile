@@ -1,5 +1,6 @@
 package com.parasoft.demoapp.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,8 @@ import java.util.List;
 import lombok.NonNull;
 
 public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private OnItemClickListener listener;
-    private List<OrderResponse> mOrderList;
+    private final OnItemClickListener listener;
+    private final List<OrderResponse> mOrderList;
     private Context context;
     private static boolean canStart = true;
 
@@ -29,26 +30,26 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int loadState = LOAD_FINISH;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
-        mOrderList =  orderList;
+        mOrderList = orderList;
         listener = customListener;
     }
 
+    @androidx.annotation.NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         if (viewType == FOOTER_TYPE) {
             View view = LayoutInflater.from(context).inflate(R.layout.order_list_footer_layout,parent,false);
             return new FooterViewHolder(view);
-        } else if (viewType == ITEM_TYPE){
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.order_list_info_layout,parent,false);
             return new ItemViewHolder(view);
         }
-        return null;
     }
 
     // Set values of the views in Recycler View
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ItemViewHolder) {
             OrderResponse orderList = mOrderList.get(position);
             ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
@@ -56,7 +57,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (!orderList.getReviewedByAPV()) {
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }
-            itemViewHolder.orderNumber.setText("#" + orderList.getOrderNumber());
+            itemViewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
             itemViewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
             itemViewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
                     orderList.getSubmissionDate().lastIndexOf('.')));
@@ -96,6 +97,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     // add item when slide-down fresh data
+    @SuppressLint("NotifyDataSetChanged")
     public void addHeaderItem(List<OrderResponse> items) {
         mOrderList.clear();
         mOrderList.addAll(items);
@@ -103,11 +105,13 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     // add item when slide-up load data
+    @SuppressLint("NotifyDataSetChanged")
     public void addFooterItem(List<OrderResponse> items) {
         mOrderList.addAll(items);
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setLoadState(int loadState) {
         this.loadState = loadState;
         notifyDataSetChanged();

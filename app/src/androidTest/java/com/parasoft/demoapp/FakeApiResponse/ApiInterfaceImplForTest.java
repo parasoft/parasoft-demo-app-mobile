@@ -39,12 +39,12 @@ public class ApiInterfaceImplForTest implements ApiInterface {
     }
 
     @Override
-    public Call<ResultResponse<OrderResponse>> orderDetails(String orderNumber) {
+    public Call<ResultResponse<OrderResponse>> getOrderDetails(String orderNumber) {
         throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 
     @Override
-    public Call<ResultResponse<OrderResponse>> orderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+    public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
         throw new UnsupportedOperationException("Need to override this method in subclass");
     }
 

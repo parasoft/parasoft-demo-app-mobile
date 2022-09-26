@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,7 +151,7 @@ public class PDAServiceTest {
                 try {
                     assertEquals("POST", call.request().method());
                     assertEquals("http://localhost1:8888/login", call.request().url().toString());
-                    assertEquals("application/x-www-form-urlencoded", call.request().body().contentType().toString());
+                    assertEquals("application/x-www-form-urlencoded", Objects.requireNonNull(Objects.requireNonNull(call.request().body()).contentType()).toString());
                     // TODO: Research for assert "Authorization" and "User-Agent" header value. Can not get the headers since
                     //       call.request().headers() returns empty.
                 } finally {
