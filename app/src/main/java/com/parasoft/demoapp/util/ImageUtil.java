@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.parasoft.demoapp.R;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -20,7 +21,7 @@ import retrofit2.Response;
 
 public class ImageUtil {
 
-    public static void loadImage(ImageView imageView, String orderImage, OrderItemAdapter.ViewHolder viewHolder) {
+    public static void loadImage(ImageView imageView, String orderImage, @Nullable OrderItemAdapter.ViewHolder viewHolder) {
         PDAService pdaService = new PDAService();
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
             .enqueue(new Callback<ResponseBody>() {
@@ -43,14 +44,15 @@ public class ImageUtil {
             });
     }
 
-    private static void showLoadingFailedImage (ImageView imageView, OrderItemAdapter.ViewHolder viewHolder) {
-        if (viewHolder != null) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.orderItemNameLayout.getLayoutParams();
-            params.leftMargin = 550;
-            viewHolder.darkOverlay.setVisibility(View.GONE);
-        }
-        imageView.getLayoutParams().height = 150;
+    private static void showLoadingFailedImage (ImageView imageView, @Nullable OrderItemAdapter.ViewHolder viewHolder) {
+        imageView.getLayoutParams().height = 350;
         imageView.getLayoutParams().width = 150;
         imageView.setImageResource(R.mipmap.ic_image_loading_failed);
+        if (viewHolder != null) {
+            imageView.getLayoutParams().height = 150;
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.orderItemNameLayout.getLayoutParams();
+            params.leftMargin = 600;
+            viewHolder.darkOverlay.setVisibility(View.GONE);
+        }
     }
 }
