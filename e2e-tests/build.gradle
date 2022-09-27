@@ -27,7 +27,8 @@ test {
             'adb.server.port',
             'demo.app.apk.path',
             'pda.server.base-url',
-            'duration.of.seconds'
+            'duration.of.seconds',
+            'uiautomator2.server.launch.timeout'
     ]
 }
 
