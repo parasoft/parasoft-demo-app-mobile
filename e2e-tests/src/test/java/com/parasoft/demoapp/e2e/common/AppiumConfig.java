@@ -44,6 +44,8 @@ public final class AppiumConfig {
 
     private static final String UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_KEY = "uiautomator2.server.launch.timeout";
 
+    private static final String ADDITIONAL_CAPABILITY_CONFIG_KEY_PREFIX = "additional.caps.";
+
     private static final String DEFAULT_DEVICE_NAME = "emulator-5554";
 
     private static final String DEFAULT_APPIUM_SERVER_URL = "http://127.0.0.1:4723/wd/hub";
@@ -96,7 +98,23 @@ public final class AppiumConfig {
     }
 
     public static String uiautomator2ServerLaunchTimeout() {
-        return getConfigValue(UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_KEY, DEFAULT_UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT);
+        return getConfigValue(UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_KEY,
+                DEFAULT_UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT);
+    }
+
+    public static Map<String,String> getAdditionalCapabilities() {
+        Map<String,String> additionalCaps = new HashMap<>();
+        for (String propertyName : CONFIG_FILE_PROPS.stringPropertyNames()) {
+            if (propertyName.startsWith(ADDITIONAL_CAPABILITY_CONFIG_KEY_PREFIX)) {
+                String capName = propertyName
+                        .substring(ADDITIONAL_CAPABILITY_CONFIG_KEY_PREFIX.length());
+                String capValue = CONFIG_FILE_PROPS.getProperty(propertyName);
+                additionalCaps.put(capName, capValue);
+                LOGGER.info("Apply additional Appium capability from config file: {}={}",
+                        capName, capValue);
+            }
+        }
+        return additionalCaps;
     }
 
     private static String getConfigValue(String configKey, String defaultValue) {

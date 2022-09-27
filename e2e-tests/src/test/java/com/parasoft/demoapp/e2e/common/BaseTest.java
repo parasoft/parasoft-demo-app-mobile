@@ -30,6 +30,9 @@ public class BaseTest {
         capabilities.setCapability(AndroidMobileCapabilityType.ADB_PORT, AppiumConfig.adbServerPort());
         capabilities.setCapability(UiAutomator2Options.UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_OPTION,
                 AppiumConfig.uiautomator2ServerLaunchTimeout());
+        AppiumConfig.getAdditionalCapabilities().forEach((key, value) -> {
+            capabilities.setCapability(key, value);
+        });
     }
 
     @BeforeEach
