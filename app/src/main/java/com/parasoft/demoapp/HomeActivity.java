@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
                         orderDisplayList.clear();
                         pageIndex = 0;
                         if (response.code() != 200) {
-                            showErrorView(getResources().getString(R.string.orders_loading_error));
+                            handleErrorMessages(response.code());
                             return;
                         }
                         List<OrderResponse> orderList = response.body() != null ? response.body().getData().getContent() : null;
@@ -245,5 +245,21 @@ public class HomeActivity extends AppCompatActivity {
     private void ordersLoadFinished() {
         ordersLoader.setRefreshing(false);
         progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorMessages (int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 400:
+                errMsg = getResources().getString(R.string.current_user_not_exist);
+                break;
+            case 401:
+                errMsg = getResources().getString(R.string.no_permission_to_get_order_list);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.orders_loading_error);
+        }
+        showErrorView(errMsg);
+        Log.e(TAG, errMsg);
     }
 }
