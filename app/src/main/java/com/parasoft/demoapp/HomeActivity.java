@@ -25,7 +25,12 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
 
+import org.apache.commons.collections4.ListUtils;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +38,7 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = "HomeActivity";
+    private static final int ITEMS_PER_PAGE = 15;
 
     private ProgressBar progressBar;
     private TextView errorMessage;
@@ -41,6 +47,12 @@ public class HomeActivity extends AppCompatActivity {
     private TextView noOrderInfo;
     private SwipeRefreshLayout ordersLoader;
     private boolean orderItemClickable = false;
+
+    private OrderAdapter orderAdapter;
+    private final List<OrderResponse> orderDisplayList = new ArrayList<>();
+    private List<List<OrderResponse>> orderPagination;
+    private int pageIndex = 0;
+    private int numOfOrders = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +111,8 @@ public class HomeActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<ResultResponse<OrderListResponse>> call,
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
                         ordersLoadFinished();
+                        orderDisplayList.clear();
+                        pageIndex = 0;
                         if (response.code() != 200) {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
@@ -107,7 +121,9 @@ public class HomeActivity extends AppCompatActivity {
                         if (orderList == null || orderList.size() == 0) {
                             showNoOrderView();
                         } else {
-                            showOrderListView(orderList);
+                            numOfOrders = orderList.size();
+                            orderPagination = ListUtils.partition(orderList, ITEMS_PER_PAGE);
+                            showOrderListView();
                         }
                         orderItemClickable = true;
                     }
@@ -136,17 +152,75 @@ public class HomeActivity extends AppCompatActivity {
         orderDialog.show(getSupportFragmentManager(), OrderDialog.TAG);
     }
 
-    public void initRecyclerView(List<OrderResponse> orders) {
+    public void initRecyclerView() {
+        orderDisplayList.addAll(orderPagination.get(0));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        OrderAdapter orderAdapter = new OrderAdapter(orders, item -> {
+        orderAdapter = new OrderAdapter(orderDisplayList, item -> {
             if (orderItemClickable) {
                 openOrderDialog(item.getOrderNumber());
             }
         });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
+        initListener();
         orderAdapter.setCanStart(true);
+        orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
+    }
+
+    private void initListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean isSlidingUp = false;
+
+            // load more operation will be triggered only when the displayed item is the last item and it's slide-up behavior
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    assert manager != null;
+                    int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
+                    int itemCount = manager.getItemCount() - 1; // footer not included
+
+                    if (lastItemPosition == itemCount && isSlidingUp) {
+                        onLoadMore();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                isSlidingUp = dy > 0;
+            }
+
+            // slide-up load more
+            public void onLoadMore() {
+                // to avoid possible repeated slide-up operation
+                if (OrderAdapter.LoadingState.LOADING == orderAdapter.getLoadState()) {
+                    orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
+                    return;
+                }
+                orderAdapter.setLoadState(OrderAdapter.LoadingState.LOADING);
+                if (orderAdapter.getItemCount() <= numOfOrders) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(() -> {
+                                pageIndex++;
+                                if (pageIndex < orderPagination.size()) {
+                                    orderAdapter.addMoreItems(orderPagination.get(pageIndex));
+                                }
+                                orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
+                            });
+                        }
+                    }, 500);
+                } else {
+                    orderAdapter.setLoadState(OrderAdapter.LoadingState.END);
+                }
+            }
+        });
     }
 
     private void showNoOrderView() {
@@ -155,10 +229,10 @@ public class HomeActivity extends AppCompatActivity {
         noOrderInfo.setVisibility(View.VISIBLE);
     }
 
-    private void showOrderListView(List<OrderResponse> orderList) {
+    private void showOrderListView() {
         noOrderInfo.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
-        initRecyclerView(orderList);
+        initRecyclerView();
     }
 
     private void showErrorView (String errorString) {
