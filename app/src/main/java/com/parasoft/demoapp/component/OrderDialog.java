@@ -189,6 +189,9 @@ public class OrderDialog extends DialogFragment {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (code == 200) {
                         assert response.body() != null;
                         orderInfo = response.body().getData();
