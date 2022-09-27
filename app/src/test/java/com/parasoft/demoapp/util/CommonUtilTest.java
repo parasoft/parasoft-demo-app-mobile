@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.TimeZone;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CommonUtilTest {
 
@@ -56,4 +58,25 @@ public class CommonUtilTest {
         Assert.assertEquals(BASE_URL, CommonUtil.getBaseUrl(appContext));
     }
 
+    @Test
+     public void getLocalDate() {
+        TimeZone defaultTimezone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+        Assert.assertEquals("2022-09-26", CommonUtil.getLocalDate("2022-09-26T08:00:00.000+00:00"));
+        Assert.assertEquals("2022-09-26", CommonUtil.getLocalDate("2022-09-26T08:00:00.000+08:00"));
+        Assert.assertEquals("2022-09-27", CommonUtil.getLocalDate("2022-09-26T09:00:00.000-07:00"));
+        Assert.assertNull(CommonUtil.getLocalDate("validTimePattern"));
+        TimeZone.setDefault(defaultTimezone);
+    }
+
+    @Test
+    public void getLocalTime() {
+        TimeZone defaultTimezone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+        Assert.assertEquals("16:00:00", CommonUtil.getLocalTime("2022-09-26T08:00:00.000+00:00"));
+        Assert.assertEquals("08:00:00", CommonUtil.getLocalTime("2022-09-26T08:00:00.000+08:00"));
+        Assert.assertEquals("00:00:00", CommonUtil.getLocalTime("2022-09-26T09:00:00.000-07:00"));
+        Assert.assertNull(CommonUtil.getLocalTime("validTimePattern"));
+        TimeZone.setDefault(defaultTimezone);
+    }
 }

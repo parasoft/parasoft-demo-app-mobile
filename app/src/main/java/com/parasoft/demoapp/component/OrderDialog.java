@@ -280,11 +280,8 @@ public class OrderDialog extends DialogFragment {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
         }
-        String submissionDate = CommonUtil.convertToLocalTime(orderInfo.getSubmissionDate());
-        if (submissionDate != null) {
-            orderSubmissionDate.setText(submissionDate.substring(0, 10));
-            orderSubmissionTime.setText(submissionDate.substring(11, 19));
-        }
+        orderSubmissionDate.setText(CommonUtil.getLocalDate(orderInfo.getSubmissionDate()));
+        orderSubmissionTime.setText(CommonUtil.getLocalTime(orderInfo.getSubmissionDate()));
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         receiverName.setText(orderInfo.getReceiverId());

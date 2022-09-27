@@ -40,12 +40,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         if (!orderList.getReviewedByAPV()) {
             viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
         }
-        String submissionDate = CommonUtil.convertToLocalTime(orderList.getSubmissionDate());
-        if (submissionDate != null) {
-            viewHolder.orderSubmissionDate.setText(submissionDate.substring(0,submissionDate.indexOf('T')));
-            viewHolder.orderSubmissionTime.setText(submissionDate.substring(submissionDate.indexOf('T')+1, submissionDate.lastIndexOf('.')));
-        }
         viewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
+        viewHolder.orderSubmissionDate.setText(CommonUtil.getLocalDate(orderList.getSubmissionDate()));
+        viewHolder.orderSubmissionTime.setText(CommonUtil.getLocalTime(orderList.getSubmissionDate()));
         viewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
         viewHolder.orderStatus.setText(parseOrderStatus(viewHolder, orderList.getStatus()));
         viewHolder.bind(orderList, listener);
