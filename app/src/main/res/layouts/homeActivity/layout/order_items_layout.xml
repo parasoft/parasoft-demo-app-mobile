@@ -30,15 +30,6 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_outdoor_dark_overlay"
                 tools:ignore="ContentDescription" />
-
-<!--            <ImageView-->
-<!--                android:id="@+id/order_item_error"-->
-<!--                android:layout_width="115dp"-->
-<!--                android:layout_height="65dp"-->
-<!--                android:layout_marginLeft="-115dp"-->
-<!--                android:scaleType="center"-->
-<!--                android:src="@mipmap/ic_image_loading_failed"-->
-<!--                tools:ignore="ContentDescription" />-->
         </LinearLayout>
 
         <LinearLayout
