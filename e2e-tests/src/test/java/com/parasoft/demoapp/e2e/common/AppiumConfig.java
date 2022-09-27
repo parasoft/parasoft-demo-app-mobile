@@ -42,6 +42,8 @@ public final class AppiumConfig {
 
     private static final String ADB_SERVER_PORT_KEY = "adb.server.port";
 
+    private static final String UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_KEY = "uiautomator2.server.launch.timeout";
+
     private static final String DEFAULT_DEVICE_NAME = "emulator-5554";
 
     private static final String DEFAULT_APPIUM_SERVER_URL = "http://127.0.0.1:4723/wd/hub";
@@ -53,6 +55,8 @@ public final class AppiumConfig {
     private static final String DEFAULT_DURATION_OF_SECONDS = "30";
 
     private static final String DEFAULT_ADB_SERVER_PORT = "5037";
+
+    private static final String DEFAULT_UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT = "30000";
 
     static {
         try {
@@ -89,6 +93,10 @@ public final class AppiumConfig {
 
     public static String adbServerPort() {
         return getConfigValue(ADB_SERVER_PORT_KEY, DEFAULT_ADB_SERVER_PORT);
+    }
+
+    public static String uiautomator2ServerLaunchTimeout() {
+        return getConfigValue(UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_KEY, DEFAULT_UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT);
     }
 
     private static String getConfigValue(String configKey, String defaultValue) {
