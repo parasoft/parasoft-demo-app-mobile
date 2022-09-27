@@ -133,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                         ordersLoadFinished();
                         showErrorView(getResources().getString(R.string.orders_loading_error));
                         orderItemClickable = true;
-                        Log.e(TAG, "Error loading all orders request", t);
+                        Log.e(TAG, "Error loading orders", t);
                     }
                 });
     }
@@ -260,7 +260,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             default:
                 errMsg = getResources().getString(R.string.orders_loading_error);
-                Log.e(TAG, "Error loading all orders request");
+                Log.e(TAG, "Error loading all orders");
         }
         showErrorView(errMsg);
     }

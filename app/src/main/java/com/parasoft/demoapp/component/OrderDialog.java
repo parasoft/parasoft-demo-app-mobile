@@ -214,7 +214,7 @@ public class OrderDialog extends DialogFragment {
                         return;
                     }
                     showErrorPage(getResources().getString(R.string.order_loading_error));
-                    Log.e(TAG, "Error loading details of the order: " + orderNumber + " request", t);
+                    Log.e(TAG, "Error loading details of the order: " + orderNumber, t);
                 }
             });
     }
@@ -247,7 +247,7 @@ public class OrderDialog extends DialogFragment {
                             return;
                         }
                         enableSaveButton(true);
-                        Log.e(TAG, "Error updating details of the order: " + orderNumber + " request", t);
+                        Log.e(TAG, "Error updating details of the order: " + orderNumber, t);
                     }
                 });
     }
@@ -266,7 +266,7 @@ public class OrderDialog extends DialogFragment {
                             location.setText(response.body().getData());
                         } else {
                             showLocationError();
-                            Log.e(TAG, "Error loading location request");
+                            Log.e(TAG, "Error loading location");
                         }
                     }
 
@@ -276,7 +276,7 @@ public class OrderDialog extends DialogFragment {
                             return;
                         }
                         showLocationError();
-                        Log.e(TAG, "Error loading location request", t);
+                        Log.e(TAG, "Error loading location", t);
                     }
                 });
     }
@@ -471,7 +471,7 @@ public class OrderDialog extends DialogFragment {
                 Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
-                Log.e(TAG, "Internal error - maybe the comment is too long");
+                Log.e(TAG, "Internal error");
         }
     }
 }

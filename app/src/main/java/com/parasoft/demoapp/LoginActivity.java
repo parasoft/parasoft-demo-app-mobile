@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<Void>> call, @NonNull Throwable t) {
                         errorMessage.setText(getResources().getString(R.string.wrong_base_url));
-                        Log.e(TAG, "Error login request", t);
+                        Log.e(TAG, "Error login", t);
                         setElementsEnabledStatus(true);
                     }
                 });

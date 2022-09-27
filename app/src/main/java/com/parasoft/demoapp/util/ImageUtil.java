@@ -35,7 +35,7 @@ public class ImageUtil {
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    Log.e(OrderDialog.TAG, "Error loading the image: " + orderImage + " request", t);
+                    Log.e(OrderDialog.TAG, "Error loading the image: " + orderImage, t);
                     // TODO: Set a default local image when load image failed
                 }
             });

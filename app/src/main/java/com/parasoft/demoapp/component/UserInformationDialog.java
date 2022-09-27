@@ -94,7 +94,7 @@ public class UserInformationDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call, @NonNull Throwable t) {
-                        Log.e(TAG, "Error loading user information request", t);
+                        Log.e(TAG, "Error loading user information", t);
                         loadContent(LOAD_ERROR, null);
                     }
                 });
