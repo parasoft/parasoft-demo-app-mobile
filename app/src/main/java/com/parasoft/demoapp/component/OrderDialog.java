@@ -210,9 +210,10 @@ public class OrderDialog extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    if (getDialog() != null) {
-                        showErrorPage(getResources().getString(R.string.order_loading_error));
+                    if (!isAdded()) {
+                        return;
                     }
+                    showErrorPage(getResources().getString(R.string.order_loading_error));
                     Log.e(TAG, "Load order info error", t);
                 }
             });
@@ -223,6 +224,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if(response.code() == 200) {
                             assert response.body() != null;
                             orderInfo = response.body().getData();
@@ -243,6 +247,9 @@ public class OrderDialog extends DialogFragment {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                         // TODO waiting for feedback on where to display error
+                        if (!isAdded()) {
+                            return;
+                        }
                         enableSaveButton(true);
                         Log.e(TAG, "Update Order details failed", t);
                     }
@@ -255,6 +262,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (response.code() == 200) {
                             assert response.body() != null;
                             location.setText(response.body().getData());
@@ -265,6 +275,9 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<String>> call, @NonNull Throwable t) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         showLocationError();
                         Log.e(TAG, "Load location error", t);
                     }
@@ -328,10 +341,8 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void showLocationError() {
-        if (isAdded()) {
-            location.setText(getResources().getString(R.string.location_loading_error));
-            location.setTextColor(getResources().getColor(R.color.error));
-        }
+        location.setText(getResources().getString(R.string.location_loading_error));
+        location.setTextColor(getResources().getColor(R.color.error));
     }
 
     public void initSpinner() {
@@ -427,11 +438,9 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void enableSaveButton(boolean enable) {
-        if (isAdded()){
-            int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
-            saveButton.setEnabled(enable);
-            saveButton.setTextColor(textColor);
-        }
+        int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
+        saveButton.setEnabled(enable);
+        saveButton.setTextColor(textColor);
     }
 
     private void handleErrorMessages (int errorCode) {
