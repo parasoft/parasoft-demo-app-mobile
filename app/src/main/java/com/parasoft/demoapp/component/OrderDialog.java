@@ -214,7 +214,7 @@ public class OrderDialog extends DialogFragment {
                         return;
                     }
                     showErrorPage(getResources().getString(R.string.order_loading_error));
-                    Log.e(TAG, "Load order info error", t);
+                    Log.e(TAG, "Error loading details of the order: " + orderNumber + " request", t);
                 }
             });
     }
@@ -247,7 +247,7 @@ public class OrderDialog extends DialogFragment {
                             return;
                         }
                         enableSaveButton(true);
-                        Log.e(TAG, "Update Order details failed", t);
+                        Log.e(TAG, "Error updating details of the order: " + orderNumber + " request", t);
                     }
                 });
     }
@@ -266,6 +266,7 @@ public class OrderDialog extends DialogFragment {
                             location.setText(response.body().getData());
                         } else {
                             showLocationError();
+                            Log.e(TAG, "Error loading location request");
                         }
                     }
 
@@ -275,7 +276,7 @@ public class OrderDialog extends DialogFragment {
                             return;
                         }
                         showLocationError();
-                        Log.e(TAG, "Load location error", t);
+                        Log.e(TAG, "Error loading location request", t);
                     }
                 });
     }
@@ -444,33 +445,33 @@ public class OrderDialog extends DialogFragment {
         switch (errorCode) {
             case 401:
                 errMsg = getResources().getString(R.string.no_authorization_to_get_order);
+                Log.e(TAG, "Not authorized to get the order: " + orderNumber);
                 break;
             case 404:
                 errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
                 errMsg = getResources().getString(R.string.order_loading_error);
+                Log.e(TAG, "Error loading the order");
         }
         showErrorPage(errMsg);
-        Log.e(TAG, errMsg);
     }
 
     private void handleErrorUpdateOrder(int errorCode) {
-        String errMsg;
+        // TODO waiting for feedback on where to display error
         switch (errorCode) {
             case 401:
-                errMsg = getResources().getString(R.string.no_authorization_to_change_status);
+                Log.e(TAG, "Not authorized to update the order: " + orderNumber);
                 break;
             case 403:
-                errMsg = getResources().getString(R.string.no_permission_to_change_status);
+                Log.e(TAG, "No permissions to update the order: " + orderNumber);
                 break;
             case 404:
-                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
-                errMsg = getResources().getString(R.string.comments_too_long);
+                Log.e(TAG, "Internal error - maybe the comment is too long");
         }
-        // TODO waiting for feedback on where to display error
-        Log.e(TAG, errMsg);
     }
 }
