@@ -49,6 +49,9 @@
     <string name="order_response" tools:ignore="TypographyEllipsis">Order response...</string>
     <string name="order_response_approve">Approve</string>
     <string name="order_response_deny">Deny</string>
+    <string name="no_permission_to_get_order_list">You are not authorized to get all orders</string>
+    <string name="no_permission_to_get_order">You are not authorized to get an order by order number</string>
+    <string name="current_user_not_exist">Current user does not exist</string>
     <string name="order_number">#%1$s</string>
     <string name="order_item_quantity">x%1$d</string>
     <string name="no_authorization">No authorization to change the status</string>

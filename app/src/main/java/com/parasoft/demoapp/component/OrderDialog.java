@@ -200,14 +200,8 @@ public class OrderDialog extends DialogFragment {
                             orderStatusRequest.setReviewedByAPV(true);
                             updateOrderDetails(orderStatusRequest, false);
                         }
-                    } else if (code == 404) {
-                        String errMsg = getResources().getString(R.string.order_not_found, orderNumber);
-                        showErrorPage(errMsg);
-                        Log.e(TAG, errMsg);
                     } else {
-                        String errMsg = getResources().getString(R.string.order_loading_error);
-                        showErrorPage(errMsg);
-                        Log.e(TAG, errMsg);
+                        handleErrorMessages(code);
                     }
                 }
 
@@ -444,5 +438,21 @@ public class OrderDialog extends DialogFragment {
             saveButton.setEnabled(enable);
             saveButton.setTextColor(textColor);
         }
+    }
+
+    private void handleErrorMessages (int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 401:
+                errMsg = getResources().getString(R.string.no_permission_to_get_order);
+                break;
+            case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.order_loading_error);
+        }
+        showErrorPage(errMsg);
+        Log.e(TAG, errMsg);
     }
 }
