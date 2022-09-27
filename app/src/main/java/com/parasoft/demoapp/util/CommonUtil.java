@@ -1,16 +1,26 @@
 package com.parasoft.demoapp.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class CommonUtil {
 
     public static final String BASE_URL_KEY = "baseUrl";
+
+    @SuppressLint("SimpleDateFormat")
+    public static final SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
 
     public static void saveSetting(Context context, String name, String value) {
         SharedPreferences.Editor note = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE).edit();
@@ -45,5 +55,41 @@ public class CommonUtil {
             }
         }
         return "EN";
+    }
+
+    public static String getLocalDate(String time) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateParse.parse(processDate(time));
+            dateFormatter.setTimeZone(TimeZone.getDefault());
+            assert date != null;
+            return dateFormatter.format(date);
+        } catch (ParseException e) {
+            Log.e("CommonUtil", "Convert to local date failed", e);
+        }
+        return null;
+    }
+
+    public static String getLocalTime(String time) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date date = dateParse.parse(processDate(time));
+            timeFormatter.setTimeZone(TimeZone.getDefault());
+            assert date != null;
+            return timeFormatter.format(date);
+        } catch (ParseException e) {
+            Log.e("CommonUtil", "Convert to local time failed", e);
+        }
+        return null;
+    }
+
+    private static String processDate(String time) {
+        int pos = time.lastIndexOf(":");
+        if(pos != -1) {
+            return time.substring(0, pos) + time.substring(pos+1);
+        }
+        return "";
     }
 }

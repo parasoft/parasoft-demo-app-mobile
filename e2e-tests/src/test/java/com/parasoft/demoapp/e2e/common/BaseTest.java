@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -27,6 +28,11 @@ public class BaseTest {
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, AutomationName.ANDROID_UIAUTOMATOR2);
         capabilities.setCapability(MobileCapabilityType.APP, AppiumConfig.demoAppApkPath());
         capabilities.setCapability(AndroidMobileCapabilityType.ADB_PORT, AppiumConfig.adbServerPort());
+        capabilities.setCapability(UiAutomator2Options.UIAUTOMATOR2_SERVER_LAUNCH_TIMEOUT_OPTION,
+                AppiumConfig.uiautomator2ServerLaunchTimeout());
+        AppiumConfig.getAdditionalCapabilities().forEach((key, value) -> {
+            capabilities.setCapability(key, value);
+        });
     }
 
     @BeforeEach

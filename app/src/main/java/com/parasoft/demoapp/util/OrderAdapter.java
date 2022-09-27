@@ -53,9 +53,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }
             itemViewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
-            itemViewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
-            itemViewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
-                    orderList.getSubmissionDate().lastIndexOf('.')));
+            itemViewHolder.orderSubmissionDate.setText(CommonUtil.getLocalDate(orderList.getSubmissionDate()));
+            itemViewHolder.orderSubmissionTime.setText(CommonUtil.getLocalTime(orderList.getSubmissionDate()));
             itemViewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
             itemViewHolder.orderStatus.setText(parseOrderStatus(itemViewHolder, orderList.getStatus()));
             itemViewHolder.bind(orderList, listener);
@@ -122,8 +121,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     // Define ItemViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView orderNumber;
-        TextView orderDetailDate;
-        TextView orderDetailTime;
+        TextView orderSubmissionDate;
+        TextView orderSubmissionTime;
         TextView orderDetailRequestedBy;
         TextView orderStatus;
         TextView orderNewStatus;
@@ -131,8 +130,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             orderNumber = itemView.findViewById(R.id.order_number);
-            orderDetailDate = itemView.findViewById(R.id.order_detail_date);
-            orderDetailTime = itemView.findViewById(R.id.order_detail_time);
+            orderSubmissionDate = itemView.findViewById(R.id.order_detail_date);
+            orderSubmissionTime = itemView.findViewById(R.id.order_detail_time);
             orderDetailRequestedBy = itemView.findViewById(R.id.order_detail_requested_by);
             orderStatus = itemView.findViewById(R.id.order_status);
             orderNewStatus = itemView.findViewById(R.id.order_new_status);
