@@ -201,7 +201,7 @@ public class OrderDialog extends DialogFragment {
                             updateOrderDetails(orderStatusRequest, false);
                         }
                     } else {
-                        handleErrorMessagesWhenGetOrderDetails(code);
+                        handleErrorGetOrder(code);
                     }
                 }
 
@@ -229,7 +229,7 @@ public class OrderDialog extends DialogFragment {
                             }
                         } else {
                             enableSaveButton(true);
-                            handleErrorMessagesWhenUpdateOrderDetails(code);
+                            handleErrorUpdateOrder(code);
                         }
                     }
 
@@ -425,7 +425,7 @@ public class OrderDialog extends DialogFragment {
         }
     }
 
-    private void handleErrorMessagesWhenGetOrderDetails (int errorCode) {
+    private void handleErrorGetOrder(int errorCode) {
         String errMsg;
         switch (errorCode) {
             case 401:
@@ -441,7 +441,7 @@ public class OrderDialog extends DialogFragment {
         Log.e(TAG, errMsg);
     }
 
-    private void handleErrorMessagesWhenUpdateOrderDetails (int errorCode) {
+    private void handleErrorUpdateOrder(int errorCode) {
         String errMsg;
         switch (errorCode) {
             case 401:
