@@ -52,7 +52,4 @@
     <string name="current_user_not_exist">当前用户不存在</string>
     <string name="order_number">#%1$s</string>
     <string name="order_item_quantity">x%1$d</string>
-    <string name="no_authorization_to_change_status">您未授权修改该订单状态</string>
-    <string name="no_permission_to_change_status">您没有修改该订单状态的权限</string>
-    <string name="comments_too_long">意见内容太长</string>
 </resources>

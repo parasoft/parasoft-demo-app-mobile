@@ -133,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                         ordersLoadFinished();
                         showErrorView(getResources().getString(R.string.orders_loading_error));
                         orderItemClickable = true;
-                        Log.e(TAG, "Load orders error", t);
+                        Log.e(TAG, "Error loading orders", t);
                     }
                 });
     }
@@ -252,14 +252,16 @@ public class HomeActivity extends AppCompatActivity {
         switch (errorCode) {
             case 400:
                 errMsg = getResources().getString(R.string.current_user_not_exist);
+                Log.e(TAG, "Invalid request parameter");
                 break;
             case 401:
                 errMsg = getResources().getString(R.string.no_authorization_to_get_order_list);
+                Log.e(TAG, "Not authorized to get all orders");
                 break;
             default:
                 errMsg = getResources().getString(R.string.orders_loading_error);
+                Log.e(TAG, "Error loading all orders");
         }
         showErrorView(errMsg);
-        Log.e(TAG, errMsg);
     }
 }

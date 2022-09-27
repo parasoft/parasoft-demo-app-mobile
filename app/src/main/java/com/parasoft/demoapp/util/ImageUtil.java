@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
@@ -34,7 +35,7 @@ public class ImageUtil {
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    Log.e("OrderDialog", "Load image " + orderImage + " failed", t);
+                    Log.e(OrderDialog.TAG, "Error loading the image: " + orderImage, t);
                     // TODO: Set a default local image when load image failed
                 }
             });
