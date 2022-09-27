@@ -201,7 +201,7 @@ public class OrderDialog extends DialogFragment {
                             updateOrderDetails(orderStatusRequest, false);
                         }
                     } else {
-                        handleErrorMessages(code);
+                        handleErrorMessagesWhenGetOrderDetails(code);
                     }
                 }
 
@@ -220,25 +220,16 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        switch (response.code()) {
-                            case 200:
-                                assert response.body() != null;
-                                orderInfo = response.body().getData();
-                                if (closeDialog) {
-                                    closeAndRefresh();
-                                }
-                                break;
-                            case 401:
-                                errorLog(getResources().getString(R.string.no_authorization));
-                                break;
-                            case 403:
-                                errorLog(getResources().getString(R.string.no_permission));
-                                break;
-                            case 404:
-                                errorLog(getResources().getString(R.string.order_does_not_exist));
-                                break;
-                            default:
-                                errorLog(getResources().getString(R.string.comments_too_long));
+                        int code = response.code();
+                        if (code == 200) {
+                            assert response.body() != null;
+                            orderInfo = response.body().getData();
+                            if (closeDialog) {
+                                closeAndRefresh();
+                            }
+                        } else {
+                            enableSaveButton(true);
+                            handleErrorMessagesWhenUpdateOrderDetails(code);
                         }
                     }
 
@@ -249,12 +240,6 @@ public class OrderDialog extends DialogFragment {
                         Log.e(TAG, "Update Order details failed", t);
                     }
                 });
-    }
-
-    private void errorLog(String errorMessage) {
-        enableSaveButton(true);
-        // TODO waiting for feedback on where to display error
-        Log.e(TAG, errorMessage);
     }
 
     private void getLocation(String locationKey) {
@@ -440,11 +425,11 @@ public class OrderDialog extends DialogFragment {
         }
     }
 
-    private void handleErrorMessages (int errorCode) {
+    private void handleErrorMessagesWhenGetOrderDetails (int errorCode) {
         String errMsg;
         switch (errorCode) {
             case 401:
-                errMsg = getResources().getString(R.string.no_permission_to_get_order);
+                errMsg = getResources().getString(R.string.no_authorization_to_get_order);
                 break;
             case 404:
                 errMsg = getResources().getString(R.string.order_not_found, orderNumber);
@@ -453,6 +438,25 @@ public class OrderDialog extends DialogFragment {
                 errMsg = getResources().getString(R.string.order_loading_error);
         }
         showErrorPage(errMsg);
+        Log.e(TAG, errMsg);
+    }
+
+    private void handleErrorMessagesWhenUpdateOrderDetails (int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 401:
+                errMsg = getResources().getString(R.string.no_authorization_to_change_status);
+                break;
+            case 403:
+                errMsg = getResources().getString(R.string.no_permission_to_change_status);
+                break;
+            case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.comments_too_long);
+        }
+        // TODO waiting for feedback on where to display error
         Log.e(TAG, errMsg);
     }
 }
