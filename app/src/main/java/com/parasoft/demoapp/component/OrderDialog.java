@@ -201,13 +201,15 @@ public class OrderDialog extends DialogFragment {
                             updateOrderDetails(orderStatusRequest, false);
                         }
                     } else {
-                        Log.e(TAG, showErrorPage(code));
+                        handleErrorMessages(code);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    showErrorPage(0);
+                    if (getDialog() != null) {
+                        showErrorPage(getResources().getString(R.string.order_loading_error));
+                    }
                     Log.e(TAG, "Load order info error", t);
                 }
             });
@@ -289,22 +291,20 @@ public class OrderDialog extends DialogFragment {
     }
 
     private String getStatus(String status) {
-        if (isAdded()) {
-            switch (status) {
-                case "Submitted":
-                    status = getResources().getString(R.string.status_open);
-                    break;
-                case "Declined":
-                    status = getResources().getString(R.string.status_denied);
-                    orderStatus.setTextColor(getResources().getColor(R.color.light_black));
-                    break;
-                case "Approved":
-                    status = getResources().getString(R.string.status_approved);
-                    orderStatus.setTextColor(getResources().getColor(R.color.light_black));
-                    break;
-                default:
-                    status = "";
-            }
+        switch (status) {
+            case "Submitted":
+                status = getResources().getString(R.string.status_open);
+                break;
+            case "Declined":
+                status = getResources().getString(R.string.status_denied);
+                orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                break;
+            case "Approved":
+                status = getResources().getString(R.string.status_approved);
+                orderStatus.setTextColor(getResources().getColor(R.color.light_black));
+                break;
+            default:
+                status = "";
         }
         return status;
     }
@@ -399,25 +399,16 @@ public class OrderDialog extends DialogFragment {
         errorMessage.setVisibility(View.GONE);
     }
 
-    public String showErrorPage(int code) {
-        String errMsg = "";
-        if (isAdded()) {
-            if (code == 404) {
-                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
-            } else {
-                errMsg = getResources().getString(R.string.order_loading_error);
-            }
-            progressBar.setVisibility(View.GONE);
-            scrollView.setVisibility(View.GONE);
-            commentsField.setVisibility(View.GONE);
-            responseSpinner.setVisibility(View.GONE);
-            contentDivider.setVisibility(View.GONE);
-            errorMessage.setText(errMsg);
-            errorMessage.setVisibility(View.VISIBLE);
-            saveButton.setVisibility(View.GONE);
-            cancelButton.setVisibility(View.GONE);
-        }
-        return errMsg;
+    public void showErrorPage(String errMsg) {
+        progressBar.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+        commentsField.setVisibility(View.GONE);
+        responseSpinner.setVisibility(View.GONE);
+        contentDivider.setVisibility(View.GONE);
+        errorMessage.setText(errMsg);
+        errorMessage.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
     }
 
     private void saveOrderDetails() {
@@ -438,5 +429,21 @@ public class OrderDialog extends DialogFragment {
             saveButton.setEnabled(enable);
             saveButton.setTextColor(textColor);
         }
+    }
+
+    private void handleErrorMessages (int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 401:
+                errMsg = getResources().getString(R.string.no_permission_to_get_order);
+                break;
+            case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.order_loading_error);
+        }
+        showErrorPage(errMsg);
+        Log.e(TAG, errMsg);
     }
 }

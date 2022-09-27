@@ -84,6 +84,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation 'junit:junit:4.13.2'
@@ -96,13 +97,25 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:4.8.0'
 }
 
-task mergeUnitTestAndAndroidTestReports(type: JacocoReport, dependsOn: ["testDebugUnitTest", "createDebugCoverageReport"]) {
+def fileFilter = ['**/BuildConfig.*']
+def mainSrc = "${project.projectDir}/src/main/java"
+def debugTree =
+        fileTree(dir: "${buildDir}/intermediates/javac/debug/classes", excludes: fileFilter)
+def debugUnitTestData =
+        fileTree(dir: "${buildDir}/outputs/unit_test_code_coverage/debugUnitTest",
+                includes: ['**/*.exec'])
+def debugAndroidTestData =
+        fileTree(dir: "${buildDir}/outputs/code_coverage/debugAndroidTest", includes: ['**/*.ec'])
+
+tasks.register('mergeUnitTestAndAndroidTestReports', JacocoReport) {
     group = "report"
     description = "Run Android tests and Unit tests and merge the coverage of these two kinds of tests into one report."
 
+    dependsOn "createDebugUnitTestCoverageReport", "createDebugAndroidTestCoverageReport"
+
     reports {
-        html.enabled(true)
-        xml.enabled(true)
+        html.required = true
+        xml.required = true
     }
 
     doLast {
@@ -110,15 +123,50 @@ task mergeUnitTestAndAndroidTestReports(type: JacocoReport, dependsOn: ["testDeb
         println("Xml report is generated: ${buildDir}/reports/jacoco/mergeUnitTestAndAndroidTestReports/mergeUnitTestAndAndroidTestReports.xml")
     }
 
-    def fileFilter =
-            [
-                    '**/BuildConfig.*'
-            ]
-
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug/classes", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([debugTree])
-    executionData.from = fileTree(dir: project.projectDir, includes: ['**/**/*.exec', '**/**/*.ec'])
+    executionData.from = [debugUnitTestData, debugAndroidTestData]
+}
+
+def testTypeDataMap = [
+        debugUnitTest: [debugUnitTestData],
+        debugAndroidTest: [debugAndroidTestData],
+        combinedDebug: [debugUnitTestData, debugAndroidTestData]
+]
+def coverageReportTasks = new LinkedHashMap<String, String>()
+testTypeDataMap.each {entry ->
+    def testType = entry.key
+    def testData = entry.value
+    def reportTaskName = "createCustom${testType.capitalize()}CoverageReport"
+    coverageReportTasks[testType] = reportTaskName
+    def reportDir = "reports/coverage/${testType}"
+    tasks.register(reportTaskName, JacocoReport) {
+        reports {
+            html {
+                required = true
+                outputLocation = layout.buildDirectory.dir("${reportDir}/html")
+            }
+            xml {
+                required = true
+                outputLocation = layout.buildDirectory.file("${reportDir}/jacoco.xml")
+            }
+        }
+
+        sourceDirectories.from = files([mainSrc])
+        classDirectories.from = files([debugTree])
+        executionData.from = testData
+
+        doLast {
+            println "${testType} JaCoCo coverage report is generated in: ${buildDir}/${reportDir}"
+        }
+    }
+}
+
+project.afterEvaluate {
+    tasks.named("testDebugUnitTest") {
+        finalizedBy coverageReportTasks['debugUnitTest'], coverageReportTasks['combinedDebug']
+    }
+    tasks.named("connectedDebugAndroidTest") {
+        finalizedBy coverageReportTasks['debugAndroidTest'], coverageReportTasks['combinedDebug']
+    }
 }
