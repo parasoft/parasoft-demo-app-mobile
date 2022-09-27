@@ -147,6 +147,7 @@ public class UserInformationDialog extends DialogFragment {
                     textDisplayArea.setTextColor(getResources().getColor(R.color.dark_blue));
                     progressBar.setVisibility(View.INVISIBLE);
                     textDisplayArea.setVisibility(View.VISIBLE);
+                    break;
                 default:
                     throw new RuntimeException(MessageFormat.format("Load status code {0} is not supported", loadStatus));
             }

@@ -1,9 +1,11 @@
 package com.parasoft.demoapp.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,11 +16,13 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import java.util.List;
 import lombok.NonNull;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final OnItemClickListener listener;
     private final List<OrderResponse> mOrderList;
     private Context context;
     private static boolean canStart = true;
+
+    private LoadingState loadingState = LoadingState.FINISHED;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList = orderList;
@@ -27,36 +31,96 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @androidx.annotation.NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.order_list_info_layout,parent,false);
-        return new ViewHolder(view);
+        if (viewType == ItemType.FOOTER.getType()) {
+            View view = LayoutInflater.from(context).inflate(R.layout.order_list_footer_layout,parent,false);
+            return new FooterViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.order_list_info_layout,parent,false);
+            return new ItemViewHolder(view);
+        }
     }
 
     // Set values of the views in Recycler View
     @Override
-    public void onBindViewHolder(@androidx.annotation.NonNull @NonNull ViewHolder viewHolder, int position) {
-        OrderResponse orderList = mOrderList.get(position);
-        if (!orderList.getReviewedByAPV()) {
-            viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
+    public void onBindViewHolder(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof ItemViewHolder) {
+            OrderResponse orderList = mOrderList.get(position);
+            ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
+            itemViewHolder.orderNewStatus.setVisibility(View.GONE);
+            if (!orderList.getReviewedByAPV()) {
+                itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
+            }
+            itemViewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
+            itemViewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
+            itemViewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
+                    orderList.getSubmissionDate().lastIndexOf('.')));
+            itemViewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
+            itemViewHolder.orderStatus.setText(parseOrderStatus(itemViewHolder, orderList.getStatus()));
+            itemViewHolder.bind(orderList, listener);
+        } else if (viewHolder instanceof FooterViewHolder) {
+            FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
+            switch (loadingState) {
+                case LOADING:
+                    footerViewHolder.mProgressBar.setVisibility(View.VISIBLE);
+                    footerViewHolder.bottomBlank.setVisibility(View.GONE);
+                    break;
+                case FINISHED:
+                    footerViewHolder.mProgressBar.setVisibility(View.GONE);
+                    footerViewHolder.bottomBlank.setVisibility(View.GONE);
+                    break;
+                case END:
+                    footerViewHolder.mProgressBar.setVisibility(View.GONE);
+                    footerViewHolder.bottomBlank.setVisibility(View.VISIBLE);
+            }
         }
-        viewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
-        viewHolder.orderDetailDate.setText(orderList.getSubmissionDate().substring(0,orderList.getSubmissionDate().indexOf('T')));
-        viewHolder.orderDetailTime.setText(orderList.getSubmissionDate().substring(orderList.getSubmissionDate().indexOf('T')+1,
-                orderList.getSubmissionDate().lastIndexOf('.')));
-        viewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
-        viewHolder.orderStatus.setText(parseOrderStatus(viewHolder, orderList.getStatus()));
-        viewHolder.bind(orderList, listener);
     }
 
-    // Set the list size to Recycler View
+    // Set the list size to Recycler View, include list items and footer
     @Override
     public int getItemCount() {
-        return mOrderList == null ? 0 : mOrderList.size();
+        return mOrderList == null ? 0 : mOrderList.size() + 1;
     }
 
-    // Define ViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return ItemType.FOOTER.getType();
+        }
+        return ItemType.LISTITEM.getType();
+    }
+
+    public void addMoreItems(List<OrderResponse> items) {
+        int insertPosition = mOrderList.size();
+        mOrderList.addAll(items);
+        notifyItemRangeInserted(insertPosition, items.size());
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setLoadState(LoadingState loadState) {
+        this.loadingState = loadState;
+        notifyDataSetChanged();
+    }
+
+    public LoadingState getLoadState() {
+        return loadingState;
+    }
+
+    // Define FooterViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar mProgressBar;
+        TextView bottomBlank;
+
+        public FooterViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mProgressBar = itemView.findViewById(R.id.progress_bar);
+            bottomBlank = itemView.findViewById(R.id.bottom_blank);
+        }
+    }
+
+    // Define ItemViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView orderNumber;
         TextView orderDetailDate;
         TextView orderDetailTime;
@@ -64,7 +128,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         TextView orderStatus;
         TextView orderNewStatus;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             orderNumber = itemView.findViewById(R.id.order_number);
             orderDetailDate = itemView.findViewById(R.id.order_detail_date);
@@ -84,7 +148,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         }
     }
 
-    private String parseOrderStatus(@NonNull ViewHolder viewHolder, OrderStatus orderStatus) {
+    private String parseOrderStatus(@NonNull ItemViewHolder viewHolder, OrderStatus orderStatus) {
         switch (orderStatus) {
             case SUBMITTED:
                 viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.color_green));
@@ -106,5 +170,23 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     public void setCanStart(boolean can) {
         canStart = can;
+    }
+
+    private enum ItemType {
+        LISTITEM(0), FOOTER(1);
+
+        private final int type;
+
+        ItemType(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+    }
+
+    public enum LoadingState {
+        LOADING, FINISHED, END
     }
 }
