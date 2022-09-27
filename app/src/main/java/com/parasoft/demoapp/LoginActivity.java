@@ -124,8 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         } else if (code == 401) {
                             errorMessage.setText(getResources().getString(R.string.wrong_username_or_password));
+                            Log.e(TAG, "Not authorized to login");
                         } else {
                             errorMessage.setText(getResources().getString(R.string.wrong_base_url));
+                            Log.e(TAG, "Base URL error");
                         }
                         setElementsEnabledStatus(true);
                     }
@@ -133,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<Void>> call, @NonNull Throwable t) {
                         errorMessage.setText(getResources().getString(R.string.wrong_base_url));
-                        Log.e(TAG, "Login error", t);
+                        Log.e(TAG, "Error login", t);
                         setElementsEnabledStatus(true);
                     }
                 });

@@ -65,8 +65,8 @@ public class OrderDialog extends DialogFragment {
     private LinearLayout comments;
     private TextView commentsDetail;
     private TextView orderStatus;
-    private TextView orderTimeYear;
-    private TextView orderTimeHour;
+    private TextView orderSubmissionDate;
+    private TextView orderSubmissionTime;
     private TextView purchaserName;
     private TextView location;
     private TextView receiverName;
@@ -100,8 +100,8 @@ public class OrderDialog extends DialogFragment {
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
         orderStatus = view.findViewById(R.id.order_status);
-        orderTimeYear = view.findViewById(R.id.order_time_year);
-        orderTimeHour = view.findViewById(R.id.order_time_hour);
+        orderSubmissionDate = view.findViewById(R.id.order_time_year);
+        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
@@ -189,6 +189,9 @@ public class OrderDialog extends DialogFragment {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (code == 200) {
                         assert response.body() != null;
                         orderInfo = response.body().getData();
@@ -207,10 +210,11 @@ public class OrderDialog extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    if (getDialog() != null) {
-                        showErrorPage(getResources().getString(R.string.order_loading_error));
+                    if (!isAdded()) {
+                        return;
                     }
-                    Log.e(TAG, "Load order info error", t);
+                    showErrorPage(getResources().getString(R.string.order_loading_error));
+                    Log.e(TAG, "Error loading details of the order: " + orderNumber, t);
                 }
             });
     }
@@ -220,6 +224,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         int code = response.code();
                         if (code == 200) {
                             assert response.body() != null;
@@ -236,8 +243,11 @@ public class OrderDialog extends DialogFragment {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                         // TODO waiting for feedback on where to display error
+                        if (!isAdded()) {
+                            return;
+                        }
                         enableSaveButton(true);
-                        Log.e(TAG, "Update Order details failed", t);
+                        Log.e(TAG, "Error updating details of the order: " + orderNumber, t);
                     }
                 });
     }
@@ -248,18 +258,25 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (response.code() == 200) {
                             assert response.body() != null;
                             location.setText(response.body().getData());
                         } else {
                             showLocationError();
+                            Log.e(TAG, "Error loading location");
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<String>> call, @NonNull Throwable t) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         showLocationError();
-                        Log.e(TAG, "Load location error", t);
+                        Log.e(TAG, "Error loading location", t);
                     }
                 });
     }
@@ -271,8 +288,8 @@ public class OrderDialog extends DialogFragment {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
         }
-        orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
-        orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
+        orderSubmissionDate.setText(CommonUtil.getLocalDate(orderInfo.getSubmissionDate()));
+        orderSubmissionTime.setText(CommonUtil.getLocalTime(orderInfo.getSubmissionDate()));
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         receiverName.setText(orderInfo.getReceiverId());
@@ -418,11 +435,9 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void enableSaveButton(boolean enable) {
-        if (isAdded()){
-            int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
-            saveButton.setEnabled(enable);
-            saveButton.setTextColor(textColor);
-        }
+        int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
+        saveButton.setEnabled(enable);
+        saveButton.setTextColor(textColor);
     }
 
     private void handleErrorGetOrder(int errorCode) {
@@ -430,33 +445,33 @@ public class OrderDialog extends DialogFragment {
         switch (errorCode) {
             case 401:
                 errMsg = getResources().getString(R.string.no_authorization_to_get_order);
+                Log.e(TAG, "Not authorized to get the order: " + orderNumber);
                 break;
             case 404:
                 errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
                 errMsg = getResources().getString(R.string.order_loading_error);
+                Log.e(TAG, "Error loading the order");
         }
         showErrorPage(errMsg);
-        Log.e(TAG, errMsg);
     }
 
     private void handleErrorUpdateOrder(int errorCode) {
-        String errMsg;
+        // TODO waiting for feedback on where to display error
         switch (errorCode) {
             case 401:
-                errMsg = getResources().getString(R.string.no_authorization_to_change_status);
+                Log.e(TAG, "Not authorized to update the order: " + orderNumber);
                 break;
             case 403:
-                errMsg = getResources().getString(R.string.no_permission_to_change_status);
+                Log.e(TAG, "No permissions to update the order: " + orderNumber);
                 break;
             case 404:
-                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
-                errMsg = getResources().getString(R.string.comments_too_long);
+                Log.e(TAG, "Internal error");
         }
-        // TODO waiting for feedback on where to display error
-        Log.e(TAG, errMsg);
     }
 }

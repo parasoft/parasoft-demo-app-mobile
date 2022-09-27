@@ -10,6 +10,7 @@ import com.parasoft.demoapp.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
@@ -39,7 +40,7 @@ public class ImageUtil {
                     @Override
                     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                         showFailedImage(imageView);
-                        Log.e("OrderDialog", "Load image " + orderImage + " failed", t);
+                        Log.e(OrderDialog.TAG, "Error loading the image: " + orderImage, t);
                     }
                 });
     }

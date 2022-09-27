@@ -47,7 +47,6 @@ public class UserInformationDialog extends DialogFragment {
     private TextView textDisplayArea;
     private TextView usernameMessage;
     private TextView passwordMessage;
-    private Button closeButton;
     @Setter // Add Setter just for testing to replace it with a mock service.
     private PDAService pdaService = new PDAService();
 
@@ -61,7 +60,7 @@ public class UserInformationDialog extends DialogFragment {
         textDisplayArea = view.findViewById(R.id.user_info_message);
         usernameMessage = view.findViewById(R.id.username_value);
         passwordMessage = view.findViewById(R.id.password_value);
-        closeButton = view.findViewById(R.id.user_information_close_button);
+        Button closeButton = view.findViewById(R.id.user_information_close_button);
 
         loadContent(LOADING, null);
         closeButton.setOnClickListener(v -> dismiss());
@@ -73,6 +72,7 @@ public class UserInformationDialog extends DialogFragment {
                     public void onResponse(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call,
                                            @NonNull Response<ResultResponse<List<ForgotPasswordUserInfoResponse>>> response) {
                         if (response.code() != 200) {
+                            Log.e(TAG, "Base URL error");
                             loadContent(LOAD_ERROR, null);
                             return;
                         }
@@ -94,7 +94,7 @@ public class UserInformationDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call, @NonNull Throwable t) {
-                        Log.e(TAG, "Forgot password request error", t);
+                        Log.e(TAG, "Error loading user information", t);
                         loadContent(LOAD_ERROR, null);
                     }
                 });
