@@ -1,3 +1,4 @@
 /build
 
 /src/test/resources/appium-dev.properties
+/src/test/resources/appium-staging.properties
