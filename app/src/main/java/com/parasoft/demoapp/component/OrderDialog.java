@@ -189,6 +189,9 @@ public class OrderDialog extends DialogFragment {
                 @Override
                 public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
                     int code = response.code();
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (code == 200) {
                         assert response.body() != null;
                         orderInfo = response.body().getData();
@@ -207,9 +210,10 @@ public class OrderDialog extends DialogFragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                    if (getDialog() != null) {
-                        showErrorPage(getResources().getString(R.string.order_loading_error));
+                    if (!isAdded()) {
+                        return;
                     }
+                    showErrorPage(getResources().getString(R.string.order_loading_error));
                     Log.e(TAG, "Load order info error", t);
                 }
             });
@@ -220,6 +224,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         int code = response.code();
                         if (code == 200) {
                             assert response.body() != null;
@@ -236,6 +243,9 @@ public class OrderDialog extends DialogFragment {
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
                         // TODO waiting for feedback on where to display error
+                        if (!isAdded()) {
+                            return;
+                        }
                         enableSaveButton(true);
                         Log.e(TAG, "Update Order details failed", t);
                     }
@@ -248,6 +258,9 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<String>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<String>> call, @NonNull Response<ResultResponse<String>> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (response.code() == 200) {
                             assert response.body() != null;
                             location.setText(response.body().getData());
@@ -258,6 +271,9 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<String>> call, @NonNull Throwable t) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         showLocationError();
                         Log.e(TAG, "Load location error", t);
                     }
@@ -418,11 +434,9 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void enableSaveButton(boolean enable) {
-        if (isAdded()){
-            int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
-            saveButton.setEnabled(enable);
-            saveButton.setTextColor(textColor);
-        }
+        int textColor = enable ? getResources().getColor(R.color.dark_blue) : getResources().getColor(R.color.button_disabled);
+        saveButton.setEnabled(enable);
+        saveButton.setTextColor(textColor);
     }
 
     private void handleErrorGetOrder(int errorCode) {
