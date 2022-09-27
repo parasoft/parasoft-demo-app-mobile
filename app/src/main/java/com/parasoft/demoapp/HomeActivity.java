@@ -2,7 +2,6 @@ package com.parasoft.demoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +24,6 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.util.OrderAdapter;
-import com.parasoft.demoapp.util.RecycleOnScrollListener;
 
 import org.apache.commons.collections4.ListUtils;
 
@@ -52,9 +50,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private OrderAdapter orderAdapter;
     private final List<OrderResponse> orderDisplayList = new ArrayList<>();
-    private List<OrderResponse> orderResponseList = new ArrayList<>();
     private List<List<OrderResponse>> orderPagination;
-    private int page = 0;
+    private int pageIndex = 0;
+    private int numOfOrders = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
                                            @NonNull Response<ResultResponse<OrderListResponse>> response) {
                         ordersLoadFinished();
                         orderDisplayList.clear();
+                        pageIndex = 0;
                         if (response.code() != 200) {
                             showErrorView(getResources().getString(R.string.orders_loading_error));
                             return;
@@ -122,9 +121,9 @@ public class HomeActivity extends AppCompatActivity {
                         if (orderList == null || orderList.size() == 0) {
                             showNoOrderView();
                         } else {
-                            orderResponseList = orderList;
+                            numOfOrders = orderList.size();
                             orderPagination = ListUtils.partition(orderList, ITEMS_PER_PAGE);
-                            showOrderListView(loadFirstTime);
+                            showOrderListView();
                         }
                         orderItemClickable = true;
                     }
@@ -154,8 +153,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initRecyclerView() {
-        page = 0;
-        getData(page);
+        orderDisplayList.addAll(orderPagination.get(0));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         orderAdapter = new OrderAdapter(orderDisplayList, item -> {
@@ -165,49 +163,64 @@ public class HomeActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(orderAdapter);
         recyclerView.setVisibility(View.VISIBLE);
-
         initListener();
+        orderAdapter.setCanStart(true);
+        orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
     }
 
     private void initListener() {
-        // slide-up load more
-        recyclerView.addOnScrollListener(new RecycleOnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean isSlidingUp = false;
+
+            // load more operation will be triggered only when the displayed item is the last item and it's slide-up behavior
             @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    assert manager != null;
+                    int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
+                    int itemCount = manager.getItemCount() - 1; // footer not included
+
+                    if (lastItemPosition == itemCount && isSlidingUp) {
+                        onLoadMore();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                isSlidingUp = dy > 0;
+            }
+
+            // slide-up load more
             public void onLoadMore() {
                 // to avoid possible repeated slide-up operation
-                if (OrderAdapter.LOADING == orderAdapter.getLoadState()) {
+                if (OrderAdapter.LoadingState.LOADING == orderAdapter.getLoadState()) {
                     orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
                     return;
                 }
-
-                orderAdapter.setLoadState(OrderAdapter.LOADING);
-                if (orderDisplayList.size() < orderResponseList.size()) {
+                orderAdapter.setLoadState(OrderAdapter.LoadingState.LOADING);
+                if (orderAdapter.getItemCount() <= numOfOrders) {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
                             runOnUiThread(() -> {
-                                page++;
-                                getData(page);
-                                orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
+                                pageIndex++;
+                                if (pageIndex < orderPagination.size()) {
+                                    orderAdapter.addMoreItems(orderPagination.get(pageIndex));
+                                }
+                                orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
                             });
                         }
-                    }, 3000);
+                    }, 500);
                 } else {
-                    page = 0;
-                    orderAdapter.setLoadState(OrderAdapter.LOAD_END);
+                    orderAdapter.setLoadState(OrderAdapter.LoadingState.END);
                 }
             }
         });
-        // slide-down refresh
-        ordersLoader.setOnRefreshListener(() -> new Handler().postDelayed(() -> loadOrderList(false), 3000));
-    }
-
-    private void getData(int page) {
-        if (page == 0) {
-            orderDisplayList.addAll(orderPagination.get(0));
-        } else if (page < orderPagination.size()) {
-            orderAdapter.addFooterItem(orderPagination.get(page));
-        }
     }
 
     private void showNoOrderView() {
@@ -216,17 +229,10 @@ public class HomeActivity extends AppCompatActivity {
         noOrderInfo.setVisibility(View.VISIBLE);
     }
 
-    private void showOrderListView(boolean loadFirstTime) {
+    private void showOrderListView() {
         noOrderInfo.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
-        if (loadFirstTime || orderDisplayList.size() == 0) {
-            initRecyclerView();
-        } else {
-            orderAdapter.addHeaderItem(orderPagination.get(0));
-        }
-
-        orderAdapter.setCanStart(true);
-        orderAdapter.setLoadState(OrderAdapter.LOAD_FINISH);
+        initRecyclerView();
     }
 
     private void showErrorView (String errorString) {

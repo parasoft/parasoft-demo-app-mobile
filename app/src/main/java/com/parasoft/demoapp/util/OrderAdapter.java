@@ -22,12 +22,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
     private static boolean canStart = true;
 
-    private final int ITEM_TYPE = 0;
-    private final int FOOTER_TYPE = 1;
-    public static final int LOADING = 0;
-    public static final int LOAD_FINISH = 1;
-    public static final int LOAD_END = 2;
-    private int loadState = LOAD_FINISH;
+    private LoadingState loadingState = LoadingState.FINISHED;
 
     public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList = orderList;
@@ -38,7 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        if (viewType == FOOTER_TYPE) {
+        if (viewType == ItemType.FOOTER.getType()) {
             View view = LayoutInflater.from(context).inflate(R.layout.order_list_footer_layout,parent,false);
             return new FooterViewHolder(view);
         } else {
@@ -66,23 +61,23 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemViewHolder.bind(orderList, listener);
         } else if (viewHolder instanceof FooterViewHolder) {
             FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
-            switch (loadState) {
+            switch (loadingState) {
                 case LOADING:
                     footerViewHolder.mProgressBar.setVisibility(View.VISIBLE);
                     footerViewHolder.bottomBlank.setVisibility(View.GONE);
                     break;
-                case LOAD_FINISH:
+                case FINISHED:
                     footerViewHolder.mProgressBar.setVisibility(View.GONE);
                     footerViewHolder.bottomBlank.setVisibility(View.GONE);
                     break;
-                case LOAD_END:
+                case END:
                     footerViewHolder.mProgressBar.setVisibility(View.GONE);
                     footerViewHolder.bottomBlank.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    // Set the list size to Recycler View
+    // Set the list size to Recycler View, include list items and footer
     @Override
     public int getItemCount() {
         return mOrderList == null ? 0 : mOrderList.size() + 1;
@@ -91,34 +86,25 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         if (position + 1 == getItemCount()) {
-            return FOOTER_TYPE;
+            return ItemType.FOOTER.getType();
         }
-        return ITEM_TYPE;
+        return ItemType.LISTITEM.getType();
     }
 
-    // add item when slide-down fresh data
-    @SuppressLint("NotifyDataSetChanged")
-    public void addHeaderItem(List<OrderResponse> items) {
-        mOrderList.clear();
+    public void addMoreItems(List<OrderResponse> items) {
+        int insertPosition = mOrderList.size();
         mOrderList.addAll(items);
-        notifyDataSetChanged();
-    }
-
-    // add item when slide-up load data
-    @SuppressLint("NotifyDataSetChanged")
-    public void addFooterItem(List<OrderResponse> items) {
-        mOrderList.addAll(items);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(insertPosition, items.size());
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setLoadState(int loadState) {
-        this.loadState = loadState;
+    public void setLoadState(LoadingState loadState) {
+        this.loadingState = loadState;
         notifyDataSetChanged();
     }
 
-    public int getLoadState() {
-        return this.loadState;
+    public LoadingState getLoadState() {
+        return loadingState;
     }
 
     // Define FooterViewHolder，extends RecyclerView.ViewHolder to get the views in Recycler View
@@ -184,5 +170,23 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setCanStart(boolean can) {
         canStart = can;
+    }
+
+    private enum ItemType {
+        LISTITEM(0), FOOTER(1);
+
+        private final int type;
+
+        ItemType(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+    }
+
+    public enum LoadingState {
+        LOADING, FINISHED, END
     }
 }
