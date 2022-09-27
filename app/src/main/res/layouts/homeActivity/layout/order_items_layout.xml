@@ -11,22 +11,35 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_gravity="center"
-            android:id="@+id/order_item_img"
+        <LinearLayout
             android:layout_width="115dp"
-            android:layout_height="65dp"
-            android:layout_marginEnd="-115dp"
-            android:scaleType="fitXY"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
+            android:layout_height="65dp">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/order_item_img"
+                android:layout_width="115dp"
+                android:layout_height="65dp"
+                android:layout_marginEnd="-115dp"
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription,ImageContrastCheck" />
 
-        <ImageView
-            android:id="@+id/order_item_dark_overlay"
-            android:layout_width="115dp"
-            android:layout_height="65dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_outdoor_dark_overlay"
-            tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/order_item_dark_overlay"
+                android:layout_width="115dp"
+                android:layout_height="65dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_outdoor_dark_overlay"
+                tools:ignore="ContentDescription" />
+
+<!--            <ImageView-->
+<!--                android:id="@+id/order_item_error"-->
+<!--                android:layout_width="115dp"-->
+<!--                android:layout_height="65dp"-->
+<!--                android:layout_marginLeft="-115dp"-->
+<!--                android:scaleType="center"-->
+<!--                android:src="@mipmap/ic_image_loading_failed"-->
+<!--                tools:ignore="ContentDescription" />-->
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/order_item_name_layout"
