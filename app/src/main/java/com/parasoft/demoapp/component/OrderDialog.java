@@ -201,7 +201,7 @@ public class OrderDialog extends DialogFragment {
                             updateOrderDetails(orderStatusRequest, false);
                         }
                     } else {
-                        handleErrorMessages(code);
+                        handleErrorGetOrder(code);
                     }
                 }
 
@@ -220,20 +220,16 @@ public class OrderDialog extends DialogFragment {
                 .enqueue(new Callback<ResultResponse<OrderResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Response<ResultResponse<OrderResponse>> response) {
-                        if(response.code() == 200) {
+                        int code = response.code();
+                        if (code == 200) {
                             assert response.body() != null;
                             orderInfo = response.body().getData();
                             if (closeDialog) {
                                 closeAndRefresh();
                             }
-                        } else if (response.code() == 404) {
-                            // TODO waiting for feedback on where to display error
-                            enableSaveButton(true);
-                            Log.e(TAG, "Order not found");
                         } else {
-                            // TODO waiting for feedback on where to display error
                             enableSaveButton(true);
-                            Log.e(TAG, "Comments are too long");
+                            handleErrorUpdateOrder(code);
                         }
                     }
 
@@ -429,11 +425,11 @@ public class OrderDialog extends DialogFragment {
         }
     }
 
-    private void handleErrorMessages (int errorCode) {
+    private void handleErrorGetOrder(int errorCode) {
         String errMsg;
         switch (errorCode) {
             case 401:
-                errMsg = getResources().getString(R.string.no_permission_to_get_order);
+                errMsg = getResources().getString(R.string.no_authorization_to_get_order);
                 break;
             case 404:
                 errMsg = getResources().getString(R.string.order_not_found, orderNumber);
@@ -442,6 +438,25 @@ public class OrderDialog extends DialogFragment {
                 errMsg = getResources().getString(R.string.order_loading_error);
         }
         showErrorPage(errMsg);
+        Log.e(TAG, errMsg);
+    }
+
+    private void handleErrorUpdateOrder(int errorCode) {
+        String errMsg;
+        switch (errorCode) {
+            case 401:
+                errMsg = getResources().getString(R.string.no_authorization_to_change_status);
+                break;
+            case 403:
+                errMsg = getResources().getString(R.string.no_permission_to_change_status);
+                break;
+            case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
+                break;
+            default:
+                errMsg = getResources().getString(R.string.comments_too_long);
+        }
+        // TODO waiting for feedback on where to display error
         Log.e(TAG, errMsg);
     }
 }

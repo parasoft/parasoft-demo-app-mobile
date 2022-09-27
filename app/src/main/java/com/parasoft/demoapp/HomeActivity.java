@@ -254,7 +254,7 @@ public class HomeActivity extends AppCompatActivity {
                 errMsg = getResources().getString(R.string.current_user_not_exist);
                 break;
             case 401:
-                errMsg = getResources().getString(R.string.no_permission_to_get_order_list);
+                errMsg = getResources().getString(R.string.no_authorization_to_get_order_list);
                 break;
             default:
                 errMsg = getResources().getString(R.string.orders_loading_error);
