@@ -20,9 +20,9 @@ import retrofit2.Response;
 
 public class ImageUtil {
 
-    public static void loadImage(ImageView imageView, String orderImage, @Nullable OrderItemAdapter.ViewHolder viewHolder) {
+    public static void loadImage(ImageView imageView, String orderImage, ImageView overlayView) {
         PDAService pdaService = new PDAService();
-        showImage(false, null, imageView, viewHolder);
+        showImage(false, null, imageView, overlayView);
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -30,7 +30,7 @@ public class ImageUtil {
                         if (response.code() == 200) {
                             assert response.body() != null;
                             Bitmap image = BitmapFactory.decodeStream(response.body().byteStream());
-                            showImage(true, image, imageView, viewHolder);
+                            showImage(true, image, imageView, overlayView);
                         } else {
                             showFailedImage(imageView);
                         }
@@ -49,12 +49,12 @@ public class ImageUtil {
         imageView.setImageResource(R.mipmap.ic_image_loading_failed);
     }
 
-    private static void showImage(boolean show, Bitmap image, ImageView imageView, @Nullable OrderItemAdapter.ViewHolder viewHolder) {
+    private static void showImage(boolean show, Bitmap image, ImageView imageView, ImageView overlayView) {
         if (show && image != null) {
             imageView.setImageBitmap(image);
         }
-        if (viewHolder != null) {
-            viewHolder.darkOverlay.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        if (overlayView != null) {
+            overlayView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         }
     }
 

@@ -35,7 +35,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         OrderItemInfo orderItem = mOrderItemList.get(position);
-        ImageUtil.loadImage(viewHolder.orderItemImage, orderItem.getImage(), viewHolder);
+        ImageUtil.loadImage(viewHolder.orderItemImage, orderItem.getImage(), viewHolder.darkOverlay);
         viewHolder.orderItemTitle.setText(orderItem.getName());
         viewHolder.orderItemQuantity.setText(context.getResources().getString(R.string.order_item_quantity, orderItem.getQuantity()));
     }
