@@ -65,8 +65,8 @@ public class OrderDialog extends DialogFragment {
     private LinearLayout comments;
     private TextView commentsDetail;
     private TextView orderStatus;
-    private TextView orderTimeYear;
-    private TextView orderTimeHour;
+    private TextView orderSubmissionDate;
+    private TextView orderSubmissionTime;
     private TextView purchaserName;
     private TextView location;
     private TextView receiverName;
@@ -100,8 +100,8 @@ public class OrderDialog extends DialogFragment {
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
         orderStatus = view.findViewById(R.id.order_status);
-        orderTimeYear = view.findViewById(R.id.order_time_year);
-        orderTimeHour = view.findViewById(R.id.order_time_hour);
+        orderSubmissionDate = view.findViewById(R.id.order_time_year);
+        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
@@ -287,8 +287,8 @@ public class OrderDialog extends DialogFragment {
             comments.setVisibility(View.VISIBLE);
             commentsDetail.setText(orderInfo.getComments());
         }
-        orderTimeYear.setText(orderInfo.getSubmissionDate().substring(0, 10));
-        orderTimeHour.setText(orderInfo.getSubmissionDate().substring(11, 19));
+        orderSubmissionDate.setText(CommonUtil.getLocalDate(orderInfo.getSubmissionDate()));
+        orderSubmissionTime.setText(CommonUtil.getLocalTime(orderInfo.getSubmissionDate()));
         orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         receiverName.setText(orderInfo.getReceiverId());
