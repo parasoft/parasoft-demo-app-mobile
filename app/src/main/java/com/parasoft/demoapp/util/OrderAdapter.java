@@ -43,18 +43,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     // Set values of the views in Recycler View
-//    @Override
-//    public void onBindViewHolder(@androidx.annotation.NonNull @NonNull ViewHolder viewHolder, int position) {
-//        OrderResponse orderList = mOrderList.get(position);
-//        if (!orderList.getReviewedByAPV()) {
-//            viewHolder.orderNewStatus.setVisibility(View.VISIBLE);
-//        }
-//        viewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
-//        viewHolder.orderSubmissionDate.setText(CommonUtil.getLocalDate(orderList.getSubmissionDate()));
-//        viewHolder.orderSubmissionTime.setText(CommonUtil.getLocalTime(orderList.getSubmissionDate()));
-//        viewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
-//        viewHolder.orderStatus.setText(parseOrderStatus(viewHolder, orderList.getStatus()));
-//        viewHolder.bind(orderList, listener);
     @Override
     public void onBindViewHolder(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ItemViewHolder) {
