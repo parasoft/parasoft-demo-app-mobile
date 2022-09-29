@@ -1,11 +1,5 @@
 package com.parasoft.demoapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -21,21 +15,25 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.Toolbar;
+
 import com.parasoft.demoapp.component.SettingDialog;
 import com.parasoft.demoapp.component.UserInformationDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
+import com.parasoft.demoapp.util.CommonUIUtil;
+import com.parasoft.demoapp.util.CommonUtil;
 
 import lombok.Getter;
-import lombok.Setter;
 import okhttp3.Credentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import com.parasoft.demoapp.util.CommonUIUtil;
-import com.parasoft.demoapp.util.CommonUtil;
 
 @Getter
 public class LoginActivity extends AppCompatActivity {
@@ -46,13 +44,13 @@ public class LoginActivity extends AppCompatActivity {
     private Button signInButton;
     private TextView errorMessage;
     private TextView forgotPasswordLink;
-    @Setter // Add Setter just for testing to replace it with a mock service.
-    private PDAService pdaService = new PDAService();
+    private PDAService pdaService;
     private final SettingDialog settingDialog = new SettingDialog();
     private final UserInformationDialog userInformationDialog = new UserInformationDialog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        pdaService = PDAService.Factory.getInstance();
         super.onCreate(savedInstanceState);
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_login);

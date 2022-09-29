@@ -14,6 +14,8 @@ public class PDAService {
     private static Retrofit retrofit;
     private static volatile boolean propertiesChanged = false;
 
+    private PDAService() {}
+
     public synchronized <T> T getClient(Class<T> serviceClass) {
         if(retrofit == null || propertiesChanged) {
             refreshRetrofit();
@@ -84,5 +86,22 @@ public class PDAService {
 
     public static Retrofit getRetrofit() {
         return retrofit;
+    }
+
+    public static class Factory {
+        private static PDAService pdaService = new PDAService();
+
+        public static synchronized PDAService getInstance() {
+            return pdaService;
+        }
+
+        /**
+         * This method is just for testing, easy to mock. Should not use it in logical code.
+         *
+         * @param pdaService Should be a mocked {@link PDAService} instance.
+        */
+        public static synchronized void setPdaService(PDAService pdaService) {
+            Factory.pdaService = pdaService;
+        }
     }
 }

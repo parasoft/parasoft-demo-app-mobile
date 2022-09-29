@@ -22,7 +22,7 @@ import retrofit2.Response;
 public class ImageUtil {
 
     public static void loadImage(ImageView imageView, String orderImage, ImageView overlayView) {
-        PDAService pdaService = new PDAService();
+        PDAService pdaService = PDAService.Factory.getInstance();
         showImage(false, null, imageView, overlayView);
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
                 .enqueue(new Callback<ResponseBody>() {
@@ -30,6 +30,9 @@ public class ImageUtil {
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         if (response.code() == 200) {
                             assert response.body() != null;
+                            System.out.println("-----------------");
+                            System.out.println(response.body().contentType());
+                            System.out.println(response.body().getClass());
                             Bitmap image = BitmapFactory.decodeStream(response.body().byteStream());
                             showImage(true, image, imageView, overlayView);
                         } else {

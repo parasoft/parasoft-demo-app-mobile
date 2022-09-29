@@ -125,7 +125,7 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/order_status"
+                    android:id="@+id/order_dialog_order_status"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

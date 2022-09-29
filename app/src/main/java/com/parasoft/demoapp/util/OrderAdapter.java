@@ -46,18 +46,18 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@androidx.annotation.NonNull @NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof ItemViewHolder) {
-            OrderResponse orderList = mOrderList.get(position);
+            OrderResponse order = mOrderList.get(position);
             ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
             itemViewHolder.orderNewStatus.setVisibility(View.GONE);
-            if (!orderList.getReviewedByAPV()) {
+            if (!order.getReviewedByAPV()) {
                 itemViewHolder.orderNewStatus.setVisibility(View.VISIBLE);
             }
-            itemViewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, orderList.getOrderNumber()));
-            itemViewHolder.orderSubmissionDate.setText(CommonUtil.getLocalDate(orderList.getSubmissionDate()));
-            itemViewHolder.orderSubmissionTime.setText(CommonUtil.getLocalTime(orderList.getSubmissionDate()));
-            itemViewHolder.orderDetailRequestedBy.setText(orderList.getRequestedBy());
-            itemViewHolder.orderStatus.setText(parseOrderStatus(itemViewHolder, orderList.getStatus()));
-            itemViewHolder.bind(orderList, listener);
+            itemViewHolder.orderNumber.setText(context.getResources().getString(R.string.order_number, order.getOrderNumber()));
+            itemViewHolder.orderSubmissionDate.setText(CommonUtil.getLocalDate(order.getSubmissionDate()));
+            itemViewHolder.orderSubmissionTime.setText(CommonUtil.getLocalTime(order.getSubmissionDate()));
+            itemViewHolder.orderDetailRequestedBy.setText(order.getRequestedBy());
+            itemViewHolder.orderStatus.setText(parseOrderStatus(itemViewHolder, order.getStatus()));
+            itemViewHolder.bind(order, listener);
         } else if (viewHolder instanceof FooterViewHolder) {
             FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
             switch (loadingState) {
