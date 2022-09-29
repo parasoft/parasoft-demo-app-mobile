@@ -83,6 +83,8 @@ public class OrderDialog extends DialogFragment {
     private String responseValue;
     private View contentDivider;
     private EditText commentsField;
+    private ProgressBar orderUpdatingBar;
+    private TextView orderUpdatingErrMsg;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -116,7 +118,10 @@ public class OrderDialog extends DialogFragment {
         scrollView = view.findViewById(R.id.order_scroll_view);
         progressBar = view.findViewById(R.id.order_dialog_progressBar);
         contentDivider = view.findViewById(R.id.order_content_divider);
+        orderUpdatingBar = view.findViewById(R.id.order_updating_progressBar);
+        orderUpdatingErrMsg = view.findViewById(R.id.order_updating_error_message);
 
+        orderUpdatingBar.bringToFront();
         homeActivity = (HomeActivity) getActivity();
         initSpinner();
         setClickEvent();
@@ -227,6 +232,7 @@ public class OrderDialog extends DialogFragment {
                         if (!isAdded()) {
                             return;
                         }
+                        enableMaskLayer(false);
                         int code = response.code();
                         if (code == 200) {
                             assert response.body() != null;
@@ -242,11 +248,12 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                        // TODO waiting for feedback on where to display error
                         if (!isAdded()) {
                             return;
                         }
+                        enableMaskLayer(false);
                         enableSaveButton(true);
+                        showUpdatingError(getResources().getString(R.string.unable_to_connect_to_server));
                         Log.e(TAG, "Error updating details of the order: " + orderNumber, t);
                     }
                 });
@@ -423,6 +430,8 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void saveOrderDetails() {
+        orderUpdatingErrMsg.setVisibility(View.GONE);
+        enableMaskLayer(true);
         enableSaveButton(false);
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         if (responseValue.equals("Deny")) {
@@ -459,19 +468,35 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void handleErrorUpdateOrder(int errorCode) {
-        // TODO waiting for feedback on where to display error
+        String errMsg;
         switch (errorCode) {
             case 401:
+                errMsg = getResources().getString(R.string.no_authorization_to_update_order);
                 Log.e(TAG, "Not authorized to update the order: " + orderNumber);
                 break;
             case 403:
+                errMsg = getResources().getString(R.string.no_permission_to_update_order);
                 Log.e(TAG, "No permissions to update the order: " + orderNumber);
                 break;
             case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
                 Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
+                errMsg = getResources().getString(R.string.comments_too_long);
                 Log.e(TAG, "Internal error");
         }
+        showUpdatingError(errMsg);
+    }
+
+    private void showUpdatingError(String errorMessage) {
+        orderUpdatingErrMsg.setVisibility(View.VISIBLE);
+        orderUpdatingErrMsg.setText(errorMessage);
+    }
+
+    private void enableMaskLayer(boolean enable) {
+        orderUpdatingBar.setVisibility(enable ? View.VISIBLE : View.GONE);
+        responseSpinner.setEnabled(!enable);
+        commentsField.setEnabled(!enable);
     }
 }
