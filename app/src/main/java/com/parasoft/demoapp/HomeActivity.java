@@ -207,13 +207,17 @@ public class HomeActivity extends AppCompatActivity {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            runOnUiThread(() -> {
-                                pageIndex++;
-                                if (pageIndex < orderPagination.size()) {
-                                    orderAdapter.addMoreItems(orderPagination.get(pageIndex));
-                                }
-                                orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
-                            });
+                            try {
+                                runOnUiThread(() -> {
+                                    pageIndex++;
+                                    if (pageIndex < orderPagination.size()) {
+                                        orderAdapter.addMoreItems(orderPagination.get(pageIndex));
+                                    }
+                                    orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
+                                });
+                            } catch(Throwable t) {
+                                Log.e(TAG, "onLoadMore() error", t);
+                            }
                         }
                     }, 500);
                 } else {
