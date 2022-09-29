@@ -6,10 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.parasoft.demoapp.R;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -30,9 +29,6 @@ public class ImageUtil {
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         if (response.code() == 200) {
                             assert response.body() != null;
-                            System.out.println("-----------------");
-                            System.out.println(response.body().contentType());
-                            System.out.println(response.body().getClass());
                             Bitmap image = BitmapFactory.decodeStream(response.body().byteStream());
                             showImage(true, image, imageView, overlayView);
                         } else {

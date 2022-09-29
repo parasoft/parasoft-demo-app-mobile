@@ -100,8 +100,8 @@ public class OrderDialog extends DialogFragment {
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
         orderStatus = view.findViewById(R.id.order_dialog_order_status);
-        orderSubmissionDate = view.findViewById(R.id.order_time_year);
-        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
+        orderSubmissionDate = view.findViewById(R.id.order_dialog_order_date);
+        orderSubmissionTime = view.findViewById(R.id.order_dialog_order_time);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
