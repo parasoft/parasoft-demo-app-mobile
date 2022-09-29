@@ -8,21 +8,22 @@ import android.widget.ImageView;
 
 import com.parasoft.demoapp.R;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
+import lombok.Setter;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ImageUtil {
+    @Setter
+    public static PDAService pdaService = new PDAService();
 
     public static void loadImage(ImageView imageView, String orderImage, ImageView overlayView) {
-        PDAService pdaService = new PDAService();
         showImage(false, null, imageView, overlayView);
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
                 .enqueue(new Callback<ResponseBody>() {
