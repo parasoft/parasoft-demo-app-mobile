@@ -19,8 +19,9 @@ public class CommonUtil {
     public static final String BASE_URL_KEY = "baseUrl";
 
     @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
+    private static SimpleDateFormat getDateParse() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    }
 
     public static void saveSetting(Context context, String name, String value) {
         SharedPreferences.Editor note = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE).edit();
@@ -61,7 +62,7 @@ public class CommonUtil {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date date = dateParse.parse(processDate(time));
+            Date date = getDateParse().parse(processDate(time));
             dateFormatter.setTimeZone(TimeZone.getDefault());
             assert date != null;
             return dateFormatter.format(date);
@@ -75,7 +76,7 @@ public class CommonUtil {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
         try {
-            Date date = dateParse.parse(processDate(time));
+            Date date = getDateParse().parse(processDate(time));
             timeFormatter.setTimeZone(TimeZone.getDefault());
             assert date != null;
             return timeFormatter.format(date);

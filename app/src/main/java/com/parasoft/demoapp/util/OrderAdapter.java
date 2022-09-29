@@ -72,6 +72,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 case END:
                     footerViewHolder.mProgressBar.setVisibility(View.GONE);
                     footerViewHolder.bottomBlank.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
             }
         }
     }
