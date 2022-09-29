@@ -232,7 +232,7 @@ public class OrderDialog extends DialogFragment {
                         if (!isAdded()) {
                             return;
                         }
-                        enableMaskLayer(false);
+                        disableResponseView(false);
                         int code = response.code();
                         if (code == 200) {
                             assert response.body() != null;
@@ -251,7 +251,7 @@ public class OrderDialog extends DialogFragment {
                         if (!isAdded()) {
                             return;
                         }
-                        enableMaskLayer(false);
+                        disableResponseView(false);
                         enableSaveButton(true);
                         showUpdatingError(getResources().getString(R.string.unable_to_connect_to_server));
                         Log.e(TAG, "Error updating details of the order: " + orderNumber, t);
@@ -430,8 +430,8 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void saveOrderDetails() {
-        orderUpdatingErrMsg.setVisibility(View.GONE);
-        enableMaskLayer(true);
+        showUpdatingError(null);
+        disableResponseView(true);
         enableSaveButton(false);
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         if (responseValue.equals("Deny")) {
@@ -490,11 +490,15 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void showUpdatingError(String errorMessage) {
-        orderUpdatingErrMsg.setVisibility(View.VISIBLE);
-        orderUpdatingErrMsg.setText(errorMessage);
+        if (errorMessage == null) {
+            orderUpdatingErrMsg.setVisibility(View.INVISIBLE);
+        } else {
+            orderUpdatingErrMsg.setVisibility(View.VISIBLE);
+            orderUpdatingErrMsg.setText(errorMessage);
+        }
     }
 
-    private void enableMaskLayer(boolean enable) {
+    private void disableResponseView(boolean enable) {
         orderUpdatingBar.setVisibility(enable ? View.VISIBLE : View.GONE);
         responseSpinner.setEnabled(!enable);
         commentsField.setEnabled(!enable);
