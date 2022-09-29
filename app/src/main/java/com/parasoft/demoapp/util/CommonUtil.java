@@ -55,8 +55,8 @@ public class CommonUtil {
 
     @SuppressLint("SimpleDateFormat")
     public static String getLocalDate(String time) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             Date date = sdf.parse(processDate(time));
             dateFormatter.setTimeZone(TimeZone.getDefault());
@@ -70,8 +70,8 @@ public class CommonUtil {
 
     @SuppressLint("SimpleDateFormat")
     public static String getLocalTime(String time) {
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
         try {
+            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             Date date = sdf.parse(processDate(time));
             timeFormatter.setTimeZone(TimeZone.getDefault());
