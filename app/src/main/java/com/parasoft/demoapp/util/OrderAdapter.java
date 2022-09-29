@@ -13,6 +13,7 @@ import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 
+import java.text.MessageFormat;
 import java.util.List;
 import lombok.NonNull;
 
@@ -74,7 +75,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     footerViewHolder.bottomBlank.setVisibility(View.VISIBLE);
                     break;
                 default:
-                    break;
+                    throw new RuntimeException(MessageFormat.format("Load status code {0} is not supported", loadingState));
             }
         }
     }
