@@ -470,6 +470,10 @@ public class OrderDialog extends DialogFragment {
     private void handleErrorUpdateOrder(int errorCode) {
         String errMsg;
         switch (errorCode) {
+            case 400:
+                errMsg = getResources().getString(R.string.updating_order_request_error);
+                Log.e(TAG, "Bad request to update order: " + orderNumber);
+                break;
             case 401:
                 errMsg = getResources().getString(R.string.no_authorization_to_update_order);
                 Log.e(TAG, "Not authorized to update the order: " + orderNumber);
@@ -483,7 +487,7 @@ public class OrderDialog extends DialogFragment {
                 Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
-                errMsg = getResources().getString(R.string.comments_too_long);
+                errMsg = getResources().getString(R.string.updating_order_error);
                 Log.e(TAG, "Internal error");
         }
         showUpdatingError(errMsg);
