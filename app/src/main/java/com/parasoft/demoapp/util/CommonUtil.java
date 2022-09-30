@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
 import java.text.ParseException;
@@ -17,6 +16,7 @@ import java.util.TimeZone;
 public class CommonUtil {
 
     public static final String BASE_URL_KEY = "baseUrl";
+    public static final String DEFAULT_URL = "http://10.0.2.2:8080";
 
     public static void saveSetting(Context context, String name, String value) {
         SharedPreferences.Editor note = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE).edit();
@@ -32,7 +32,7 @@ public class CommonUtil {
     public static String getBaseUrl(Context context) {
         String baseUrl = getSetting(context, BASE_URL_KEY);
         if (baseUrl == null) {
-            baseUrl = context.getString(R.string.default_url);
+            baseUrl = DEFAULT_URL;
         }
         return baseUrl;
     }
