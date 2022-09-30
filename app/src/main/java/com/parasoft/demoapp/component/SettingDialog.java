@@ -79,7 +79,11 @@ public class SettingDialog extends DialogFragment {
     }
 
     public void setClickEvent() {
-        cancelButton.setOnClickListener(v -> dismiss());
+        cancelButton.setOnClickListener(v -> {
+            errorMessage.setText("");
+            fillBaseUrl();
+            dismiss();
+        });
 
         saveButton.setOnClickListener(v -> {
             saveBaseUrl();
