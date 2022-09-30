@@ -471,8 +471,8 @@ public class OrderDialog extends DialogFragment {
         String errMsg;
         switch (errorCode) {
             case 400:
-                errMsg = getResources().getString(R.string.non_repeatable_operations);
-                Log.e(TAG, "The order: " + orderNumber + " has already modified, and cannot operate it again");
+                errMsg = getResources().getString(R.string.updating_order_request_error);
+                Log.e(TAG, "Bad request to update order: " + orderNumber);
                 break;
             case 401:
                 errMsg = getResources().getString(R.string.no_authorization_to_update_order);
