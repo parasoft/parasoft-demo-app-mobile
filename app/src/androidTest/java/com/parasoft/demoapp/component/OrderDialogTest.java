@@ -268,7 +268,7 @@ public class OrderDialogTest extends MockPDAService {
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_with500Response());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.comments_too_long)));
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.updating_order_error)));
 
             try {
                 Thread.sleep(3000);
