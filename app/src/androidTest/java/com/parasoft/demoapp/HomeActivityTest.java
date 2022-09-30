@@ -3,6 +3,7 @@ package com.parasoft.demoapp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openContextualActionModeOverflowMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -14,7 +15,6 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.when;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.parasoft.demoapp.FakeApiResponse.OrdersRelativeApis;
@@ -142,7 +142,7 @@ public class HomeActivityTest extends MockPDAService {
             OrdersRelativeApis.FakeData.addAnOrder("23-456-011", OrderStatus.SUBMITTED, 1, false);
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
-            onView(withId(R.id.order_recycler_view)).perform(ViewActions.swipeDown());
+            onView(withId(R.id.order_recycler_view)).perform(swipeDown());
             onView(withText("#23-456-011")).check(matches(isDisplayed()));
             onView(withText("#23-456-010")).check(matches(isDisplayed()));
         }
