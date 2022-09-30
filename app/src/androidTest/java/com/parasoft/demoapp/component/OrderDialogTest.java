@@ -232,31 +232,61 @@ public class OrderDialogTest extends MockPDAService {
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_with401Response());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            // TODO: Verify the error message on page
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.no_authorization_to_update_order)));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             // Update order info but 403 happens.
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_with403Response());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            // TODO: Verify the error message on page
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.no_permission_to_update_order)));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             // Update order info but 404 happens.
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_with404Response());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            // TODO: Verify the error message on page
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText("Order: #" + orderNumber + " not found")));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             // Update order info but 500 happens.
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_with500Response());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            // TODO: Verify the error message on page
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.comments_too_long)));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             // Update order info but on failure.
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.updateOrderDetails_onFailure());
             onView(withId(R.id.order_save_button)).perform(click());
             onView(withId(R.id.order_dialog_title)).check(matches(withSubstring(orderNumber))); // Do not close dialog if error happens
-            // TODO: Verify the error message on page
+            onView(withId(R.id.order_updating_error_message)).check(matches(withText(R.string.unable_to_connect_to_server)));
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             verify(mockedPdaService, atLeastOnce()).getClient(ApiInterface.class);
         }
