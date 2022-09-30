@@ -11,7 +11,6 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -76,6 +75,22 @@ public class OrdersRelativeApis {
 
     public static ApiInterface localizedValue_onFailure() {
         return new LocalizedValue_onFailure();
+    }
+
+    public static ApiInterface getOrderList_with400Response() {
+        return new GetOrderList_with400Response();
+    }
+
+    public static ApiInterface getOrderList_with401Response() {
+        return new GetOrderList_with401Response();
+    }
+
+    public static ApiInterface getOrderList_with500Response() {
+        return new GetOrderList_with500Response();
+    }
+
+    public static ApiInterface getOrderList_onFailure() {
+        return new GetOrderList_onFailure();
     }
 
     private static class AllApisWith200Response extends ApiInterfaceImplForTest {
@@ -356,7 +371,61 @@ public class OrdersRelativeApis {
             return new CallInterfaceImplForTest<ResponseBody>() {
                 @Override
                 public void enqueue(Callback<ResponseBody> callback) {
-                callback.onFailure(null, new RuntimeException("On failure"));
+                    callback.onFailure(null, new RuntimeException("On failure"));
+                }
+            };
+        }
+    }
+
+    private static class GetOrderList_with400Response extends ApiInterfaceImplForTest {
+        @Override
+        public Call<ResultResponse<OrderListResponse>> getOrderList() {
+            return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
+                    ResponseBody responseBody = ResponseBody.create(null, "Invalid request parameter.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(400, responseBody);
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderList_with401Response extends ApiInterfaceImplForTest {
+        @Override
+        public Call<ResultResponse<OrderListResponse>> getOrderList() {
+            return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
+                    ResponseBody responseBody = ResponseBody.create(null, "Not authorized to get all orders.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(401, responseBody);
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderList_with500Response extends ApiInterfaceImplForTest {
+        @Override
+        public Call<ResultResponse<OrderListResponse>> getOrderList() {
+            return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
+                    ResponseBody responseBody = ResponseBody.create(null, "Error loading all orders.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(500, responseBody);
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderList_onFailure extends ApiInterfaceImplForTest {
+        @Override
+        public Call<ResultResponse<OrderListResponse>> getOrderList() {
+            return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
+                    callback.onFailure(null, new RuntimeException("On failure"));
                 }
             };
         }
@@ -389,6 +458,27 @@ public class OrdersRelativeApis {
             order.setSubmissionDate("2022-09-26T08:00:00.000+00:00");
             orderList.add(order);
             return order;
+        }
+
+        public static void addMoreOrders(int orderQuantity) {
+            String orderNumber;
+            OrderStatus orderStatus = null;
+            for (int i = orderQuantity; i >= 1; i--) {
+                orderNumber = "23-456-0" + (i >= 10 ? "" : "0") + i;
+                switch (i % 3) {
+                    case 0:
+                        orderStatus = OrderStatus.SUBMITTED;
+                        break;
+                    case 1:
+                        orderStatus = OrderStatus.APPROVED;
+                        break;
+                    case 2:
+                        orderStatus = OrderStatus.DECLINED;
+                        break;
+                    default:
+                }
+                addAnOrder(orderNumber, orderStatus, 1, false);
+            }
         }
 
         public static OrderResponse getOrderByOrderNumber(String orderNumber) {
