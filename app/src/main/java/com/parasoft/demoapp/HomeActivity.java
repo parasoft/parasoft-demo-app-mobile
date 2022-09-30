@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        pdaService = new PDAService();
+        pdaService = PDAService.Factory.getInstance();
         super.onCreate(savedInstanceState);
         overridePendingTransition(com.google.android.material.R.anim.abc_fade_in, com.google.android.material.R.anim.abc_fade_out);
         setContentView(R.layout.activity_home);
@@ -139,9 +139,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void signOut() {
-        pdaService.getClient(ApiInterface.class).logout();
         PDAService.setAuthToken(null);
-
         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
         startActivity(intent);
         HomeActivity.this.finish();

@@ -24,11 +24,6 @@ public class ApiInterfaceImplForTest implements ApiInterface {
     }
 
     @Override
-    public Call<ResultResponse<Void>> logout() {
-        throw new UnsupportedOperationException("Need to override this method in subclass");
-    }
-
-    @Override
     public Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword() {
         throw new UnsupportedOperationException("Need to override this method in subclass");
     }

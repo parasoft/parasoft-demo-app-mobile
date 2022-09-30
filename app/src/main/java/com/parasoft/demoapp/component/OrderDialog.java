@@ -93,7 +93,7 @@ public class OrderDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        pdaService = new PDAService();
+        pdaService = PDAService.Factory.getInstance();
         View view = inflater.inflate(R.layout.order_dialog_layout, container, false);
         saveButton = view.findViewById(R.id.order_save_button);
         cancelButton = view.findViewById(R.id.order_dismiss_button);
@@ -101,9 +101,9 @@ public class OrderDialog extends DialogFragment {
         errorMessage = view.findViewById(R.id.order_info_error_message );
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
-        orderStatus = view.findViewById(R.id.order_status);
-        orderSubmissionDate = view.findViewById(R.id.order_time_year);
-        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
+        orderStatus = view.findViewById(R.id.order_dialog_order_status);
+        orderSubmissionDate = view.findViewById(R.id.order_dialog_order_date);
+        orderSubmissionTime = view.findViewById(R.id.order_dialog_order_time);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
@@ -350,7 +350,11 @@ public class OrderDialog extends DialogFragment {
     }
 
     public void initSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_dropdown_item_layout, R.id.order_response_value, getResources().getStringArray(R.array.order_response)){
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(getContext(),
+                                         R.layout.spinner_dropdown_item_layout,
+                                         R.id.order_response_value,
+                                         getResources().getStringArray(R.array.order_response)){
             @Override
             public boolean isEnabled(int position) {
                 return position != 0;

@@ -1,7 +1,7 @@
 package com.parasoft.demoapp.FakeApiResponse;
 
-
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
+import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
 import okhttp3.ResponseBody;
@@ -39,6 +39,22 @@ public class LoginApi {
                     resultResponse.setMessage("Login successfully.");
 
                     Response<ResultResponse<Void>> response = Response.success(200, resultResponse);
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+
+        @Override
+        public Call<ResultResponse<OrderListResponse>> getOrderList() {
+            return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
+                    ResultResponse<OrderListResponse> resultResponse = new ResultResponse<>();
+                    resultResponse.setData(new OrderListResponse());
+                    resultResponse.setStatus(1);
+                    resultResponse.setMessage("Response successfully but no orders.");
+
+                    Response<ResultResponse<OrderListResponse>> response = Response.success(200, resultResponse);
                     callback.onResponse(null, response);
                 }
             };
