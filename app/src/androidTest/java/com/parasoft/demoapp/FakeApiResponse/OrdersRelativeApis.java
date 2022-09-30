@@ -1,5 +1,7 @@
 package com.parasoft.demoapp.FakeApiResponse;
 
+import android.graphics.Bitmap;
+
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.request.OrderStatusRequest;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
@@ -7,7 +9,9 @@ import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -18,8 +22,60 @@ import retrofit2.Response;
 
 public class OrdersRelativeApis {
 
-    public static ApiInterface return200Response_allRequest() {
+    public static ApiInterface allRequests_with200Response() {
         return new AllApisWith200Response();
+    }
+
+    public static ApiInterface getOrderDetails_with401Response() {
+        return new GetOrderDetails_with401Response();
+    }
+
+    public static ApiInterface getOrderDetails_with404Response() {
+        return new GetOrderDetails_with404Response();
+    }
+
+    public static ApiInterface getOrderDetails_with500Response() {
+        return new GetOrderDetails_with500Response();
+    }
+
+    public static ApiInterface getOrderDetails_onFailure() {
+        return new GetOrderDetails_onFailure();
+    }
+
+    public static ApiInterface updateOrderDetails_with401Response() {
+        return new UpdateOrderDetails_with401Response();
+    }
+
+    public static ApiInterface updateOrderDetails_with403Response() {
+        return new UpdateOrderDetails_with403Response();
+    }
+
+    public static ApiInterface updateOrderDetails_with404Response() {
+        return new UpdateOrderDetails_with404Response();
+    }
+
+    public static ApiInterface updateOrderDetails_with500Response() {
+        return new UpdateOrderDetails_with500Response();
+    }
+
+    public static ApiInterface updateOrderDetails_onFailure() {
+        return new UpdateOrderDetails_onFailure();
+    }
+
+    public static ApiInterface getImage_with404Response() {
+        return new GetImage_with404Response();
+    }
+
+    public static ApiInterface getImage_onFailure() {
+        return new GetImage_onFailure();
+    }
+
+    public static ApiInterface localizedValue_with404Response() {
+        return new LocalizedValue_with404Response();
+    }
+
+    public static ApiInterface localizedValue_onFailure() {
+        return new LocalizedValue_onFailure();
     }
 
     private static class AllApisWith200Response extends ApiInterfaceImplForTest {
@@ -29,7 +85,7 @@ public class OrdersRelativeApis {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
                     ResultResponse<OrderListResponse> resultResponse = new ResultResponse<>();
-                    resultResponse.setData(FakeDate.orderListResponse);
+                    resultResponse.setData(FakeData.orderListResponse);
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("Response orders successfully.");
 
@@ -45,7 +101,7 @@ public class OrdersRelativeApis {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
                     ResultResponse<OrderResponse> resultResponse = new ResultResponse<>();
-                    OrderResponse order = FakeDate.getOrderByOrderNumber(orderNumber);
+                    OrderResponse order = FakeData.getOrderByOrderNumber(orderNumber);
                     resultResponse.setData(order);
                     Response<ResultResponse<OrderResponse>> response;
                     if(order != null) {
@@ -68,7 +124,7 @@ public class OrdersRelativeApis {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
                     ResultResponse<OrderResponse> resultResponse = new ResultResponse<>();
-                    OrderResponse order = FakeDate.getOrderByOrderNumber(orderNumber);
+                    OrderResponse order = FakeData.getOrderByOrderNumber(orderNumber);
 
                     Response<ResultResponse<OrderResponse>> response;
                     if(order == null) {
@@ -96,7 +152,11 @@ public class OrdersRelativeApis {
             return new CallInterfaceImplForTest<ResponseBody>() {
                 @Override
                 public void enqueue(Callback<ResponseBody> callback) {
-                    Response<ResponseBody> response = Response.success(ResponseBody.create(MediaType.parse("image/png"), ""));
+                    Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
+                    byte[] bitmapData = byteArrayOutputStream.toByteArray();
+                    Response<ResponseBody> response = Response.success(ResponseBody.create(MediaType.parse("image/png"), bitmapData));
                     callback.onResponse(null, response);
                 }
             };
@@ -108,7 +168,7 @@ public class OrdersRelativeApis {
                 @Override
                 public void enqueue(Callback<ResultResponse<String>> callback) {
                     ResultResponse<String> resultResponse = new ResultResponse<>();
-                    resultResponse.setData("Localized value");
+                    resultResponse.setData("Localized location value");
                     resultResponse.setStatus(1);
                     resultResponse.setMessage("Response successfully.");
 
@@ -119,7 +179,136 @@ public class OrdersRelativeApis {
         }
     }
 
-    private static class localizedValue_with404Response extends AllApisWith200Response {
+    private static class UpdateOrderDetails_with401Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(401,
+                            ResponseBody.create(null, "Not authorized to update the order."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class UpdateOrderDetails_with403Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(403,
+                            ResponseBody.create(null, "Not permission to update the order."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class UpdateOrderDetails_with404Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(404,
+                            ResponseBody.create(null, "There is no order corresponding to " + orderNumber + "."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class UpdateOrderDetails_with500Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(500,
+                            ResponseBody.create(null, "Internal error."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class UpdateOrderDetails_onFailure extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    callback.onFailure(null, new RuntimeException("On failure"));
+                }
+            };
+        }
+    }
+
+    private static class GetOrderDetails_with401Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> getOrderDetails(String orderNumber) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(401,
+                            ResponseBody.create(null, "Not authorized to get the order."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderDetails_with404Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> getOrderDetails(String orderNumber) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(404,
+                            ResponseBody.create(null, "There is no order corresponding to " + orderNumber + "."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderDetails_with500Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> getOrderDetails(String orderNumber) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(500,
+                            ResponseBody.create(null, "Internal error."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class GetOrderDetails_onFailure extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> getOrderDetails(String orderNumber) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    callback.onFailure(null, new RuntimeException("On failure"));
+                }
+            };
+        }
+    }
+
+    private static class LocalizedValue_with404Response extends AllApisWith200Response {
         @Override
         public Call<ResultResponse<String>> localizedValue(String lang, String key) {
             return new CallInterfaceImplForTest<ResultResponse<String>>() {
@@ -133,7 +322,19 @@ public class OrdersRelativeApis {
         }
     }
 
-    private static class getImage_with404Response extends AllApisWith200Response {
+    private static class LocalizedValue_onFailure extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<String>> localizedValue(String lang, String key) {
+            return new CallInterfaceImplForTest<ResultResponse<String>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<String>> callback) {
+                    callback.onFailure(null, new RuntimeException("On failure"));
+                }
+            };
+        }
+    }
+
+    private static class GetImage_with404Response extends AllApisWith200Response {
 
         @Override
         public Call<ResponseBody> getImage(String imagePath) {
@@ -148,7 +349,20 @@ public class OrdersRelativeApis {
         }
     }
 
-    public static class FakeDate {
+    private static class GetImage_onFailure extends AllApisWith200Response {
+
+        @Override
+        public Call<ResponseBody> getImage(String imagePath) {
+            return new CallInterfaceImplForTest<ResponseBody>() {
+                @Override
+                public void enqueue(Callback<ResponseBody> callback) {
+                callback.onFailure(null, new RuntimeException("On failure"));
+                }
+            };
+        }
+    }
+
+    public static class FakeData {
         private static final OrderListResponse orderListResponse = new OrderListResponse();
         private static final List<OrderResponse> orderList = new ArrayList<>();
 
@@ -164,6 +378,7 @@ public class OrdersRelativeApis {
             OrderResponse order = new OrderResponse();
             order.setOrderNumber(orderNumber);
             order.setLocation(orderNumber + " - 29.90° E, 54.41° N");
+            order.setRegion("Location");
             order.setReceiverId(orderNumber + " - receiver name");
             order.setEventId(orderNumber + " - receiver number");
             order.setEventNumber(orderNumber + " - purchaser order");
@@ -177,7 +392,7 @@ public class OrdersRelativeApis {
         }
 
         public static OrderResponse getOrderByOrderNumber(String orderNumber) {
-            for(OrderResponse order : FakeDate.orderList) {
+            for(OrderResponse order : FakeData.orderList) {
                 if(order.getOrderNumber().equals(orderNumber)) {
                     return order;
                 }
@@ -187,10 +402,10 @@ public class OrdersRelativeApis {
 
         private static List<OrderResponse.OrderItemInfo> prepareOrderItems(int number) {
             List<OrderResponse.OrderItemInfo> orderItems = new ArrayList<>();
-            for(int i = 0; i < number; i++) {
+            for(int i = 1; i <= number; i++) {
                 OrderResponse.OrderItemInfo orderItemInfo =
-                        new OrderResponse.OrderItemInfo("Item name" + 1,  "Item description" + 1,
-                                "/image/path",  1);
+                        new OrderResponse.OrderItemInfo("Item name " + i,  "Item description " + i,
+                                "/image/path",  i);
                 orderItems.add(orderItemInfo);
             }
 
