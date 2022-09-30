@@ -10,7 +10,6 @@
     <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="save">SAVE</string>
     <string name="base_url">Base URL</string>
-    <string name="default_url" translatable="false">http://10.0.2.2:8080</string>
     <string name="base_url_must_not_be_empty">Base URL must not be empty</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="reset_base_url">Reset Base URL</string>
