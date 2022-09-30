@@ -56,6 +56,6 @@
     <string name="non_repeatable_operations">The order status has already been modified</string>
     <string name="no_authorization_to_update_order">You are not authorized to update this order</string>
     <string name="no_permission_to_update_order">You have no permissions to update this order</string>
-    <string name="comments_too_long">Comments are too long</string>
     <string name="unable_to_connect_to_server">Unable to connect to server</string>
+    <string name="updating_order_error">Error updating order</string>
 </resources>

@@ -55,6 +55,6 @@
     <string name="non_repeatable_operations">订单状态已被修改</string>
     <string name="no_authorization_to_update_order">您未授权更新该订单</string>
     <string name="no_permission_to_update_order">您没有更新该订单的权限</string>
-    <string name="comments_too_long">原因描述太长</string>
     <string name="unable_to_connect_to_server">无法连接到服务器</string>
+    <string name="updating_order_error">订单更新错误</string>
 </resources>

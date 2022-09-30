@@ -487,7 +487,7 @@ public class OrderDialog extends DialogFragment {
                 Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
-                errMsg = getResources().getString(R.string.comments_too_long);
+                errMsg = getResources().getString(R.string.updating_order_error);
                 Log.e(TAG, "Internal error");
         }
         showUpdatingError(errMsg);
