@@ -77,24 +77,20 @@ public class OrdersRelativeApis {
         return new LocalizedValue_onFailure();
     }
 
-    public static ApiInterface returnOrderList_with400Response() {
-        return new getOrderList_with400Response();
+    public static ApiInterface getOrderList_with400Response() {
+        return new GetOrderList_with400Response();
     }
 
-    public static ApiInterface returnOrderList_with401Response() {
-        return new getOrderList_with401Response();
+    public static ApiInterface getOrderList_with401Response() {
+        return new GetOrderList_with401Response();
     }
 
-    public static ApiInterface returnOrderList_with500Response() {
-        return new getOrderList_with500Response();
+    public static ApiInterface getOrderList_with500Response() {
+        return new GetOrderList_with500Response();
     }
 
-    public static ApiInterface returnOrderList_onFailure() {
-        return new getOrderList_onFailure();
-    }
-
-    public static ApiInterface returnOrderList_logOut() {
-        return new logOutWith200Response();
+    public static ApiInterface getOrderList_onFailure() {
+        return new GetOrderList_onFailure();
     }
 
     private static class AllApisWith200Response extends ApiInterfaceImplForTest {
@@ -375,76 +371,61 @@ public class OrdersRelativeApis {
             return new CallInterfaceImplForTest<ResponseBody>() {
                 @Override
                 public void enqueue(Callback<ResponseBody> callback) {
-                callback.onFailure(null, new RuntimeException("On failure"));
+                    callback.onFailure(null, new RuntimeException("On failure"));
                 }
             };
         }
     }
 
-    private static class getOrderList_with400Response extends ApiInterfaceImplForTest {
+    private static class GetOrderList_with400Response extends ApiInterfaceImplForTest {
         @Override
         public Call<ResultResponse<OrderListResponse>> getOrderList() {
             return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
-                    Response<ResultResponse<OrderListResponse>> response = Response.error(400, ResponseBody.create(null, "Invalid request parameter."));
+                    ResponseBody responseBody = ResponseBody.create(null, "Invalid request parameter.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(400, responseBody);
                     callback.onResponse(null, response);
                 }
             };
         }
     }
 
-    private static class getOrderList_with401Response extends ApiInterfaceImplForTest {
+    private static class GetOrderList_with401Response extends ApiInterfaceImplForTest {
         @Override
         public Call<ResultResponse<OrderListResponse>> getOrderList() {
             return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
-                    Response<ResultResponse<OrderListResponse>> response = Response.error(401, ResponseBody.create(null, "Not authorized to get all orders."));
+                    ResponseBody responseBody = ResponseBody.create(null, "Not authorized to get all orders.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(401, responseBody);
                     callback.onResponse(null, response);
                 }
             };
         }
     }
 
-    private static class getOrderList_with500Response extends ApiInterfaceImplForTest {
+    private static class GetOrderList_with500Response extends ApiInterfaceImplForTest {
         @Override
         public Call<ResultResponse<OrderListResponse>> getOrderList() {
             return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
-                    Response<ResultResponse<OrderListResponse>> response = Response.error(500, ResponseBody.create(null, "Error loading all orders."));
+                    ResponseBody responseBody = ResponseBody.create(null, "Error loading all orders.");
+                    Response<ResultResponse<OrderListResponse>> response = Response.error(500, responseBody);
                     callback.onResponse(null, response);
                 }
             };
         }
     }
 
-    private static class getOrderList_onFailure extends ApiInterfaceImplForTest {
+    private static class GetOrderList_onFailure extends ApiInterfaceImplForTest {
         @Override
         public Call<ResultResponse<OrderListResponse>> getOrderList() {
             return new CallInterfaceImplForTest<ResultResponse<OrderListResponse>>() {
                 @Override
                 public void enqueue(Callback<ResultResponse<OrderListResponse>> callback) {
-                    callback.onFailure(null, new Throwable("On failure"));
-                }
-            };
-        }
-    }
-
-    private static class logOutWith200Response extends ApiInterfaceImplForTest {
-        @Override
-        public Call<ResultResponse<Void>> logout() {
-            return new CallInterfaceImplForTest<ResultResponse<Void>>() {
-                @Override
-                public void enqueue(Callback<ResultResponse<Void>> callback) {
-                    ResultResponse<Void> resultResponse = new ResultResponse<>();
-                    resultResponse.setData(null);
-                    resultResponse.setStatus(1);
-                    resultResponse.setMessage("Logout successfully.");
-
-                    Response<ResultResponse<Void>> response = Response.success(200, resultResponse);
-                    callback.onResponse(null, response);
+                    callback.onFailure(null, new RuntimeException("On failure"));
                 }
             };
         }
@@ -483,13 +464,7 @@ public class OrdersRelativeApis {
             String orderNumber;
             OrderStatus orderStatus = null;
             for (int i = orderQuantity; i >= 1; i--) {
-                OrderResponse order = new OrderResponse();
                 orderNumber = "23-456-0" + (i >= 10 ? "" : "0") + i;
-                order.setOrderNumber(orderNumber);
-                order.setLocation(orderNumber + " - 29.90° E, 54.41° N");
-                order.setReceiverId(orderNumber + " - receiver name");
-                order.setEventId(orderNumber + " - receiver number");
-                order.setEventNumber(orderNumber + " - purchaser order");
                 switch (i % 3) {
                     case 0:
                         orderStatus = OrderStatus.SUBMITTED;
@@ -500,13 +475,9 @@ public class OrdersRelativeApis {
                     case 2:
                         orderStatus = OrderStatus.DECLINED;
                         break;
+                    default:
                 }
-                order.setStatus(orderStatus);
-                order.setReviewedByAPV(false);
-                order.setOrderItems(prepareOrderItems(1));
-                order.setRequestedBy("purchaser");
-                order.setSubmissionDate("2022-09-26T08:0" + i + ":00.000+00:00");
-                orderList.add(order);
+                addAnOrder(orderNumber, orderStatus, 1, false);
             }
         }
 
