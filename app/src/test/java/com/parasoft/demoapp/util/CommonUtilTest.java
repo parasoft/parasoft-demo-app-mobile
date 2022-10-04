@@ -10,8 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
-import com.parasoft.demoapp.R;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +46,6 @@ public class CommonUtilTest {
     public void setUp() {
         Mockito.when(appContext.getSharedPreferences(anyString(), anyInt())).thenReturn(sharedPrefs);
         Mockito.when(sharedPrefs.edit()).thenReturn(editor);
-        Mockito.when(appContext.getString(R.string.default_url)).thenReturn(BASE_URL_DEF);
 
         Mockito.when(appContext.getResources()).thenReturn(resources);
         Mockito.when(resources.getConfiguration()).thenReturn(configuration);
