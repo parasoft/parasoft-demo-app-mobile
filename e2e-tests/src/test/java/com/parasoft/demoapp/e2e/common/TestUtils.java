@@ -39,4 +39,11 @@ public class TestUtils {
         wait.until(ExpectedConditions.elementToBeClickable(LoginActivityLocators.BASE_URL_SAVE_BUTTON)).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
     }
+
+    public static void setBaseUrlAndlogin(WebDriver driver, WebDriverWait wait, String username,
+                                          String password) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.APP_TITLE));
+        TestUtils.setBaseUrl(driver, AppiumConfig.pdaServerUrl());
+        TestUtils.login(driver, username, password);
+    }
 }
