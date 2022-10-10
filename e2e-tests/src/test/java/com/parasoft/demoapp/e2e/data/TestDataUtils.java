@@ -76,16 +76,8 @@ public final class TestDataUtils {
                 collect(Collectors.toList());
     }
 
-    public static String dateToLocalDateString(Date date) {
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(),
-                ZoneId.systemDefault());
-        return localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE);
-    }
-
-    public static String dateToLocalTimeString(Date date) {
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(),
-                ZoneId.systemDefault());
-        return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    public static List<Order> getOpenOrders() {
+        return getAllOrders().stream().filter(Order::isOpenOrder).collect(Collectors.toList());
     }
 
     private static void addItemsToCart(Map<Long,Integer> itemIdQtyMap) {

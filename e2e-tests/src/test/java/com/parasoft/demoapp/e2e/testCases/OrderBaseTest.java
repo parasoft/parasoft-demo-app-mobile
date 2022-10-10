@@ -9,7 +9,9 @@ import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_RECYCLER
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.PROGRESS_BAR;
 
 import com.parasoft.demoapp.e2e.common.BaseTest;
+import com.parasoft.demoapp.e2e.data.Order;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -29,6 +31,7 @@ public abstract class OrderBaseTest extends BaseTest {
     }
 
     protected WebElement scrollToOrder(String orderNumber) {
+        String orderNumberWithHashPrefix = StringUtils.prependIfMissing(orderNumber, Order.HASH_SIGN);
         WebElement orderRecyclerView = driver.findElement(ORDER_RECYCLER_VIEW);
         List<WebElement> viewGroups = orderRecyclerView.
                 findElements(DESCENDANT_ANDROID_VIEW_VIEW_GROUP);
@@ -39,7 +42,7 @@ public abstract class OrderBaseTest extends BaseTest {
             Optional<WebElement> orderDetailRequestedByElemOptional = viewGroup.
                     findElements(ORDER_DETAIL_REQUESTED_BY).stream().findFirst();
             if (orderNumberElemOptional.isPresent() &&
-                    orderNumber.contentEquals(orderNumberElemOptional.get().getText()) &&
+                    orderNumberWithHashPrefix.contentEquals(orderNumberElemOptional.get().getText()) &&
                     orderDetailRequestedByElemOptional.isPresent()) {
                 return viewGroup;
             }
@@ -53,7 +56,7 @@ public abstract class OrderBaseTest extends BaseTest {
             scroll(ScrollDirection.DOWN, 0.5);
             wait.until(ExpectedConditions.
                     invisibilityOfElementLocated(PROGRESS_BAR));
-            return scrollToOrder(orderNumber);
+            return scrollToOrder(orderNumberWithHashPrefix);
         }
     }
 }

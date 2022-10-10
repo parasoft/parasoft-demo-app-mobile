@@ -20,6 +20,10 @@ public final class OrderDetailLocators {
 
     public static final By ORDER_DIALOG_ORDER_STATUS = By.id(ID_PREFIX + "order_dialog_order_status");
 
+    public static final By COMMENTS = By.id(ID_PREFIX + "comments");
+
+    public static final By COMMENTS_DETAIL = By.id(ID_PREFIX + "comments_detail");
+
     public static final By PURCHASER_NAME = By.id(ID_PREFIX + "purchaser_name");
 
     public static final By LOCATION = By.id(ID_PREFIX + "location");
@@ -40,6 +44,8 @@ public final class OrderDetailLocators {
     public static final By INVOICE_NUMBER = By.id(ID_PREFIX + "invoice_number");
 
     public static final By PURCHASE_ORDER_NUMBER = By.id(ID_PREFIX + "purchase_order_number");
+
+    public static final By ORDER_UPDATING_ERROR_MESSAGE = By.id(ID_PREFIX + "order_updating_error_message");
 
     public static final By ORDER_RESPONSE_SPINNER = By.id(ID_PREFIX + "order_response_spinner");
 

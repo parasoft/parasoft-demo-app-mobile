@@ -2,6 +2,9 @@ package com.parasoft.demoapp.e2e.data;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -9,14 +12,15 @@ import lombok.Data;
 
 @Data
 public class Order {
-    private static final String HASH_SIGN = "#";
+    public static final String HASH_SIGN = "#";
+    private static  final String TIME_PATTERN = "HH:mm:ss";
 
     public static final String SUBMITTED_STATUS = "SUBMITTED";
     public static final String DECLINED_STATUS = "DECLINED";
     public static final String APPROVED_STATUS = "APPROVED";
 
     private static final String OPEN_STATUS = "OPEN";
-    private static final String DENIED_STATUS = "DENIED";
+    public static final String DENIED_STATUS = "DENIED";
 
     private Long id;
     private String orderNumber;
@@ -50,10 +54,16 @@ public class Order {
     }
 
     public String getOrderDetailDate() {
-        return TestDataUtils.dateToLocalDateString(submissionDate);
+        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.systemDefault()).
+                format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public String getOrderDetailTime() {
-        return TestDataUtils.dateToLocalTimeString(submissionDate);
+        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.systemDefault()).
+                format(DateTimeFormatter.ofPattern(TIME_PATTERN));
+    }
+
+    public boolean isOpenOrder() {
+        return StringUtils.equals(status, SUBMITTED_STATUS);
     }
 }
