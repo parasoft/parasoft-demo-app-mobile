@@ -23,7 +23,6 @@ import com.parasoft.demoapp.e2e.data.Order;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import io.restassured.RestAssured;
 
@@ -48,12 +47,9 @@ class OrderListTest extends OrderBaseTest {
 
         wait.until(ExpectedConditions.
                 presenceOfElementLocated(ORDER_REQUESTS_TITLE));
-        WebElement orderRequestsTitle = driver.findElement(ORDER_REQUESTS_TITLE);
-        assertEquals("ORDER REQUESTS", orderRequestsTitle.getText());
-
-        WebElement displayNoOrdersInfo = driver.
-                findElement(DISPLAY_NO_ORDERS_INFO);
-        assertEquals("There are no order requests", displayNoOrdersInfo.getText());
+        assertEquals("ORDER REQUESTS", driver.findElement(ORDER_REQUESTS_TITLE).getText());
+        assertEquals("There are no order requests",
+                driver.findElement(DISPLAY_NO_ORDERS_INFO).getText());
 
         List<Order> testDataOrders = createTestDataOrders();
 
@@ -71,34 +67,21 @@ class OrderListTest extends OrderBaseTest {
 
     private void checkOrderList(List<Order> testDataOrders) {
         waitForOrderListToBeDisplayed();
-        new ArrayList<>(Lists.reverse(testDataOrders)).forEach(this::checkOrder);
+        new ArrayList<>(Lists.reverse(testDataOrders)).forEach(this::checkOrderListItem);
     }
 
-    private void checkOrder(Order order) {
-        WebElement orderViewGroupElem = scrollToOrder(order.getUiOrderNumber());
-        if (orderViewGroupElem == null) {
-            fail(String.format("Can not find order(%s) in the list.", order.getUiOrderNumber()));
-        }
-        checkOrderProperties(order, orderViewGroupElem);
-    }
-
-    private static void checkOrderProperties(Order order, WebElement orderViewGroupElem) {
-        WebElement orderNumberElem = orderViewGroupElem.findElement(ORDER_NUMBER);
-        assertEquals(order.getUiOrderNumber(), orderNumberElem.getText());
-        WebElement orderDetailDateElem = orderViewGroupElem.
-                findElement(ORDER_DETAIL_DATE);
-        assertEquals(order.getOrderDetailDate(), orderDetailDateElem.getText());
-        WebElement orderDetailTimeElem = orderViewGroupElem.
-                findElement(ORDER_DETAIL_TIME);
-        assertEquals(order.getOrderDetailTime(), orderDetailTimeElem.getText());
-        WebElement orderDetailRequestedByElem = orderViewGroupElem.
-                findElement(ORDER_DETAIL_REQUESTED_BY);
-        assertEquals(order.getRequestedBy(), orderDetailRequestedByElem.getText());
-        WebElement orderStatusElem = orderViewGroupElem.findElement(ORDER_STATUS);
-        assertEquals(order.getUiStatus(), orderStatusElem.getText());
-        Optional<WebElement> orderNewStatusElemOptional = orderViewGroupElem.
-                findElements(ORDER_NEW_STATUS).stream().findFirst();
-        assertThat(orderNewStatusElemOptional.isPresent(),
+    private void checkOrderListItem(Order order) {
+        WebElement orderListItem = scrollToOrder(order.getOrderNumber());
+        assertEquals(order.getUiOrderNumber(),
+                orderListItem.findElement(ORDER_NUMBER).getText());
+        assertEquals(order.getOrderDetailDate(), orderListItem.
+                findElement(ORDER_DETAIL_DATE).getText());
+        assertEquals(order.getOrderDetailTime(), orderListItem.
+                findElement(ORDER_DETAIL_TIME).getText());
+        assertEquals(order.getRequestedBy(), orderListItem.
+                findElement(ORDER_DETAIL_REQUESTED_BY).getText());
+        assertEquals(order.getUiStatus(), orderListItem.findElement(ORDER_STATUS).getText());
+        assertThat(orderListItem.findElements(ORDER_NEW_STATUS).stream().findFirst().isPresent(),
                 is(not(BooleanUtils.toBoolean(order.getReviewedByAPV()))));
     }
 }

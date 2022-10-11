@@ -19,7 +19,7 @@ public class Order {
     public static final String DECLINED_STATUS = "DECLINED";
     public static final String APPROVED_STATUS = "APPROVED";
 
-    private static final String OPEN_STATUS = "OPEN";
+    public static final String OPEN_STATUS = "OPEN";
     public static final String DENIED_STATUS = "DENIED";
 
     private Long id;
@@ -65,5 +65,9 @@ public class Order {
 
     public boolean isOpenOrder() {
         return StringUtils.equals(status, SUBMITTED_STATUS);
+    }
+
+    public int getOrderItemTotalQuantity() {
+        return orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
     }
 }

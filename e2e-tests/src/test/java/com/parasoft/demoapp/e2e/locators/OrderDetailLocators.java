@@ -8,6 +8,8 @@ public final class OrderDetailLocators {
 
     public static final By SETTING_DIALOG = By.id(ID_PREFIX + "setting_dialog");
 
+    public static final By ORDER_INFO_ERROR_MESSAGE = By.id(ID_PREFIX + "order_info_error_message");
+
     public static final By ORDER_CLOSE_BUTTON = By.id(ID_PREFIX + "order_close_button");
 
     public static final By ORDER_DIALOG_TITLE = By.id(ID_PREFIX + "order_dialog_title");

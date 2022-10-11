@@ -8,6 +8,8 @@ import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_NUMBER;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_RECYCLER_VIEW;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.PROGRESS_BAR;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.parasoft.demoapp.e2e.common.BaseTest;
 import com.parasoft.demoapp.e2e.data.Order;
 
@@ -51,6 +53,7 @@ public abstract class OrderBaseTest extends BaseTest {
         Optional<WebElement> bottomBlankElemOptional =
                 orderRecyclerView.findElements(BOTTOM_BLANK).stream().findFirst();
         if (bottomBlankElemOptional.isPresent()) {
+            fail(String.format("Can not find order(%s) in the list.", orderNumber));
             return null;
         } else {
             scroll(ScrollDirection.DOWN, 0.5);
