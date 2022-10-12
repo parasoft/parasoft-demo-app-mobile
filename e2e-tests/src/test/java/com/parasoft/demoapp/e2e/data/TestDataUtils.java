@@ -14,14 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import io.restassured.http.ContentType;
@@ -58,6 +56,18 @@ public final class TestDataUtils {
         return orders;
     }
 
+    public static List<Order> createTestDataOrdersWithRandomPurchaser() throws IOException {
+        List<Order> orders = new ArrayList<>();
+        OrderTestData[] orderTestDataArray = new GsonBuilder().create().
+                fromJson(getOrderTestDataReader(), OrderTestData[].class);
+        Arrays.stream(orderTestDataArray).forEach(orderTestData -> {
+            String purchaserUsername = getRandomPurchaserUsername();
+            addItemsToCartWithGivenPurchaser(orderTestData.getOrderItems(), purchaserUsername);
+            orders.add(createOrderWithGivenPurchaser(orderTestData, purchaserUsername));
+        });
+        return orders;
+    }
+
     public static List<Order> getAllOrders() {
         return given().
                 auth().preemptive().basic(APPROVER_USERNAME, APPROVER_PASSWORD).
@@ -70,10 +80,20 @@ public final class TestDataUtils {
                 body().as(OrdersResponse.class).getData().getContent();
     }
 
+    public static String getLocalizedValue(String key) {
+        return given().
+                auth().preemptive().basic(APPROVER_USERNAME, APPROVER_PASSWORD).
+                pathParam("key", key).
+                when().
+                get(API_BASE_URL + "/localize/EN/{key}").
+                then().
+                contentType(ContentType.JSON).
+                body("status", equalTo(1)).
+                extract().path("data");
+    }
+
     public static List<Order> getNewOrders() {
-        return getAllOrders().stream().
-                filter(order -> BooleanUtils.isFalse(order.getReviewedByAPV())).
-                collect(Collectors.toList());
+        return getAllOrders().stream().filter(Order::isNewOrder).collect(Collectors.toList());
     }
 
     public static List<Order> getOpenOrders() {
@@ -90,9 +110,22 @@ public final class TestDataUtils {
         });
     }
 
+    private static void addItemsToCartWithGivenPurchaser(List<OrderItem> orderItems,
+                                                         String purchaserUsername) {
+        orderItems.forEach(orderItem -> {
+            addItemToCartWithGivenPurchaser(orderItem.getItemId(), orderItem.getQuantity(),
+                    purchaserUsername);
+        });
+    }
+
     private static void addItemToCart(Long itemId, Integer itemQty) {
+        addItemToCartWithGivenPurchaser(itemId, itemQty, PURCHASER_USERNAME);
+    }
+
+    private static void addItemToCartWithGivenPurchaser(Long itemId, Integer itemQty,
+                                                   String purchaserUsername) {
         given().
-                auth().preemptive().basic(PURCHASER_USERNAME, PURCHASER_PASSWORD).
+                auth().preemptive().basic(purchaserUsername, PURCHASER_PASSWORD).
                 param("itemId", itemId).
                 param("itemQty", itemQty).
                 when().
@@ -103,8 +136,13 @@ public final class TestDataUtils {
     }
 
     private static Order submitOrder(OrderRequest orderRequest) {
+        return submitOrderWithGivenPurchaser(orderRequest, PURCHASER_USERNAME);
+    }
+
+    private static Order submitOrderWithGivenPurchaser(OrderRequest orderRequest,
+                                                       String purchaserUsername) {
         return given().
-                auth().preemptive().basic(PURCHASER_USERNAME, PURCHASER_PASSWORD).
+                auth().preemptive().basic(purchaserUsername, PURCHASER_PASSWORD).
                 body(orderRequest).contentType(ContentType.JSON).
                 when().
                 post(API_BASE_URL + "/v1/orders").
@@ -131,7 +169,18 @@ public final class TestDataUtils {
 
     private static Order createOrder(OrderTestData orderTestData) {
         Order submittedOrder = submitOrder(orderTestData.getOrderRequest());
+        return updateOrderBasedOnTestData(orderTestData, submittedOrder);
+    }
 
+    private static Order createOrderWithGivenPurchaser(OrderTestData orderTestData,
+                                                       String purchaserUsername) {
+        Order submittedOrder =
+                submitOrderWithGivenPurchaser(orderTestData.getOrderRequest(), purchaserUsername);
+        return updateOrderBasedOnTestData(orderTestData, submittedOrder);
+    }
+
+    private static Order updateOrderBasedOnTestData(OrderTestData orderTestData,
+                                                    Order submittedOrder) {
         OrderUpdateRequest orderUpdateRequest = new OrderUpdateRequest();
         switch (orderTestData.getStatus()) {
             case Order.APPROVED_STATUS: {
@@ -172,5 +221,20 @@ public final class TestDataUtils {
                     ANDROID_LOCALHOST_URL_PREFIX, LOCALHOST_URL_PREFIX);
         }
         return pdaServerUrl;
+    }
+
+    private static String getRandomPurchaserUsername() {
+        OptionalInt randomNumberOpt = new Random().ints(1, 51)
+                .findFirst();
+        if (randomNumberOpt.isPresent()) {
+            int randomNumber = randomNumberOpt.getAsInt();
+            if (randomNumber == 1) {
+                return PURCHASER_USERNAME;
+            } else {
+                return PURCHASER_USERNAME + randomNumber;
+            }
+        } else {
+            return PURCHASER_USERNAME;
+        }
     }
 }

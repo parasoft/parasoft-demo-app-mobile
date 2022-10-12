@@ -1,11 +1,26 @@
 package com.parasoft.demoapp.e2e.testCases;
 
-import static com.parasoft.demoapp.e2e.data.TestDataUtils.*;
-import static com.parasoft.demoapp.e2e.locators.OrderListLocators.*;
+import static com.parasoft.demoapp.e2e.data.TestDataUtils.APPROVER_PASSWORD;
+import static com.parasoft.demoapp.e2e.data.TestDataUtils.APPROVER_USERNAME;
+import static com.parasoft.demoapp.e2e.data.TestDataUtils.createTestDataOrdersWithRandomPurchaser;
+import static com.parasoft.demoapp.e2e.data.TestDataUtils.resetDatabase;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.DISPLAY_NO_ORDERS_INFO;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_DETAIL_DATE;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_DETAIL_REQUESTED_BY;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_DETAIL_TIME;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_NEW_STATUS;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_NUMBER;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_REQUESTS_TITLE;
+import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_STATUS;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import com.google.common.collect.Lists;
+import com.parasoft.demoapp.e2e.common.AppiumConfig;
+import com.parasoft.demoapp.e2e.common.TestUtils;
+import com.parasoft.demoapp.e2e.data.Order;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -14,11 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.google.common.collect.Lists;
-import com.parasoft.demoapp.e2e.common.AppiumConfig;
-import com.parasoft.demoapp.e2e.common.TestUtils;
-import com.parasoft.demoapp.e2e.data.Order;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -51,7 +61,7 @@ class OrderListTest extends OrderBaseTest {
         assertEquals("There are no order requests",
                 driver.findElement(DISPLAY_NO_ORDERS_INFO).getText());
 
-        List<Order> testDataOrders = createTestDataOrders();
+        List<Order> testDataOrders = createTestDataOrdersWithRandomPurchaser();
 
         swipe(0.5, 0.25, 0.5, 0.75, Duration.ofMillis(1000));
         checkOrderList(testDataOrders);
@@ -59,7 +69,7 @@ class OrderListTest extends OrderBaseTest {
 
     @Test
     void testShouldShowExistingOrdersAfterLogin() throws Throwable {
-        List<Order> testDataOrders = createTestDataOrders();
+        List<Order> testDataOrders = createTestDataOrdersWithRandomPurchaser();
 
         TestUtils.setBaseUrlAndlogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
         checkOrderList(testDataOrders);

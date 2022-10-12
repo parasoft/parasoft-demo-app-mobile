@@ -1,5 +1,6 @@
 package com.parasoft.demoapp.e2e.data;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -67,7 +68,15 @@ public class Order {
         return StringUtils.equals(status, SUBMITTED_STATUS);
     }
 
-    public int getOrderItemTotalQuantity() {
-        return orderItems.stream().mapToInt(OrderItem::getQuantity).sum();
+    public boolean isNewOrder() {
+        return BooleanUtils.isFalse(reviewedByAPV);
+    }
+
+    public String getOrderItemTotalQuantity() {
+        return Integer.toString(orderItems.stream().mapToInt(OrderItem::getQuantity).sum());
+    }
+
+    public boolean hasComments() {
+        return StringUtils.isNotEmpty(comments);
     }
 }
