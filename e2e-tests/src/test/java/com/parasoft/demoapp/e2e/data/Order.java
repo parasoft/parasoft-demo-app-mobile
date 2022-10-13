@@ -54,13 +54,13 @@ public class Order {
         return HASH_SIGN + orderNumber;
     }
 
-    public String getOrderDetailDate() {
-        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.systemDefault()).
+    public String getOrderDetailDate(String timeZone) {
+        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.of(timeZone)).
                 format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    public String getOrderDetailTime() {
-        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.systemDefault()).
+    public String getOrderDetailTime(String timeZone) {
+        return LocalDateTime.ofInstant(submissionDate.toInstant(), ZoneId.of(timeZone)).
                 format(DateTimeFormatter.ofPattern(TIME_PATTERN));
     }
 

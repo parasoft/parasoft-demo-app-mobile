@@ -84,9 +84,9 @@ class OrderListTest extends OrderBaseTest {
         WebElement orderListItem = scrollToOrder(order.getOrderNumber());
         assertEquals(order.getUiOrderNumber(),
                 orderListItem.findElement(ORDER_NUMBER).getText());
-        assertEquals(order.getOrderDetailDate(), orderListItem.
+        assertEquals(order.getOrderDetailDate(getDeviceTimeZone()), orderListItem.
                 findElement(ORDER_DETAIL_DATE).getText());
-        assertEquals(order.getOrderDetailTime(), orderListItem.
+        assertEquals(order.getOrderDetailTime(getDeviceTimeZone()), orderListItem.
                 findElement(ORDER_DETAIL_TIME).getText());
         assertEquals(order.getRequestedBy(), orderListItem.
                 findElement(ORDER_DETAIL_REQUESTED_BY).getText());

@@ -8,18 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.PointerInput.Kind;
 import org.openqa.selenium.interactions.PointerInput.MouseButton;
 import org.openqa.selenium.interactions.PointerInput.Origin;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Map;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -33,10 +32,13 @@ public class BaseTest {
     protected static DesiredCapabilities capabilities;
 
     private Dimension windowSize;
-
     private static final Duration SCROLL_DUR = Duration.ofMillis(1000);
     private static final double SCROLL_RATIO = 0.8;
     private static final int ANDROID_SCROLL_DIVISOR = 3;
+
+    private static final String MOBILE_DEVICE_INFO_COMMAND = "mobile: deviceInfo";
+    private static final String DEVICE_INFO_TIME_ZONE_KEY = "timeZone";
+    private static String timeZone;
 
     @BeforeAll
     public static void beforeClass() {
@@ -123,5 +125,16 @@ public class BaseTest {
 
     public enum ScrollDirection {
         UP, DOWN, LEFT, RIGHT
+    }
+
+    @SuppressWarnings("unchecked")
+    protected String getDeviceTimeZone() {
+        if (timeZone == null) {
+            Map<String, Object> deviceInfo = (Map<String, Object>)
+                    driver.executeScript(MOBILE_DEVICE_INFO_COMMAND);
+            timeZone = (String) deviceInfo.get(DEVICE_INFO_TIME_ZONE_KEY);
+        }
+
+        return timeZone;
     }
 }

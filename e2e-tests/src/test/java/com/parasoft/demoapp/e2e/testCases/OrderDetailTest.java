@@ -250,9 +250,9 @@ class OrderDetailTest extends OrderBaseTest {
         WebElement orderScrollView = driver.findElement(ORDER_SCROLL_VIEW);
         wait.until(ExpectedConditions.presenceOfElementLocated(ORDER_DIALOG_ORDER_DATE));
         assertThat(scrollToItem(ORDER_DIALOG_ORDER_DATE, orderScrollView).getText(),
-                is(order.getOrderDetailDate()));
+                is(order.getOrderDetailDate(getDeviceTimeZone())));
         assertThat(scrollToItem(ORDER_DIALOG_ORDER_TIME, orderScrollView).getText(),
-                is(order.getOrderDetailTime()));
+                is(order.getOrderDetailTime(getDeviceTimeZone())));
         assertThat(scrollToItem(ORDER_DIALOG_ORDER_STATUS, orderScrollView).getText(),
                 is(order.getUiStatus()));
         if (order.hasComments()) {
