@@ -6,10 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.parasoft.demoapp.R;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.component.OrderDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -22,7 +21,7 @@ import retrofit2.Response;
 public class ImageUtil {
 
     public static void loadImage(ImageView imageView, String orderImage, ImageView overlayView) {
-        PDAService pdaService = new PDAService();
+        PDAService pdaService = PDAService.Factory.getInstance();
         showImage(false, null, imageView, overlayView);
         pdaService.getClient(ApiInterface.class).getImage(orderImage)
                 .enqueue(new Callback<ResponseBody>() {

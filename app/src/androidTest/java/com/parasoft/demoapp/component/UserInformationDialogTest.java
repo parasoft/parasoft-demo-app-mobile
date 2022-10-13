@@ -7,44 +7,30 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.parasoft.demoapp.FakeApiResponse.ForgotPasswordApi;
 import com.parasoft.demoapp.LoginActivity;
+import com.parasoft.demoapp.MockPDAService;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
-import com.parasoft.demoapp.retrofitConfig.PDAService;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class UserInformationDialogTest {
-
-    private ActivityScenario<LoginActivity> loginActivityScenario;
-
-    @Rule
-    public ActivityScenarioRule<LoginActivity> loginActivityScenarioRule = new ActivityScenarioRule<>(LoginActivity.class);
+public class UserInformationDialogTest extends MockPDAService {
 
     @Before
     public void setUp() {
-        loginActivityScenario = loginActivityScenarioRule.getScenario();
+        resetMockedPDAService();
     }
-
-    @After
-    public void tearDown() {
-        loginActivityScenario.close();
-        loginActivityScenario = null;
-    }
-
 
     public void openUserInformationDialog() {
         onView(withId(R.id.forgot_password_link)).perform(click());
@@ -59,96 +45,86 @@ public class UserInformationDialogTest {
 
     @Test
     public void test_loadUserInfo_200() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200Response());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
+        when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200Response());
 
-        // When
-        openUserInformationDialog();
+        try (ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class)) {
+            // When
+            openUserInformationDialog();
 
-        // Then
-        onView(withId(R.id.user_info_message)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_information_table)).check(matches(isDisplayed()));
-        onView(withId(R.id.username_label)).check(matches(withText(R.string.user_name_label)));
-        onView(withId(R.id.username_value)).check(matches(withText("fakeUsername")));
-        onView(withId(R.id.password_label)).check(matches(withText(R.string.password_label)));
-        onView(withId(R.id.password_value)).check(matches(withText("fakePassword")));
-        onView(withId(R.id.user_info_message)).check(matches(withText("")));
-        closeUserInformationDialog();
+            // Then
+            verify(mockedPdaService, times(1)).getClient(ApiInterface.class);
+            onView(withId(R.id.user_info_message)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.user_information_table)).check(matches(isDisplayed()));
+            onView(withId(R.id.username_label)).check(matches(withText(R.string.user_name_label)));
+            onView(withId(R.id.username_value)).check(matches(withText("fakeUsername")));
+            onView(withId(R.id.password_label)).check(matches(withText(R.string.password_label)));
+            onView(withId(R.id.password_value)).check(matches(withText("fakePassword")));
+            onView(withId(R.id.user_info_message)).check(matches(withText("")));
+            closeUserInformationDialog();
+        }
     }
 
     @Test
     public void test_loadUserInfo_200_noUserInfo() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200ButNoUserInfoResponse());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
+        when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return200ButNoUserInfoResponse());
 
-        // When
-        openUserInformationDialog();
+        try (ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class)) {
+            // When
+            openUserInformationDialog();
 
-        // Then
-        onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.no_users_available)));
-        closeUserInformationDialog();
+            // Then
+            verify(mockedPdaService, times(1)).getClient(ApiInterface.class);
+            onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.user_info_message)).check(matches(withText(R.string.no_users_available)));
+            closeUserInformationDialog();
+        }
     }
 
     @Test
     public void test_loadUserInfo_500() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return500Response());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
+        when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.return500Response());
 
-        // When
-        openUserInformationDialog();
+        try (ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class)) {
+            // When
+            openUserInformationDialog();
 
-        // Then
-        onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
-        closeUserInformationDialog();
+            // Then
+            verify(mockedPdaService, times(1)).getClient(ApiInterface.class);
+            onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
+            closeUserInformationDialog();
+        }
     }
 
     @Test
     public void test_loadUserInfo_onFailure() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.onFailure());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
+        when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(ForgotPasswordApi.onFailure());
 
-        // When
-        openUserInformationDialog();
+        try (ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class)) {
+            // When
+            openUserInformationDialog();
 
-        // Then
-        onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
-        closeUserInformationDialog();
+            // Then
+            verify(mockedPdaService, times(1)).getClient(ApiInterface.class);
+            onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
+            closeUserInformationDialog();
+        }
     }
 
     @Test
     public void test_loadUserInfo_exception() {
-        // Given
-        loginActivityScenarioRule.getScenario().onActivity(activity -> {
-            PDAService mockedPdaService = mock(PDAService.class);
-            when(mockedPdaService.getClient(ApiInterface.class)).thenThrow(new IllegalArgumentException());
-            activity.getUserInformationDialog().setPdaService(mockedPdaService);
-        });
+        when(mockedPdaService.getClient(ApiInterface.class)).thenThrow(new IllegalArgumentException());
 
-        // When
-        openUserInformationDialog();
+        try (ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class)) {
+            // When
+            openUserInformationDialog();
 
-        // Then
-        onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
-        closeUserInformationDialog();
+            // Then
+            verify(mockedPdaService, times(1)).getClient(ApiInterface.class);
+            onView(withId(R.id.user_information_table)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.user_info_message)).check(matches(withText(R.string.wrong_base_url)));
+            closeUserInformationDialog();
+        }
     }
 }

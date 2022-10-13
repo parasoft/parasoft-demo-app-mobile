@@ -54,7 +54,7 @@ public class SettingDialog extends DialogFragment {
 
         setClickEvent();
         baseUrlInput.addTextChangedListener(new BaseUrlTextWatcher());
-        resetBaseURL.setOnClickListener(v -> baseUrlInput.setText(R.string.default_url));
+        resetBaseURL.setOnClickListener(v -> baseUrlInput.setText(CommonUtil.DEFAULT_URL));
 
         fillBaseUrl();
 
@@ -79,7 +79,11 @@ public class SettingDialog extends DialogFragment {
     }
 
     public void setClickEvent() {
-        cancelButton.setOnClickListener(v -> dismiss());
+        cancelButton.setOnClickListener(v -> {
+            errorMessage.setText("");
+            fillBaseUrl();
+            dismiss();
+        });
 
         saveButton.setOnClickListener(v -> {
             saveBaseUrl();

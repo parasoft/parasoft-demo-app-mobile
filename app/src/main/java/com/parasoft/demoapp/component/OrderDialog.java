@@ -83,6 +83,8 @@ public class OrderDialog extends DialogFragment {
     private String responseValue;
     private View contentDivider;
     private EditText commentsField;
+    private ProgressBar orderUpdatingBar;
+    private TextView orderUpdatingErrMsg;
 
     public OrderDialog(String orderNumber) {
         this.orderNumber = orderNumber;
@@ -91,7 +93,7 @@ public class OrderDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        pdaService = new PDAService();
+        pdaService = PDAService.Factory.getInstance();
         View view = inflater.inflate(R.layout.order_dialog_layout, container, false);
         saveButton = view.findViewById(R.id.order_save_button);
         cancelButton = view.findViewById(R.id.order_dismiss_button);
@@ -99,9 +101,9 @@ public class OrderDialog extends DialogFragment {
         errorMessage = view.findViewById(R.id.order_info_error_message );
         comments = view.findViewById(R.id.comments);
         commentsDetail = view.findViewById(R.id.comments_detail);
-        orderStatus = view.findViewById(R.id.order_status);
-        orderSubmissionDate = view.findViewById(R.id.order_time_year);
-        orderSubmissionTime = view.findViewById(R.id.order_time_hour);
+        orderStatus = view.findViewById(R.id.order_dialog_order_status);
+        orderSubmissionDate = view.findViewById(R.id.order_dialog_order_date);
+        orderSubmissionTime = view.findViewById(R.id.order_dialog_order_time);
         purchaserName = view.findViewById(R.id.purchaser_name);
         location = view.findViewById(R.id.location);
         receiverName = view.findViewById(R.id.receiver_name);
@@ -116,7 +118,10 @@ public class OrderDialog extends DialogFragment {
         scrollView = view.findViewById(R.id.order_scroll_view);
         progressBar = view.findViewById(R.id.order_dialog_progressBar);
         contentDivider = view.findViewById(R.id.order_content_divider);
+        orderUpdatingBar = view.findViewById(R.id.order_updating_progressBar);
+        orderUpdatingErrMsg = view.findViewById(R.id.order_updating_error_message);
 
+        orderUpdatingBar.bringToFront();
         homeActivity = (HomeActivity) getActivity();
         initSpinner();
         setClickEvent();
@@ -227,6 +232,7 @@ public class OrderDialog extends DialogFragment {
                         if (!isAdded()) {
                             return;
                         }
+                        disableResponseView(false);
                         int code = response.code();
                         if (code == 200) {
                             assert response.body() != null;
@@ -242,11 +248,12 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
-                        // TODO waiting for feedback on where to display error
                         if (!isAdded()) {
                             return;
                         }
+                        disableResponseView(false);
                         enableSaveButton(true);
+                        showUpdatingError(getResources().getString(R.string.unable_to_connect_to_server));
                         Log.e(TAG, "Error updating details of the order: " + orderNumber, t);
                     }
                 });
@@ -343,7 +350,11 @@ public class OrderDialog extends DialogFragment {
     }
 
     public void initSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_dropdown_item_layout, R.id.order_response_value, getResources().getStringArray(R.array.order_response)){
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(getContext(),
+                                         R.layout.spinner_dropdown_item_layout,
+                                         R.id.order_response_value,
+                                         getResources().getStringArray(R.array.order_response)){
             @Override
             public boolean isEnabled(int position) {
                 return position != 0;
@@ -423,6 +434,8 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void saveOrderDetails() {
+        showUpdatingError(null);
+        disableResponseView(true);
         enableSaveButton(false);
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
         if (responseValue.equals("Deny")) {
@@ -459,19 +472,43 @@ public class OrderDialog extends DialogFragment {
     }
 
     private void handleErrorUpdateOrder(int errorCode) {
-        // TODO waiting for feedback on where to display error
+        String errMsg;
         switch (errorCode) {
+            case 400:
+                errMsg = getResources().getString(R.string.updating_order_request_error);
+                Log.e(TAG, "Bad request to update order: " + orderNumber);
+                break;
             case 401:
+                errMsg = getResources().getString(R.string.no_authorization_to_update_order);
                 Log.e(TAG, "Not authorized to update the order: " + orderNumber);
                 break;
             case 403:
+                errMsg = getResources().getString(R.string.no_permission_to_update_order);
                 Log.e(TAG, "No permissions to update the order: " + orderNumber);
                 break;
             case 404:
+                errMsg = getResources().getString(R.string.order_not_found, orderNumber);
                 Log.e(TAG, "The order: " + orderNumber + " is not found");
                 break;
             default:
+                errMsg = getResources().getString(R.string.updating_order_error);
                 Log.e(TAG, "Internal error");
         }
+        showUpdatingError(errMsg);
+    }
+
+    private void showUpdatingError(String errorMessage) {
+        if (errorMessage == null) {
+            orderUpdatingErrMsg.setVisibility(View.INVISIBLE);
+        } else {
+            orderUpdatingErrMsg.setVisibility(View.VISIBLE);
+            orderUpdatingErrMsg.setText(errorMessage);
+        }
+    }
+
+    private void disableResponseView(boolean enable) {
+        orderUpdatingBar.setVisibility(enable ? View.VISIBLE : View.GONE);
+        responseSpinner.setEnabled(!enable);
+        commentsField.setEnabled(!enable);
     }
 }

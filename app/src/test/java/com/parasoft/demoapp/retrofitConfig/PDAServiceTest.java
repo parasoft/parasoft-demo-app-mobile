@@ -49,7 +49,7 @@ public class PDAServiceTest {
 
         try {
             // When
-            new PDAService().getClient(ApiInterface.class);
+            PDAService.Factory.getInstance().getClient(ApiInterface.class);
         } catch (NullPointerException e) {
             hasNullPointerException = true;
             assertEquals("baseUrl == null", e.getMessage());
@@ -73,7 +73,7 @@ public class PDAServiceTest {
         assertNull(PDAService.getRetrofit());
 
         // When
-        new PDAService().getClient(ApiInterface.class);
+        PDAService.Factory.getInstance().getClient(ApiInterface.class);
 
         // Then
         assertTrue(PDAService.isPropertiesChanged());
@@ -92,7 +92,7 @@ public class PDAServiceTest {
 
         try {
             // When
-            new PDAService().getClient(ApiInterface.class);
+            PDAService.Factory.getInstance().getClient(ApiInterface.class);
         } catch (IllegalArgumentException e) {
             hasIllegalArgumentException = true;
             assertEquals("Invalid URL host: \"\"", e.getMessage());
@@ -118,7 +118,7 @@ public class PDAServiceTest {
         assertNull(PDAService.getRetrofit());
 
         // When
-        new PDAService().getClient(ApiInterface.class);
+        PDAService.Factory.getInstance().getClient(ApiInterface.class);
 
         // Then
         assertTrue(PDAService.isPropertiesChanged());
@@ -138,7 +138,7 @@ public class PDAServiceTest {
         assertNull(PDAService.getRetrofit());
         System.setProperty("http.agent", "Dalvik/2.1.0 (Linux; U; Android 13; sdk_gphone64_x86_64 Build/TPB4.220624.004)");
         // When
-        ApiInterface api = new PDAService().getClient(ApiInterface.class);
+        ApiInterface api = PDAService.Factory.getInstance().getClient(ApiInterface.class);
         Call<ResultResponse<Void>> call = api.login("approver", "password");
         call.enqueue(new Callback<ResultResponse<Void>>() {
             @Override

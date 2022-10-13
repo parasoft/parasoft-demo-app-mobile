@@ -30,7 +30,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
 
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,8 +46,6 @@ public class UserInformationDialog extends DialogFragment {
     private TextView textDisplayArea;
     private TextView usernameMessage;
     private TextView passwordMessage;
-    @Setter // Add Setter just for testing to replace it with a mock service.
-    private PDAService pdaService = new PDAService();
 
     @Nullable
     @Override
@@ -66,7 +63,7 @@ public class UserInformationDialog extends DialogFragment {
         closeButton.setOnClickListener(v -> dismiss());
 
         try {
-            pdaService.getClient(ApiInterface.class).forgotPassword()
+            PDAService.Factory.getInstance().getClient(ApiInterface.class).forgotPassword()
                 .enqueue(new Callback<ResultResponse<List<ForgotPasswordUserInfoResponse>>>() {
                     @Override
                     public void onResponse(@NonNull Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> call,

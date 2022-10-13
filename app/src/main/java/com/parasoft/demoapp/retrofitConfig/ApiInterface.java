@@ -24,9 +24,6 @@ public interface ApiInterface {
     @POST("/login")
     Call<ResultResponse<Void>> login(@Field("username") String username, @Field("password") String password);
 
-    @GET("/logout")
-    Call<ResultResponse<Void>> logout();
-
     @GET("/forgotPassword")
     Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword();
 

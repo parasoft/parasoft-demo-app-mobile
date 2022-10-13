@@ -10,7 +10,6 @@
     <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="save">SAVE</string>
     <string name="base_url">Base URL</string>
-    <string name="default_url" translatable="false">http://10.0.2.2:8080</string>
     <string name="base_url_must_not_be_empty">Base URL must not be empty</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="reset_base_url">Reset Base URL</string>
@@ -54,4 +53,9 @@
     <string name="current_user_not_exist">Current user does not exist</string>
     <string name="order_number">#%1$s</string>
     <string name="order_item_quantity">x%1$d</string>
+    <string name="updating_order_request_error">Bad request to update order</string>
+    <string name="no_authorization_to_update_order">You are not authorized to update this order</string>
+    <string name="no_permission_to_update_order">You have no permissions to update this order</string>
+    <string name="unable_to_connect_to_server">Unable to connect to server</string>
+    <string name="updating_order_error">Error updating order</string>
 </resources>

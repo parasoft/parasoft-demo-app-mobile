@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
 import java.text.ParseException;
@@ -17,10 +16,7 @@ import java.util.TimeZone;
 public class CommonUtil {
 
     public static final String BASE_URL_KEY = "baseUrl";
-
-    @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
+    public static final String DEFAULT_URL = "http://10.0.2.2:8080";
 
     public static void saveSetting(Context context, String name, String value) {
         SharedPreferences.Editor note = context.getSharedPreferences("applicationSettings", Context.MODE_PRIVATE).edit();
@@ -36,7 +32,7 @@ public class CommonUtil {
     public static String getBaseUrl(Context context) {
         String baseUrl = getSetting(context, BASE_URL_KEY);
         if (baseUrl == null) {
-            baseUrl = context.getString(R.string.default_url);
+            baseUrl = DEFAULT_URL;
         }
         return baseUrl;
     }
@@ -57,11 +53,12 @@ public class CommonUtil {
         return "EN";
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String getLocalDate(String time) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date date = dateParse.parse(processDate(time));
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            Date date = sdf.parse(processDate(time));
             dateFormatter.setTimeZone(TimeZone.getDefault());
             assert date != null;
             return dateFormatter.format(date);
@@ -71,11 +68,12 @@ public class CommonUtil {
         return null;
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String getLocalTime(String time) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
         try {
-            Date date = dateParse.parse(processDate(time));
+            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            Date date = sdf.parse(processDate(time));
             timeFormatter.setTimeZone(TimeZone.getDefault());
             assert date != null;
             return timeFormatter.format(date);
