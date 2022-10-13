@@ -66,13 +66,17 @@ class OrderDetailTest extends OrderBaseTest {
 
     private static final double ORDER_DETAIL_DIALOG_SCROLL_RATIO = 0.25;
 
+    private static final String ENABLED_ATTRIBUTE = "enabled";
+    private static final String TRUE_VALUE = "true";
+    private static final String FALSE_VALUE = "false";
+
     @BeforeEach
     void setUp() throws Throwable {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         wait = new WebDriverWait(driver, Duration.ofSeconds(AppiumConfig.durationOfSeconds()));
         resetDatabase();
         createTestDataOrdersWithRandomPurchaser();
-        TestUtils.setBaseUrlAndlogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
+        TestUtils.setBaseUrlAndLogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
     }
 
     @AfterEach
@@ -137,10 +141,8 @@ class OrderDetailTest extends OrderBaseTest {
     private void testClickNewOrderCloseOrCancelButton(String orderNumber,
                                                       By closeOrCancelButtonLocator) {
         openOrderDetailFromOrderList(orderNumber);
-        wait.until(ExpectedConditions.
-                presenceOfElementLocated(closeOrCancelButtonLocator));
-        WebElement closeOrCancelButton = driver.findElement(closeOrCancelButtonLocator);
-        closeOrCancelButton.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(closeOrCancelButtonLocator));
+        driver.findElement(closeOrCancelButtonLocator).click();
         waitForOrderListToBeDisplayed();
         WebElement orderListItem = scrollToOrder(orderNumber);
         assertThat(orderListItem.findElements(ORDER_NEW_STATUS).isEmpty(), is(true));
@@ -160,12 +162,10 @@ class OrderDetailTest extends OrderBaseTest {
                                         boolean hasComments, boolean isCommentsTooLong) {
         openOrderDetailFromOrderList(orderNumber);
         wait.until(ExpectedConditions.elementToBeClickable(ORDER_RESPONSE_SPINNER));
-        WebElement orderResponseSpinner = driver.findElement(ORDER_RESPONSE_SPINNER);
-        orderResponseSpinner.click();
+        driver.findElement(ORDER_RESPONSE_SPINNER).click();
         wait.until(ExpectedConditions.numberOfElementsToBe(ORDER_RESPONSE_VALUE, 3));
-        List<WebElement> orderResponseValues = driver.findElements(ORDER_RESPONSE_VALUE);
         final String responseValue = isApprove ? "Approve" : "Deny";
-        orderResponseValues.stream().
+        driver.findElements(ORDER_RESPONSE_VALUE).stream().
                 filter(orderResponseValue ->
                         StringUtils.equals(orderResponseValue.getText(), responseValue)).
                 findFirst().ifPresent(WebElement::click);
@@ -183,13 +183,11 @@ class OrderDetailTest extends OrderBaseTest {
         }
 
         if (hasComments) {
-            WebElement commentsField = driver.findElement(COMMENTS_FIELD);
-            commentsField.sendKeys(comments);
+            driver.findElement(COMMENTS_FIELD).sendKeys(comments);
         }
         wait.until(ExpectedConditions.attributeToBe(ORDER_SAVE_BUTTON,
-                "enabled", "true"));
-        WebElement orderSaveButton = driver.findElement(ORDER_SAVE_BUTTON);
-        orderSaveButton.click();
+                ENABLED_ATTRIBUTE, TRUE_VALUE));
+        driver.findElement(ORDER_SAVE_BUTTON).click();
 
         if (isCommentsTooLong) {
             checkOrderInfoAfterFailedApproveOrDenyWithTooLongComments();
@@ -225,8 +223,8 @@ class OrderDetailTest extends OrderBaseTest {
 
         assertThat(driver.findElement(ORDER_DIALOG_ORDER_STATUS).getText(), is(Order.OPEN_STATUS));
         assertThat(driver.findElements(COMMENTS).isEmpty(), is(true));
-        assertThat(driver.findElement(ORDER_SAVE_BUTTON).getAttribute("enabled"),
-                is("true"));
+        assertThat(driver.findElement(ORDER_SAVE_BUTTON).getAttribute(ENABLED_ATTRIBUTE),
+                is(TRUE_VALUE));
     }
 
     private void openOrderDetailFromOrderList(String orderNumber) {
@@ -339,9 +337,9 @@ class OrderDetailTest extends OrderBaseTest {
                 is("Order response..."));
         assertThat(driver.findElement(COMMENTS_FIELD).getText(), is("Comments"));
         assertThat(driver.findElement(ORDER_DISMISS_BUTTON).
-                getAttribute("enabled"), is("true"));
+                getAttribute(ENABLED_ATTRIBUTE), is(TRUE_VALUE));
         assertThat(driver.findElement(ORDER_SAVE_BUTTON).
-                getAttribute("enabled"), is("false"));
+                getAttribute(ENABLED_ATTRIBUTE), is(FALSE_VALUE));
     }
 
     private void checkResponseSectionNotExist() {

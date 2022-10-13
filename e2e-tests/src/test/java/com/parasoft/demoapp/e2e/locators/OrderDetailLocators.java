@@ -34,8 +34,7 @@ public final class OrderDetailLocators {
 
     public static final By GPS_COORDINATES = byId("gps_coordinates");
 
-    public static final By REQUESTED_ITEM_TOTAL_QUANTITY =
-            byId("requested_item_total_quantity");
+    public static final By REQUESTED_ITEM_TOTAL_QUANTITY = byId("requested_item_total_quantity");
 
     public static final By ORDER_ITEMS_RECYCLER_VIEW = byId("order_items_recycler_view");
 

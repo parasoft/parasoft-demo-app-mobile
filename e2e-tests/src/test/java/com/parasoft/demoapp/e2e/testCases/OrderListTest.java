@@ -53,10 +53,9 @@ class OrderListTest extends OrderBaseTest {
 
     @Test
     void testShouldShowNewOrdersAfterSwipeRefresh() throws Throwable {
-        TestUtils.setBaseUrlAndlogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
+        TestUtils.setBaseUrlAndLogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
 
-        wait.until(ExpectedConditions.
-                presenceOfElementLocated(ORDER_REQUESTS_TITLE));
+        wait.until(ExpectedConditions.presenceOfElementLocated(ORDER_REQUESTS_TITLE));
         assertEquals("ORDER REQUESTS", driver.findElement(ORDER_REQUESTS_TITLE).getText());
         assertEquals("There are no order requests",
                 driver.findElement(DISPLAY_NO_ORDERS_INFO).getText());
@@ -71,7 +70,7 @@ class OrderListTest extends OrderBaseTest {
     void testShouldShowExistingOrdersAfterLogin() throws Throwable {
         List<Order> testDataOrders = createTestDataOrdersWithRandomPurchaser();
 
-        TestUtils.setBaseUrlAndlogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
+        TestUtils.setBaseUrlAndLogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
         checkOrderList(testDataOrders);
     }
 
@@ -82,8 +81,7 @@ class OrderListTest extends OrderBaseTest {
 
     private void checkOrderListItem(Order order) {
         WebElement orderListItem = scrollToOrder(order.getOrderNumber());
-        assertEquals(order.getUiOrderNumber(),
-                orderListItem.findElement(ORDER_NUMBER).getText());
+        assertEquals(order.getUiOrderNumber(), orderListItem.findElement(ORDER_NUMBER).getText());
         assertEquals(order.getOrderDetailDate(getDeviceTimeZone()), orderListItem.
                 findElement(ORDER_DETAIL_DATE).getText());
         assertEquals(order.getOrderDetailTime(getDeviceTimeZone()), orderListItem.

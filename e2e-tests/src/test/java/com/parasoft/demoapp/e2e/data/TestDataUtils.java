@@ -35,6 +35,11 @@ public final class TestDataUtils {
     private static final String LOCALHOST_URL_PREFIX = "http://localhost";
     private static final String API_BASE_URL = getApiBaseUrl();
 
+    private static final String STATUS_FIELD = "status";
+    private static final int OK_STATUS = 1;
+
+    private static final String ORDER_TEST_DATA_RESOURCE_LOCATION = "order-test-data.json";
+
     public static void resetDatabase() {
         given().
                 auth().preemptive().basic(PURCHASER_USERNAME, PURCHASER_PASSWORD).
@@ -42,7 +47,7 @@ public final class TestDataUtils {
                 put(API_BASE_URL + "/v1/demoAdmin/databaseReset").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1));
+                body(STATUS_FIELD, equalTo(OK_STATUS));
     }
 
     public static List<Order> createTestDataOrders() throws IOException {
@@ -75,7 +80,7 @@ public final class TestDataUtils {
                 get(API_BASE_URL + "/v1/orders").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1)).
+                body(STATUS_FIELD, equalTo(OK_STATUS)).
                 extract().
                 body().as(OrdersResponse.class).getData().getContent();
     }
@@ -88,7 +93,7 @@ public final class TestDataUtils {
                 get(API_BASE_URL + "/localize/EN/{key}").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1)).
+                body(STATUS_FIELD, equalTo(OK_STATUS)).
                 extract().path("data");
     }
 
@@ -132,7 +137,7 @@ public final class TestDataUtils {
                 post(API_BASE_URL + "/v1/cartItems").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1));
+                body(STATUS_FIELD, equalTo(OK_STATUS));
     }
 
     private static Order submitOrder(OrderRequest orderRequest) {
@@ -148,7 +153,7 @@ public final class TestDataUtils {
                 post(API_BASE_URL + "/v1/orders").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1)).
+                body(STATUS_FIELD, equalTo(OK_STATUS)).
                 extract().
                 body().as(OrderResponse.class).getData();
     }
@@ -162,7 +167,7 @@ public final class TestDataUtils {
                 put(API_BASE_URL + "/v1/orders/{orderNumber}").
                 then().
                 contentType(ContentType.JSON).
-                body("status", equalTo(1)).
+                body(STATUS_FIELD, equalTo(OK_STATUS)).
                 extract().
                 body().as(OrderResponse.class).getData();
     }
@@ -206,8 +211,7 @@ public final class TestDataUtils {
     }
 
     private static BufferedReader getOrderTestDataReader() throws IOException {
-        final String orderTestDataResource = "order-test-data.json";
-        InputStream input = AppiumConfig.getResourceInputStream(orderTestDataResource);
+        InputStream input = AppiumConfig.getResourceInputStream(ORDER_TEST_DATA_RESOURCE_LOCATION);
         if (input == null) {
             throw new IOException("Fail to load order test data.");
         }

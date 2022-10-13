@@ -7,7 +7,6 @@ import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_DETAIL_R
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_NUMBER;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_RECYCLER_VIEW;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.PROGRESS_BAR;
-
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.parasoft.demoapp.e2e.common.BaseTest;
@@ -23,6 +22,8 @@ import java.util.Optional;
 
 public abstract class OrderBaseTest extends BaseTest {
 
+    private static final double ORDER_LIST_SCROLL_RATIO = 0.5;
+
     protected WebDriverWait wait;
 
     protected void waitForOrderListToBeDisplayed() {
@@ -33,7 +34,8 @@ public abstract class OrderBaseTest extends BaseTest {
     }
 
     protected WebElement scrollToOrder(String orderNumber) {
-        String orderNumberWithHashPrefix = StringUtils.prependIfMissing(orderNumber, Order.HASH_SIGN);
+        String orderNumberWithHashPrefix =
+                StringUtils.prependIfMissing(orderNumber, Order.HASH_SIGN);
         WebElement orderRecyclerView = driver.findElement(ORDER_RECYCLER_VIEW);
         List<WebElement> viewGroups = orderRecyclerView.
                 findElements(DESCENDANT_ANDROID_VIEW_VIEW_GROUP);
@@ -44,21 +46,19 @@ public abstract class OrderBaseTest extends BaseTest {
             Optional<WebElement> orderDetailRequestedByElemOptional = viewGroup.
                     findElements(ORDER_DETAIL_REQUESTED_BY).stream().findFirst();
             if (orderNumberElemOptional.isPresent() &&
-                    orderNumberWithHashPrefix.contentEquals(orderNumberElemOptional.get().getText()) &&
+                    StringUtils.equals(orderNumberWithHashPrefix,
+                            orderNumberElemOptional.get().getText()) &&
                     orderDetailRequestedByElemOptional.isPresent()) {
                 return viewGroup;
             }
         }
 
-        Optional<WebElement> bottomBlankElemOptional =
-                orderRecyclerView.findElements(BOTTOM_BLANK).stream().findFirst();
-        if (bottomBlankElemOptional.isPresent()) {
+        if (orderRecyclerView.findElements(BOTTOM_BLANK).stream().findFirst().isPresent()) {
             fail(String.format("Can not find order(%s) in the list.", orderNumber));
-            return null;
+            throw new RuntimeException();
         } else {
-            scroll(ScrollDirection.DOWN, 0.5);
-            wait.until(ExpectedConditions.
-                    invisibilityOfElementLocated(PROGRESS_BAR));
+            scroll(ScrollDirection.DOWN, ORDER_LIST_SCROLL_RATIO);
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(PROGRESS_BAR));
             return scrollToOrder(orderNumberWithHashPrefix);
         }
     }
