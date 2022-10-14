@@ -168,7 +168,7 @@ public final class AppiumConfig {
                 + PROPERTIES_FILE_NAME_EXTENSION);
     }
 
-    private static InputStream getResourceInputStream(String resourceLoc) {
+    public static InputStream getResourceInputStream(String resourceLoc) {
         InputStream input = AppiumConfig.class.getResourceAsStream(resourceLoc);
         if (input == null) {
             // this is how we load file within editor (eg eclipse)

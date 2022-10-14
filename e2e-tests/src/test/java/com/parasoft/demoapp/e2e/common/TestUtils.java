@@ -2,6 +2,7 @@ package com.parasoft.demoapp.e2e.common;
 
 import com.parasoft.demoapp.e2e.locators.LoginActivityLocators;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class TestUtils {
+
+    private static final String ID_PREFIX = "com.parasoft.demoapp:id/";
 
     public static void login(WebDriver driver, String username, String password) {
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(AppiumConfig.durationOfSeconds()));
@@ -38,5 +41,16 @@ public class TestUtils {
         driver.findElement(LoginActivityLocators.BASE_URL_INPUT).sendKeys(baseUrl);
         wait.until(ExpectedConditions.elementToBeClickable(LoginActivityLocators.BASE_URL_SAVE_BUTTON)).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(LoginActivityLocators.SETTING_DIALOG_TITLE));
+    }
+
+    public static void setBaseUrlAndLogin(WebDriver driver, WebDriverWait wait, String username,
+                                          String password) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(LoginActivityLocators.APP_TITLE));
+        TestUtils.setBaseUrl(driver, AppiumConfig.pdaServerUrl());
+        TestUtils.login(driver, username, password);
+    }
+
+    public static By byId(String idSuffix) {
+        return By.id(ID_PREFIX + idSuffix);
     }
 }
