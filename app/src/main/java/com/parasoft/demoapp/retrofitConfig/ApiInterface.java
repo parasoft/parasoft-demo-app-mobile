@@ -21,10 +21,10 @@ import retrofit2.http.Url;
 
 public interface ApiInterface {
     @FormUrlEncoded
-    @POST("/login")
+    @POST("/v1/login")
     Call<ResultResponse<Void>> login(@Field("username") String username, @Field("password") String password);
 
-    @GET("/forgotPassword")
+    @GET("/v1/forgotPassword")
     Call<ResultResponse<List<ForgotPasswordUserInfoResponse>>> forgotPassword();
 
     @GET("/v1/orders")
@@ -34,11 +34,12 @@ public interface ApiInterface {
     Call<ResultResponse<OrderResponse>> getOrderDetails(@Path("orderNumber") String orderNumber);
 
     @PUT("/v1/orders/{orderNumber}")
-    Call<ResultResponse<OrderResponse>> updateOrderDetails(@Path("orderNumber") String orderNumber, @Body OrderStatusRequest orderStatusRequest);
+    Call<ResultResponse<OrderResponse>> updateOrderDetails(@Path("orderNumber") String orderNumber,
+                                                           @Body OrderStatusRequest orderStatusRequest);
 
     @GET
     Call<ResponseBody> getImage(@Url String imagePath);
 
-    @GET("/localize/{lang}/{key}")
+    @GET("/v1/localize/{lang}/{key}")
     Call<ResultResponse<String>> localizedValue(@Path("lang") String lang, @Path("key") String key);
 }
