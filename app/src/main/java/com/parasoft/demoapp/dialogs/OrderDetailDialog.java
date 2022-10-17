@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.component;
+package com.parasoft.demoapp.dialogs;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.parasoft.demoapp.HomeActivity;
+import com.parasoft.demoapp.activities.HomeActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
@@ -46,13 +46,13 @@ import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.CommonUtil;
 import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.CommonUIUtil;
-import com.parasoft.demoapp.util.OrderItemAdapter;
+import com.parasoft.demoapp.adapters.OrderItemsAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrderDialog extends DialogFragment {
+public class OrderDetailDialog extends DialogFragment {
     public static final String TAG = "OrderDialog";
 
     private final String orderNumber;
@@ -86,7 +86,7 @@ public class OrderDialog extends DialogFragment {
     private ProgressBar orderUpdatingBar;
     private TextView orderUpdatingErrMsg;
 
-    public OrderDialog(String orderNumber) {
+    public OrderDetailDialog(String orderNumber) {
         this.orderNumber = orderNumber;
     }
 
@@ -248,6 +248,7 @@ public class OrderDialog extends DialogFragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ResultResponse<OrderResponse>> call, @NonNull Throwable t) {
+
                         if (!isAdded()) {
                             return;
                         }
@@ -332,8 +333,8 @@ public class OrderDialog extends DialogFragment {
     private void initOrderItemRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(homeActivity);
         recyclerView.setLayoutManager(layoutManager);
-        OrderItemAdapter orderItemAdapter = new OrderItemAdapter(orderInfo.getOrderItems());
-        recyclerView.setAdapter(orderItemAdapter);
+        OrderItemsAdapter orderItemsAdapter = new OrderItemsAdapter(orderInfo.getOrderItems());
+        recyclerView.setAdapter(orderItemsAdapter);
     }
 
     private String getTotalQuantity() {

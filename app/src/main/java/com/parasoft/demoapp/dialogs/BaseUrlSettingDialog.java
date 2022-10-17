@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.component;
+package com.parasoft.demoapp.dialogs;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -23,14 +23,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.parasoft.demoapp.LoginActivity;
+import com.parasoft.demoapp.activities.LoginActivity;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.util.CommonUtil;
 
 import lombok.Getter;
 
 @Getter
-public class SettingDialog extends DialogFragment {
+public class BaseUrlSettingDialog extends DialogFragment {
     public static final String TAG = "SettingDialog";
     public static final String WELL_FORMED_URL_REGEX = "^(https?)://([a-zA-Z0-9-_]+.?)*[a-zA-Z0-9-_]+((/[\\S]+)?/?)$";
 
@@ -44,7 +44,7 @@ public class SettingDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.setting_dialog_layout, container, false);
+        View view = inflater.inflate(R.layout.base_url_setting_dialog_layout, container, false);
         baseUrlInput = view.findViewById(R.id.base_url_input);
         saveButton = view.findViewById(R.id.base_url_save_button);
         cancelButton = view.findViewById(R.id.base_url_dismiss_button);

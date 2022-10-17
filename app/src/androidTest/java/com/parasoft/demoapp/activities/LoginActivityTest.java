@@ -1,4 +1,4 @@
-package com.parasoft.demoapp;
+package com.parasoft.demoapp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -25,8 +25,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.parasoft.demoapp.FakeApiResponse.ForgotPasswordApi;
 import com.parasoft.demoapp.FakeApiResponse.LoginApi;
-import com.parasoft.demoapp.component.SettingDialog;
-import com.parasoft.demoapp.component.UserInformationDialog;
+import com.parasoft.demoapp.R;
+import com.parasoft.demoapp.dialogs.BaseUrlSettingDialog;
+import com.parasoft.demoapp.dialogs.UserInformationDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 
@@ -56,7 +57,7 @@ public class LoginActivityTest extends MockPDAService {
                 View actionbarView = Objects.requireNonNull(loginActivity.getSupportActionBar()).getCustomView();
                 ImageButton settingButton = actionbarView.findViewById(R.id.setting_button);
                 TextView titleText = actionbarView.findViewById(R.id.app_title);
-                SettingDialog settingDialog = loginActivity.getSettingDialog();
+                BaseUrlSettingDialog baseUrlSettingDialog = loginActivity.getBaseUrlSettingDialog();
                 UserInformationDialog userInformationDialog = loginActivity.getUserInformationDialog();
                 PDAService pdaService = loginActivity.getPdaService();
 
@@ -72,7 +73,7 @@ public class LoginActivityTest extends MockPDAService {
                 assertNotNull(loginActivity.getSupportActionBar());
                 assertEquals(titleText.getText(), loginActivity.getString(R.string.app_title));
                 assertNotNull(settingButton);
-                assertNotNull(settingDialog);
+                assertNotNull(baseUrlSettingDialog);
                 assertNotNull(userInformationDialog);
                 assertNotNull(pdaService);
                 assertFalse(signInButton.isEnabled());

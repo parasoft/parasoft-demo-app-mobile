@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.component;
+package com.parasoft.demoapp.dialogs;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
@@ -15,7 +15,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.parasoft.demoapp.LoginActivity;
+import com.parasoft.demoapp.activities.LoginActivity;
 import com.parasoft.demoapp.R;
 
 import org.junit.After;
@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class SettingDialogTest {
+public class BaseUrlSettingDialogTest {
 
     private ActivityScenario<LoginActivity> loginActivityScenario;
 

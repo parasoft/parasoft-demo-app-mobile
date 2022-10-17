@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.component;
+package com.parasoft.demoapp.dialogs;
 
 import android.app.Dialog;
 import android.graphics.Color;

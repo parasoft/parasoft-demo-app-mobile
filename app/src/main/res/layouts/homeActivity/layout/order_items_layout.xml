@@ -28,7 +28,7 @@
                 android:layout_width="115dp"
                 android:layout_height="65dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_outdoor_dark_overlay"
+                android:src="@drawable/ic_image_dark_overlay"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 

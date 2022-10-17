@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public abstract class OrderBaseTest extends BaseTest {
 
-    private static final double ORDER_LIST_SCROLL_RATIO = 0.5;
+    private static final double ORDER_LIST_SCROLL_RATIO = 0.3;
 
     protected WebDriverWait wait;
 
