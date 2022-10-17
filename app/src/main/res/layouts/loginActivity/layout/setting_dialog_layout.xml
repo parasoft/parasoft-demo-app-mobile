@@ -101,6 +101,7 @@
             android:background="@null"
             android:fontFamily="sans-serif"
             android:hint="@string/base_url"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
