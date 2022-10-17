@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.util;
+package com.parasoft.demoapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse.OrderItemInfo;
+import com.parasoft.demoapp.util.ImageUtil;
 
 import java.util.List;
 
-public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ViewHolder> {
+public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.ViewHolder> {
     private final List<OrderItemInfo> mOrderItemList;
     private Context context;
 
-    public OrderItemAdapter(List<OrderItemInfo> orderItemList){
+    public OrderItemsAdapter(List<OrderItemInfo> orderItemList){
         mOrderItemList =  orderItemList;
     }
 

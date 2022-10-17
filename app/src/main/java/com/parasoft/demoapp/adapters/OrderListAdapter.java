@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.util;
+package com.parasoft.demoapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
+import com.parasoft.demoapp.util.CommonUtil;
 
 import java.text.MessageFormat;
 import java.util.List;
 import lombok.NonNull;
 
-public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final OnItemClickListener listener;
     private final List<OrderResponse> mOrderList;
     private Context context;
@@ -25,7 +26,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private LoadingState loadingState = LoadingState.FINISHED;
 
-    public OrderAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
+    public OrderListAdapter(List<OrderResponse> orderList, OnItemClickListener customListener){
         mOrderList = orderList;
         listener = customListener;
     }
@@ -91,7 +92,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (position + 1 == getItemCount()) {
             return ItemType.FOOTER.getType();
         }
-        return ItemType.LISTITEM.getType();
+        return ItemType.LIST_ITEM.getType();
     }
 
     public void addMoreItems(List<OrderResponse> items) {
@@ -176,7 +177,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private enum ItemType {
-        LISTITEM(0), FOOTER(1);
+        LIST_ITEM(0), FOOTER(1);
 
         private final int type;
 

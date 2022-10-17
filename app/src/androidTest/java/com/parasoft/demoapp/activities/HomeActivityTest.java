@@ -1,4 +1,4 @@
-package com.parasoft.demoapp;
+package com.parasoft.demoapp.activities;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openContextualActionModeOverflowMenu;
@@ -15,9 +15,11 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.when;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.parasoft.demoapp.FakeApiResponse.OrdersRelativeApis;
+import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
 import com.parasoft.demoapp.util.CommonUtil;
@@ -37,7 +39,7 @@ public class HomeActivityTest extends MockPDAService {
     }
 
     public void test_showHomeActivityTitle() {
-        onView(withText(R.string.home_title)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withText(R.string.home_title)).check(matches(isDisplayed()));
         onView(withId(R.id.order_requests_title)).check(matches(isDisplayed()));
     }
 

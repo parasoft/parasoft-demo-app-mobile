@@ -1,4 +1,4 @@
-package com.parasoft.demoapp;
+package com.parasoft.demoapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,14 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.parasoft.demoapp.component.OrderDialog;
+import com.parasoft.demoapp.R;
+import com.parasoft.demoapp.dialogs.OrderDetailDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.OrderListResponse;
 import com.parasoft.demoapp.retrofitConfig.response.OrderResponse;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
 import com.parasoft.demoapp.util.CommonUIUtil;
-import com.parasoft.demoapp.util.OrderAdapter;
+import com.parasoft.demoapp.adapters.OrderListAdapter;
 
 import org.apache.commons.collections4.ListUtils;
 
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private SwipeRefreshLayout ordersLoader;
     private boolean orderItemClickable = false;
 
-    private OrderAdapter orderAdapter;
+    private OrderListAdapter orderListAdapter;
     private final List<OrderResponse> orderDisplayList = new ArrayList<>();
     private List<List<OrderResponse>> orderPagination;
     private int pageIndex = 0;
@@ -77,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        getMenuInflater().inflate(R.menu.home_menu, menu);
+        getMenuInflater().inflate(R.menu.more_options_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -146,24 +147,24 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void openOrderDialog(String orderNumber) {
-        OrderDialog orderDialog = new OrderDialog(orderNumber);
-        orderDialog.show(getSupportFragmentManager(), OrderDialog.TAG);
+        OrderDetailDialog orderDetailDialog = new OrderDetailDialog(orderNumber);
+        orderDetailDialog.show(getSupportFragmentManager(), OrderDetailDialog.TAG);
     }
 
     public void initRecyclerView() {
         orderDisplayList.addAll(orderPagination.get(0));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        orderAdapter = new OrderAdapter(orderDisplayList, item -> {
+        orderListAdapter = new OrderListAdapter(orderDisplayList, item -> {
             if (orderItemClickable) {
                 openOrderDialog(item.getOrderNumber());
             }
         });
-        recyclerView.setAdapter(orderAdapter);
+        recyclerView.setAdapter(orderListAdapter);
         recyclerView.setVisibility(View.VISIBLE);
         initListener();
-        orderAdapter.setCanStart(true);
-        orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
+        orderListAdapter.setCanStart(true);
+        orderListAdapter.setLoadState(OrderListAdapter.LoadingState.FINISHED);
     }
 
     private void initListener() {
@@ -196,12 +197,12 @@ public class HomeActivity extends AppCompatActivity {
             // slide-up load more
             public void onLoadMore() {
                 // to avoid possible repeated slide-up operation
-                if (OrderAdapter.LoadingState.LOADING == orderAdapter.getLoadState()) {
-                    orderAdapter.notifyItemRemoved(orderAdapter.getItemCount());
+                if (OrderListAdapter.LoadingState.LOADING == orderListAdapter.getLoadState()) {
+                    orderListAdapter.notifyItemRemoved(orderListAdapter.getItemCount());
                     return;
                 }
-                orderAdapter.setLoadState(OrderAdapter.LoadingState.LOADING);
-                if (orderAdapter.getItemCount() <= numOfOrders) {
+                orderListAdapter.setLoadState(OrderListAdapter.LoadingState.LOADING);
+                if (orderListAdapter.getItemCount() <= numOfOrders) {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -209,9 +210,9 @@ public class HomeActivity extends AppCompatActivity {
                                 runOnUiThread(() -> {
                                     pageIndex++;
                                     if (pageIndex < orderPagination.size()) {
-                                        orderAdapter.addMoreItems(orderPagination.get(pageIndex));
+                                        orderListAdapter.addMoreItems(orderPagination.get(pageIndex));
                                     }
-                                    orderAdapter.setLoadState(OrderAdapter.LoadingState.FINISHED);
+                                    orderListAdapter.setLoadState(OrderListAdapter.LoadingState.FINISHED);
                                 });
                             } catch(Throwable t) {
                                 Log.e(TAG, "onLoadMore() error", t);
@@ -219,7 +220,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }, 500);
                 } else {
-                    orderAdapter.setLoadState(OrderAdapter.LoadingState.END);
+                    orderListAdapter.setLoadState(OrderListAdapter.LoadingState.END);
                 }
             }
         });

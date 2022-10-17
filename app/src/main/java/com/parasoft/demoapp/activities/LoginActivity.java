@@ -1,4 +1,4 @@
-package com.parasoft.demoapp;
+package com.parasoft.demoapp.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,8 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 
-import com.parasoft.demoapp.component.SettingDialog;
-import com.parasoft.demoapp.component.UserInformationDialog;
+import com.parasoft.demoapp.R;
+import com.parasoft.demoapp.dialogs.BaseUrlSettingDialog;
+import com.parasoft.demoapp.dialogs.UserInformationDialog;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.PDAService;
 import com.parasoft.demoapp.retrofitConfig.response.ResultResponse;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView errorMessage;
     private TextView forgotPasswordLink;
     private PDAService pdaService;
-    private final SettingDialog settingDialog = new SettingDialog();
+    private final BaseUrlSettingDialog baseUrlSettingDialog = new BaseUrlSettingDialog();
     private final UserInformationDialog userInformationDialog = new UserInformationDialog();
 
     @Override
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        View customActionBar = View.inflate(this, R.layout.title_layout, null);
+        View customActionBar = View.inflate(this, R.layout.login_title_layout, null);
 
         actionBar.setCustomView(customActionBar, lp);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -97,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openSettingModal() {
-        settingDialog.show(getSupportFragmentManager(), SettingDialog.TAG);
+        baseUrlSettingDialog.show(getSupportFragmentManager(), BaseUrlSettingDialog.TAG);
     }
 
     public void signIn() {

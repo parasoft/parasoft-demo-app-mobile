@@ -1,4 +1,4 @@
-package com.parasoft.demoapp.component;
+package com.parasoft.demoapp.dialogs;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -26,8 +26,8 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.parasoft.demoapp.FakeApiResponse.OrdersRelativeApis;
-import com.parasoft.demoapp.HomeActivity;
-import com.parasoft.demoapp.MockPDAService;
+import com.parasoft.demoapp.activities.HomeActivity;
+import com.parasoft.demoapp.activities.MockPDAService;
 import com.parasoft.demoapp.R;
 import com.parasoft.demoapp.retrofitConfig.ApiInterface;
 import com.parasoft.demoapp.retrofitConfig.response.OrderStatus;
@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class OrderDialogTest extends MockPDAService {
+public class OrderDetailDialogTest extends MockPDAService {
 
     @Before
     public void setUp() {

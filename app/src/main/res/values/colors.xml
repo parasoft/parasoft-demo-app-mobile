@@ -24,5 +24,6 @@
     <color name="color_brown">#7B4D12</color>
     <color name="status_icon_bg">#FACD91</color>
     <color name="white_translucent">#80FFFFFF</color>
+    <color name="ic_image_loading_failed_background">#FFFFFF</color>
 
 </resources>

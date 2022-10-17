@@ -1,4 +1,4 @@
-package com.parasoft.demoapp;
+package com.parasoft.demoapp.activities;
 
 import static org.mockito.Mockito.mock;
 
