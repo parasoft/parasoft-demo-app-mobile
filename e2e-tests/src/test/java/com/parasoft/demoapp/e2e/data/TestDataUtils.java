@@ -90,7 +90,7 @@ public final class TestDataUtils {
                 auth().preemptive().basic(APPROVER_USERNAME, APPROVER_PASSWORD).
                 pathParam("key", key).
                 when().
-                get(API_BASE_URL + "/localize/EN/{key}").
+                get(API_BASE_URL + "/v1/localize/EN/{key}").
                 then().
                 contentType(ContentType.JSON).
                 body(STATUS_FIELD, equalTo(OK_STATUS)).
