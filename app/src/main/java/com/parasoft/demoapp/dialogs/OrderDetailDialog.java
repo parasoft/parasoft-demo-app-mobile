@@ -48,6 +48,8 @@ import com.parasoft.demoapp.util.ImageUtil;
 import com.parasoft.demoapp.util.CommonUIUtil;
 import com.parasoft.demoapp.adapters.OrderItemsAdapter;
 
+import java.text.MessageFormat;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -439,10 +441,12 @@ public class OrderDetailDialog extends DialogFragment {
         disableResponseView(true);
         enableSaveButton(false);
         OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-        if (responseValue.equals("Deny")) {
+        if (responseValue.equals(getString(R.string.order_response_deny))) {
             orderStatusRequest.setStatus(OrderStatus.DECLINED);
-        } else {
+        } else if(responseValue.equals(getString(R.string.order_response_approve))) {
             orderStatusRequest.setStatus(OrderStatus.APPROVED);
+        } else {
+            throw new RuntimeException(MessageFormat.format("Order response status {0} is not supported", responseValue));
         }
         orderStatusRequest.setComments(commentsField.getText().toString());
         updateOrderDetails(orderStatusRequest, true);
