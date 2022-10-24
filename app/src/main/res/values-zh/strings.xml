@@ -57,4 +57,5 @@
     <string name="no_permission_to_update_order">您没有更新该订单的权限</string>
     <string name="unable_to_connect_to_server">无法连接到服务器</string>
     <string name="updating_order_error">订单更新错误</string>
+    <string name="over_length_comments">评论超过了225个字符</string>
 </resources>

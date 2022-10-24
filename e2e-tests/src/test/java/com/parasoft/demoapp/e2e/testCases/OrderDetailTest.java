@@ -219,7 +219,7 @@ class OrderDetailTest extends OrderBaseTest {
     private void checkOrderInfoAfterFailedApproveOrDenyWithTooLongComments() {
         wait.until(ExpectedConditions.presenceOfElementLocated(ORDER_UPDATING_ERROR_MESSAGE));
         assertThat(driver.findElement(ORDER_UPDATING_ERROR_MESSAGE).getText(),
-                is("Error updating order"));
+                is("Comments exceed 225 characters"));
 
         assertThat(driver.findElement(ORDER_DIALOG_ORDER_STATUS).getText(), is(Order.OPEN_STATUS));
         assertThat(driver.findElements(COMMENTS).isEmpty(), is(true));

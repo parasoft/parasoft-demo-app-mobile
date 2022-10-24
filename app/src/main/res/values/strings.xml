@@ -58,4 +58,5 @@
     <string name="no_permission_to_update_order">You have no permissions to update this order</string>
     <string name="unable_to_connect_to_server">Unable to connect to server</string>
     <string name="updating_order_error">Error updating order</string>
+    <string name="over_length_comments">Comments exceed 225 characters</string>
 </resources>
