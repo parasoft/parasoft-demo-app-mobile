@@ -448,7 +448,14 @@ public class OrderDetailDialog extends DialogFragment {
         } else {
             throw new RuntimeException(MessageFormat.format("Order response status {0} is not supported", responseValue));
         }
-        orderStatusRequest.setComments(commentsField.getText().toString());
+        String comments = commentsField.getText().toString();
+        if(comments.length() > 225) {
+            disableResponseView(false);
+            enableSaveButton(true);
+            showUpdatingError(getResources().getString(R.string.over_length_comments));
+            return;
+        }
+        orderStatusRequest.setComments(comments);
         updateOrderDetails(orderStatusRequest, true);
     }
 

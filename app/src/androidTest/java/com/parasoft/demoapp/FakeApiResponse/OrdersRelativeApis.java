@@ -41,6 +41,10 @@ public class OrdersRelativeApis {
         return new GetOrderDetails_onFailure();
     }
 
+    public static ApiInterface updateOrderDetails_with400Response() {
+        return new UpdateOrderDetails_with400Response();
+    }
+
     public static ApiInterface updateOrderDetails_with401Response() {
         return new UpdateOrderDetails_with401Response();
     }
@@ -202,6 +206,21 @@ public class OrdersRelativeApis {
                 public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
                     Response<ResultResponse<OrderResponse>> response = Response.error(401,
                             ResponseBody.create(null, "Not authorized to update the order."));
+
+                    callback.onResponse(null, response);
+                }
+            };
+        }
+    }
+
+    private static class UpdateOrderDetails_with400Response extends AllApisWith200Response {
+        @Override
+        public Call<ResultResponse<OrderResponse>> updateOrderDetails(String orderNumber, OrderStatusRequest orderStatusRequest) {
+            return new CallInterfaceImplForTest<ResultResponse<OrderResponse>>() {
+                @Override
+                public void enqueue(Callback<ResultResponse<OrderResponse>> callback) {
+                    Response<ResultResponse<OrderResponse>> response = Response.error(400,
+                            ResponseBody.create(null, "Bad request."));
 
                     callback.onResponse(null, response);
                 }
