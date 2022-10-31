@@ -128,7 +128,7 @@ public class HomeActivityTest extends MockPDAService {
 
     @Test
     public void test_swipeDownRefresh() {
-        OrdersRelativeApis.FakeData.addAnOrder("23-456-010", OrderStatus.SUBMITTED, 1, false);
+        OrdersRelativeApis.FakeData.addAnOrder("23-456-010", OrderStatus.PROCESSED, 1, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -141,7 +141,7 @@ public class HomeActivityTest extends MockPDAService {
             onView(withId(R.id.order_new_status)).check(matches(withText(R.string.status_new)));
             onView(withText("#23-456-011")).check(doesNotExist());
 
-            OrdersRelativeApis.FakeData.addAnOrder("23-456-011", OrderStatus.SUBMITTED, 1, false);
+            OrdersRelativeApis.FakeData.addAnOrder("23-456-011", OrderStatus.PROCESSED, 1, false);
             when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
             onView(withId(R.id.order_recycler_view)).perform(swipeDown());

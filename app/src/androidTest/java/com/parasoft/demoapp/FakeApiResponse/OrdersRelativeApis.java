@@ -486,7 +486,7 @@ public class OrdersRelativeApis {
                 orderNumber = "23-456-0" + (i >= 10 ? "" : "0") + i;
                 switch (i % 3) {
                     case 0:
-                        orderStatus = OrderStatus.SUBMITTED;
+                        orderStatus = OrderStatus.PROCESSED;
                         break;
                     case 1:
                         orderStatus = OrderStatus.APPROVED;
