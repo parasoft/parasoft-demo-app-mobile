@@ -154,7 +154,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private String parseOrderStatus(@NonNull ItemViewHolder viewHolder, OrderStatus orderStatus) {
         switch (orderStatus) {
-            case SUBMITTED:
+            case PROCESSED:
                 viewHolder.orderStatus.setTextColor(context.getResources().getColor(R.color.color_green));
                 return context.getResources().getString(R.string.status_open);
             case APPROVED:
