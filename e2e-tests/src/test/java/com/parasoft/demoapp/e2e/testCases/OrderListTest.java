@@ -3,6 +3,7 @@ package com.parasoft.demoapp.e2e.testCases;
 import static com.parasoft.demoapp.e2e.data.TestDataUtils.APPROVER_PASSWORD;
 import static com.parasoft.demoapp.e2e.data.TestDataUtils.APPROVER_USERNAME;
 import static com.parasoft.demoapp.e2e.data.TestDataUtils.createTestDataOrdersWithRandomPurchaser;
+import static com.parasoft.demoapp.e2e.data.TestDataUtils.getAllOrders;
 import static com.parasoft.demoapp.e2e.data.TestDataUtils.resetDatabase;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.DISPLAY_NO_ORDERS_INFO;
 import static com.parasoft.demoapp.e2e.locators.OrderListLocators.ORDER_DETAIL_DATE;
@@ -17,7 +18,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.google.common.collect.Lists;
 import com.parasoft.demoapp.e2e.common.AppiumConfig;
 import com.parasoft.demoapp.e2e.common.TestUtils;
 import com.parasoft.demoapp.e2e.data.Order;
@@ -31,8 +31,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.restassured.RestAssured;
 
@@ -60,23 +58,23 @@ class OrderListTest extends OrderBaseTest {
         assertEquals("There are no order requests",
                 driver.findElement(DISPLAY_NO_ORDERS_INFO).getText());
 
-        List<Order> testDataOrders = createTestDataOrdersWithRandomPurchaser();
+        createTestDataOrdersWithRandomPurchaser();
 
         swipe(0.5, 0.25, 0.5, 0.75, Duration.ofMillis(1000));
-        checkOrderList(testDataOrders);
+        checkOrderList();
     }
 
     @Test
     void testShouldShowExistingOrdersAfterLogin() throws Throwable {
-        List<Order> testDataOrders = createTestDataOrdersWithRandomPurchaser();
+        createTestDataOrdersWithRandomPurchaser();
 
         TestUtils.setBaseUrlAndLogin(driver, wait, APPROVER_USERNAME, APPROVER_PASSWORD);
-        checkOrderList(testDataOrders);
+        checkOrderList();
     }
 
-    private void checkOrderList(List<Order> testDataOrders) {
+    private void checkOrderList() {
         waitForOrderListToBeDisplayed();
-        new ArrayList<>(Lists.reverse(testDataOrders)).forEach(this::checkOrderListItem);
+        getAllOrders().forEach(this::checkOrderListItem);
     }
 
     private void checkOrderListItem(Order order) {

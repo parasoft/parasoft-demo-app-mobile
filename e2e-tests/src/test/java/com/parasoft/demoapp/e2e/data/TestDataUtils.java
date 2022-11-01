@@ -1,5 +1,6 @@
 package com.parasoft.demoapp.e2e.data;
 
+import static com.parasoft.demoapp.e2e.common.TestUtils.waitForSeconds;
 import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 
@@ -158,6 +159,19 @@ public final class TestDataUtils {
                 body().as(OrderResponse.class).getData();
     }
 
+    private static Order getOrder(String orderNumber) {
+        return given().
+                auth().preemptive().basic(APPROVER_USERNAME, APPROVER_PASSWORD).
+                pathParam("orderNumber", orderNumber).
+                when().
+                get(API_BASE_URL + "/v1/orders/{orderNumber}").
+                then().
+                contentType(ContentType.JSON).
+                body(STATUS_FIELD, equalTo(OK_STATUS)).
+                extract().
+                body().as(OrderResponse.class).getData();
+    }
+
     private static Order updateOrder(String orderNumber, OrderUpdateRequest orderUpdateRequest) {
         return given().
                 auth().preemptive().basic(APPROVER_USERNAME, APPROVER_PASSWORD).
@@ -197,7 +211,7 @@ public final class TestDataUtils {
                 break;
             }
             default: {
-                orderUpdateRequest.setStatus(Order.SUBMITTED_STATUS);
+                orderUpdateRequest.setStatus(Order.PROCESSED_STATUS);
             }
         }
         if (StringUtils.isNotEmpty(orderTestData.getComments())) {
@@ -206,6 +220,10 @@ public final class TestDataUtils {
         if (BooleanUtils.isTrue(orderTestData.getReviewedByAPV())) {
             orderUpdateRequest.setReviewedByAPV(true);
         }
+
+        do {
+            waitForSeconds(2);
+        } while (!getOrder(submittedOrder.getOrderNumber()).isOpenOrder());
 
         return updateOrder(submittedOrder.getOrderNumber(), orderUpdateRequest);
     }
