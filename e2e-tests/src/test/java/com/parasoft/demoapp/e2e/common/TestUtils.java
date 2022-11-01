@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class TestUtils {
 
@@ -52,5 +53,13 @@ public class TestUtils {
 
     public static By byId(String idSuffix) {
         return By.id(ID_PREFIX + idSuffix);
+    }
+
+    public static void waitForSeconds(long secondsToSleep) {
+        try {
+            TimeUnit.SECONDS.sleep(secondsToSleep);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

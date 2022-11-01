@@ -16,7 +16,7 @@ public class Order {
     public static final String HASH_SIGN = "#";
     private static  final String TIME_PATTERN = "HH:mm:ss";
 
-    public static final String SUBMITTED_STATUS = "SUBMITTED";
+    public static final String PROCESSED_STATUS = "PROCESSED";
     public static final String DECLINED_STATUS = "DECLINED";
     public static final String APPROVED_STATUS = "APPROVED";
 
@@ -42,7 +42,7 @@ public class Order {
     private String comments;
 
     public String getUiStatus() {
-        if (StringUtils.equals(status, SUBMITTED_STATUS)) {
+        if (StringUtils.equals(status, PROCESSED_STATUS)) {
             return OPEN_STATUS;
         } else if (StringUtils.equals(status, DECLINED_STATUS)) {
             return DENIED_STATUS;
@@ -65,7 +65,7 @@ public class Order {
     }
 
     public boolean isOpenOrder() {
-        return StringUtils.equals(status, SUBMITTED_STATUS);
+        return StringUtils.equals(status, PROCESSED_STATUS);
     }
 
     public boolean isNewOrder() {
