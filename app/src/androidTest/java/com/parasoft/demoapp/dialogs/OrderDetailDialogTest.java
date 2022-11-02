@@ -50,7 +50,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_openAndClose() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -93,7 +93,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_approveOrder() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -137,7 +137,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_denyOrder() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -178,7 +178,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_getOrderDetails_negative() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -213,7 +213,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_updateOrderDetails_negative() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -280,7 +280,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_getImage_negative() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 
@@ -313,7 +313,7 @@ public class OrderDetailDialogTest extends MockPDAService {
     @Test
     public void test_localizedValue_negative() {
         String orderNumber = "23-456-001";
-        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.SUBMITTED, 2, false);
+        OrdersRelativeApis.FakeData.addAnOrder(orderNumber, OrderStatus.PROCESSED, 2, false);
 
         when(mockedPdaService.getClient(ApiInterface.class)).thenReturn(OrdersRelativeApis.allRequests_with200Response());
 

@@ -300,7 +300,7 @@ public class OrderDetailDialog extends DialogFragment {
         }
         orderSubmissionDate.setText(CommonUtil.getLocalDate(orderInfo.getSubmissionDate()));
         orderSubmissionTime.setText(CommonUtil.getLocalTime(orderInfo.getSubmissionDate()));
-        orderStatus.setText(getStatus(orderInfo.getStatus().getStatus()));
+        orderStatus.setText(getStatus(orderInfo.getStatus()));
         purchaserName.setText(orderInfo.getRequestedBy());
         receiverName.setText(orderInfo.getReceiverId());
         getLocation(orderInfo.getRegion());
@@ -313,23 +313,24 @@ public class OrderDetailDialog extends DialogFragment {
         initOrderItemRecyclerView();
     }
 
-    private String getStatus(String status) {
+    private String getStatus(OrderStatus status) {
+        String orderString;
         switch (status) {
-            case "Submitted":
-                status = getResources().getString(R.string.status_open);
+            case PROCESSED:
+                orderString = getResources().getString(R.string.status_open);
                 break;
-            case "Declined":
-                status = getResources().getString(R.string.status_denied);
+            case DECLINED:
+                orderString = getResources().getString(R.string.status_denied);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
-            case "Approved":
-                status = getResources().getString(R.string.status_approved);
+            case APPROVED:
+                orderString = getResources().getString(R.string.status_approved);
                 orderStatus.setTextColor(getResources().getColor(R.color.light_black));
                 break;
             default:
-                status = "";
+                orderString = "";
         }
-        return status;
+        return orderString;
     }
 
     private void initOrderItemRecyclerView() {
@@ -407,8 +408,7 @@ public class OrderDetailDialog extends DialogFragment {
     public void showOrderPage() {
         progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
-        String status = orderInfo.getStatus().getStatus();
-        if ("Submitted".equals(status)) {
+        if (OrderStatus.PROCESSED == orderInfo.getStatus()) {
             commentsField.setVisibility(View.VISIBLE);
             responseSpinner.setVisibility(View.VISIBLE);
             contentDivider.setVisibility(View.VISIBLE);

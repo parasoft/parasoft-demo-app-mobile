@@ -2,9 +2,9 @@ package com.parasoft.demoapp.retrofitConfig.response;
 
 public enum OrderStatus {
 
-    SUBMITTED("Submitted"), APPROVED("Approved"), DECLINED("Declined");
+    PROCESSED("Processed"), APPROVED("Approved"), DECLINED("Declined");
 
-    private String status;
+    private final String status;
 
     OrderStatus(String status) {
         this.status = status;
