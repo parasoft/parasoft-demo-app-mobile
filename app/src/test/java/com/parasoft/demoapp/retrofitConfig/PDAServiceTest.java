@@ -128,6 +128,7 @@ public class PDAServiceTest {
     }
 
     boolean requestFinished = false;
+    Throwable throwable = null;
     @Test
     public void getClient_rendARequest() throws InterruptedException {
         // Given
@@ -150,10 +151,12 @@ public class PDAServiceTest {
             public void onFailure(@NonNull Call<ResultResponse<Void>> call, @NonNull Throwable t) {
                 try {
                     assertEquals("POST", call.request().method());
-                    assertEquals("http://localhost1:8888/login", call.request().url().toString());
+                    assertEquals("http://localhost1:8888/v1/login", call.request().url().toString());
                     assertEquals("application/x-www-form-urlencoded", Objects.requireNonNull(Objects.requireNonNull(call.request().body()).contentType()).toString());
                     // TODO: Research for assert "Authorization" and "User-Agent" header value. Can not get the headers since
                     //       call.request().headers() returns empty.
+                } catch (Throwable th) {
+                    throwable = th;
                 } finally {
                     requestFinished = true;
                 }
@@ -167,6 +170,10 @@ public class PDAServiceTest {
         // To wait for request finish.
         while(!requestFinished) {
             Thread.sleep(1000);
+        }
+
+        if(throwable != null) {
+            throw new RuntimeException(throwable);
         }
     }
 
