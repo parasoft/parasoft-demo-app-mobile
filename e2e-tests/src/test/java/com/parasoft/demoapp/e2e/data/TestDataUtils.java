@@ -132,8 +132,8 @@ public final class TestDataUtils {
                                                    String purchaserUsername) {
         given().
                 auth().preemptive().basic(purchaserUsername, PURCHASER_PASSWORD).
-                param("itemId", itemId).
-                param("itemQty", itemQty).
+                body("{\"itemId\": " + itemId + ", \"itemQty\": " + itemQty + "}").
+                contentType(ContentType.JSON).
                 when().
                 post(API_BASE_URL + "/v1/cartItems").
                 then().
