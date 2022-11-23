@@ -130,8 +130,10 @@ public class PDAServiceTest {
     private boolean _ready;
     private final Object lock = new Object();
     public void ready () {
-        _ready = true;
-        lock.notifyAll();
+        synchronized (lock) {
+            _ready = true;
+            lock.notifyAll();
+        }
     }
     Throwable throwable = null;
     @Test
@@ -163,9 +165,7 @@ public class PDAServiceTest {
                 } catch (Throwable th) {
                     throwable = th;
                 } finally {
-                    synchronized (lock) {
-                        ready();
-                    }
+                    ready();
                 }
             }
         });
