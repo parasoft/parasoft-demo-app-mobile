@@ -127,7 +127,12 @@ public class PDAServiceTest {
         assertEquals(baseUrl, PDAService.getBaseUrl());
     }
 
-    boolean requestFinished = false;
+    private boolean _ready;
+    private final Object lock = new Object();
+    public void ready () {
+        _ready = true;
+        lock.notifyAll();
+    }
     Throwable throwable = null;
     @Test
     public void getClient_rendARequest() throws InterruptedException {
@@ -140,8 +145,8 @@ public class PDAServiceTest {
         System.setProperty("http.agent", "Dalvik/2.1.0 (Linux; U; Android 13; sdk_gphone64_x86_64 Build/TPB4.220624.004)");
         // When
         ApiInterface api = PDAService.Factory.getInstance().getClient(ApiInterface.class);
-        Call<ResultResponse<Void>> call = api.login("approver", "password");
-        call.enqueue(new Callback<ResultResponse<Void>>() {
+        Call<ResultResponse<Void>> callLogin = api.login("approver", "password");
+        callLogin.enqueue(new Callback<ResultResponse<Void>>() {
             @Override
             public void onResponse(@NonNull Call<ResultResponse<Void>> call, @NonNull Response<ResultResponse<Void>> response) {
                 throw new RuntimeException(baseUrl + " can be connected, it is not expected.");
@@ -158,7 +163,9 @@ public class PDAServiceTest {
                 } catch (Throwable th) {
                     throwable = th;
                 } finally {
-                    requestFinished = true;
+                    synchronized (lock) {
+                        ready();
+                    }
                 }
             }
         });
@@ -168,8 +175,10 @@ public class PDAServiceTest {
         assertNotNull(PDAService.getRetrofit());
 
         // To wait for request finish.
-        while(!requestFinished) {
-            Thread.sleep(1000);
+        synchronized (lock) {
+            while(!_ready) {
+                lock.wait();
+            }
         }
 
         if(throwable != null) {
