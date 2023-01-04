@@ -17,7 +17,7 @@ User can either use emulator comes with Android Studio or third party emulator l
     - Pixel density: 240DPI (Medium)
 - If using emulator comes with Android Studio, the recommended configuration is:
     - Device: **Pixel 5** (or 1080x2340 as minimum resolution)
-    - Android SDK: **API 33** (or API 31 as minimum SDK version)
+    - Android SDK: **API 32** (or API 31 as minimum SDK version)
 
 ## Using the Demo Application
 1. Make sure the [Parasoft Demo Application](https://github.com/parasoft/parasoft-demo-app) service is running.
